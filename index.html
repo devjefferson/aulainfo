@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AulaInfo — Aulas de Informática para Crianças</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header .logo { font-size: 64px; }
+
+        header h1 {
+            font-size: 36px;
+            color: white;
+            margin: 10px 0 8px;
+        }
+
+        header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .days-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .day-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 28px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .day-icon { font-size: 36px; }
+
+        .day-title {
+            font-size: 22px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .aula-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .aula-item a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .aula-item a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .aula-num {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .aula-info { flex: 1; }
+
+        .aula-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .aula-subtitle {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .aula-arrow {
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        @media (max-width: 500px) {
+            .days-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🖥️</div>
+        <h1>AulaInfo</h1>
+        <p>Aulas de Informática para Crianças</p>
+    </header>
+
+    <div class="days-grid">
+
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-icon">📅</span>
+                <span class="day-title">Segunda-feira</span>
+            </div>
+            <ul class="aula-list">
+                <li class="aula-item">
+                    <a href="segunda/aula1.html">
+                        <div class="aula-num">1</div>
+                        <div class="aula-info">
+                            <div class="aula-name">O que é a Internet?</div>
+                            <div class="aula-subtitle">Introdução à internet para crianças</div>
+                        </div>
+                        <span class="aula-arrow">▶</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-icon">📅</span>
+                <span class="day-title">Quinta-feira</span>
+            </div>
+            <ul class="aula-list">
+                <li class="aula-item">
+                    <a href="quinta/aula1.html">
+                        <div class="aula-num">1</div>
+                        <div class="aula-info">
+                            <div class="aula-name">O que é a Internet?</div>
+                            <div class="aula-subtitle">Introdução à internet para crianças</div>
+                        </div>
+                        <span class="aula-arrow">▶</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
