@@ -8,136 +8,232 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f0f1a;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 48px 20px 64px;
         }
 
+        /* ── Header ─────────────────────────────────────────── */
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 64px;
         }
 
-        header .logo { font-size: 64px; }
+        .logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 24px;
+            font-size: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(102,126,234,0.4);
+        }
 
         header h1 {
-            font-size: 36px;
+            font-size: 40px;
+            font-weight: 800;
             color: white;
-            margin: 10px 0 8px;
+            letter-spacing: -1px;
+        }
+
+        header h1 span {
+            background: linear-gradient(90deg, #667eea, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
-            font-size: 18px;
+            font-size: 17px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 8px;
+        }
+
+        /* ── Grid ────────────────────────────────────────────── */
+        .grid {
+            max-width: 860px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 28px;
+        }
+
+        /* ── Card ────────────────────────────────────────────── */
+        .card {
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid rgba(255,255,255,0.07);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            border-radius: inherit;
+        }
+
+        /* Segunda — azul/verde */
+        .card--segunda {
+            background: linear-gradient(145deg, #0d1b2a, #112233);
+        }
+        .card--segunda::before {
+            background: linear-gradient(135deg, #4ade80, #22d3ee);
+        }
+        .card--segunda .card-accent { background: linear-gradient(135deg, #4ade80, #22d3ee); }
+        .card--segunda .aula-num   { background: linear-gradient(135deg, #4ade80, #22d3ee); color: #0a2a1a; }
+        .card--segunda .aula-arrow { color: #4ade80; }
+        .card--segunda .day-icon-wrap { background: rgba(74,222,128,0.15); }
+
+        /* Quinta — roxo/rosa */
+        .card--quinta {
+            background: linear-gradient(145deg, #1a0d2e, #200e3a);
+        }
+        .card--quinta::before {
+            background: linear-gradient(135deg, #a78bfa, #f472b6);
+        }
+        .card--quinta .card-accent { background: linear-gradient(135deg, #a78bfa, #f472b6); }
+        .card--quinta .aula-num   { background: linear-gradient(135deg, #a78bfa, #f472b6); color: white; }
+        .card--quinta .aula-arrow { color: #a78bfa; }
+        .card--quinta .day-icon-wrap { background: rgba(167,139,250,0.15); }
+
+        /* top accent line */
+        .card-accent {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* ── Card header ─────────────────────────────────────── */
+        .card-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .day-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .day-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .age-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.1);
             color: rgba(255,255,255,0.7);
         }
 
-        .days-grid {
-            max-width: 900px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 30px;
-        }
-
-        .day-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 28px;
-        }
-
-        .day-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .day-icon { font-size: 36px; }
-
-        .day-title {
-            font-size: 22px;
-            color: white;
-            font-weight: bold;
-        }
-
+        /* ── Aula list ───────────────────────────────────────── */
         .aula-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .aula-item a {
             display: flex;
             align-items: center;
             gap: 14px;
-            background: white;
-            border-radius: 16px;
-            padding: 16px 20px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 14px 18px;
             text-decoration: none;
-            color: #333;
-            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
 
         .aula-item a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.11);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.35);
         }
 
         .aula-num {
-            background: #667eea;
-            color: white;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 13px;
             flex-shrink: 0;
         }
 
-        .aula-info { flex: 1; }
+        .aula-info { flex: 1; min-width: 0; }
 
         .aula-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #222;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
         }
 
         .aula-subtitle {
-            font-size: 13px;
-            color: #888;
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
             margin-top: 2px;
         }
 
         .aula-arrow {
-            font-size: 18px;
-            color: #667eea;
+            font-size: 16px;
+            opacity: 0.8;
         }
 
-        @media (max-width: 500px) {
-            .days-grid { grid-template-columns: 1fr; }
-            header h1 { font-size: 26px; }
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 520px) {
+            .grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 30px; }
         }
     </style>
 </head>
 <body>
+
     <header>
-        <div class="logo">🖥️</div>
-        <h1>AulaInfo</h1>
+        <div class="logo-wrap">🖥️</div>
+        <h1>Aula<span>Info</span></h1>
         <p>Aulas de Informática para Crianças</p>
     </header>
 
-    <div class="days-grid">
+    <div class="grid">
 
-        <div class="day-card">
-            <div class="day-header">
-                <span class="day-icon">📅</span>
-                <span class="day-title">Segunda-feira</span>
+        <!-- Segunda-feira — 8 a 10 anos -->
+        <div class="card card--segunda">
+            <div class="card-accent"></div>
+            <div class="card-head">
+                <div class="day-icon-wrap">📅</div>
+                <div class="card-head-text">
+                    <div class="day-title">Segunda-feira</div>
+                    <span class="age-badge">👧 8 – 10 anos</span>
+                </div>
             </div>
             <ul class="aula-list">
                 <li class="aula-item">
@@ -153,10 +249,15 @@
             </ul>
         </div>
 
-        <div class="day-card">
-            <div class="day-header">
-                <span class="day-icon">📅</span>
-                <span class="day-title">Quinta-feira</span>
+        <!-- Quinta-feira — 11 a 15 anos -->
+        <div class="card card--quinta">
+            <div class="card-accent"></div>
+            <div class="card-head">
+                <div class="day-icon-wrap">📅</div>
+                <div class="card-head-text">
+                    <div class="day-title">Quinta-feira</div>
+                    <span class="age-badge">🧑 11 – 15 anos</span>
+                </div>
             </div>
             <ul class="aula-list">
                 <li class="aula-item">
@@ -173,5 +274,6 @@
         </div>
 
     </div>
+
 </body>
 </html>
