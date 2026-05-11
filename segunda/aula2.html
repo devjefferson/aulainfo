@@ -209,7 +209,14 @@
     .restart { background: linear-gradient(135deg,#f7971e,#ffd200); border: none; border-radius: 50px; padding: 12px 32px; font-size: 15px; font-weight: 800; color: #1a1a2e; cursor: pointer; transition: transform 0.2s; }
     .restart:hover { transform: scale(1.05); }
 
-    /* Nav */
+    /* Video slide */
+  .video-slide-body { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+  .video-label-top { font-size: 13px; opacity: 0.7; }
+  .video-wrap { width: 100%; max-width: 300px; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .video-wrap iframe { width: 100%; height: 100%; border: none; }
+  .video-hint { font-size: 13px; opacity: 0.6; }
+
+  /* Nav */
     .nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 24px; }
     .nav-btn { background: rgba(255,255,255,0.13); border: 2px solid rgba(255,255,255,0.25); color: #fff; border-radius: 50px; padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .nav-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.04); }
@@ -249,11 +256,29 @@
     </div>
   </div>
 
-  <!-- ② A internet divide -->
+  <!-- ② Vídeo -->
+  <div class="slide s1">
+    <div class="time-badge">⏱ 5–8 min · Vídeo</div>
+    <div class="slide-label">Slide 2 · Vídeo de apoio</div>
+    <div class="slide-title">Assista e preste atenção! 👀</div>
+    <div class="video-slide-body">
+      <div class="video-label-top">Vamos ver um vídeo sobre o tema de hoje:</div>
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/fj_OD1Qzg6w"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="video-hint">💬 Depois do vídeo: "O que vocês entenderam?"</div>
+    </div>
+  </div>
+
+  <!-- ③ A internet divide -->
   <div class="slide s2">
-    <div class="time-badge">⏱ 5–12 min · Conceito</div>
+    <div class="time-badge">⏱ 8–15 min · Conceito</div>
     <div class="slide-emoji">📬</div>
-    <div class="slide-label">Slide 2 · Conceito</div>
+    <div class="slide-label">Slide 3 · Conceito</div>
     <div class="slide-title">A internet não manda tudo de uma vez!</div>
     <div class="slide-body">
       <p>Imagina mandar uma <strong>carta gigante</strong> pra um amigo.</p>
@@ -772,12 +797,12 @@
     current = n;
     slides[current].classList.add('active');
     dotsEl.children[current].classList.add('active');
-    document.getElementById('progress').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('progress').textContent = (current + 1) + ' / 14';
     document.getElementById('prev').disabled = current === 0;
     document.getElementById('next').disabled = current === total - 1;
 
-    // Animate speed bars when slide 9 appears (index 8)
-    if (current === 8) animateSpeedBars();
+    // Animate speed bars when slide 10 appears (index 9, shifted by video slide)
+    if (current === 9) animateSpeedBars();
   }
 
   function changeSlide(dir) {
