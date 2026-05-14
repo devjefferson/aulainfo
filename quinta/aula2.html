@@ -314,6 +314,246 @@
   .copy-btn:hover { background: rgba(255,255,255,.22); }
   .copy-btn.copied { background: rgba(0,200,80,.25); border-color: #0c8; color: #0f8; }
 
+  .btn-demo {
+    background: rgba(255,80,80,.15);
+    border: 1px solid rgba(255,80,80,.4);
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #ff8888;
+    transition: .2s;
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+  .btn-demo:hover { background: rgba(255,80,80,.28); border-color: rgba(255,80,80,.7); color: #ffaaaa; }
+
+  /* ── POPUPS OVERLAY ── */
+  .adware-popup {
+    position: fixed;
+    background: #1a0a00;
+    border: 2px solid #ff6600;
+    border-radius: 10px;
+    padding: 16px 18px;
+    width: 240px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 0 20px rgba(255,80,0,.5);
+    line-height: 1.5;
+    z-index: 9998;
+    animation: adwareIn .25s ease;
+  }
+  .adware-popup.erro { border-color: #ff2222; background: #1a0000; box-shadow: 0 0 20px rgba(255,0,0,.5); }
+  .adware-popup.info { border-color: #ffcc00; background: #1a1400; box-shadow: 0 0 20px rgba(255,200,0,.4); }
+  .adware-popup strong { display: block; margin-bottom: 6px; font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: 1px; }
+  .adware-popup p { margin: 0 0 10px; }
+  .adware-popup button {
+    background: #cc3300; color: #fff; border: none;
+    border-radius: 6px; padding: 6px 12px; font-size: 12px;
+    font-weight: 700; cursor: pointer; width: 100%;
+  }
+  .adware-popup.info button { background: #886600; }
+  @keyframes adwareIn { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+
+  /* ── EXPLOSÃO OVERLAY ── */
+  #bomba-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0a0000;
+    z-index: 9997;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    transition: background .3s;
+  }
+  #bomba-overlay.ativo { display: flex; }
+  #bomba-aviso {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: .6;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  #bomba-numero {
+    font-size: clamp(120px, 22vw, 220px);
+    font-weight: 900;
+    color: #ff2222;
+    line-height: 1;
+    transition: transform .15s;
+    text-shadow: 0 0 60px rgba(255,0,0,.8);
+  }
+  #bomba-msg {
+    margin-top: 24px;
+    font-size: 16px;
+    opacity: .7;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  #bomba-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9998; display: none; }
+  #bomba-flash  { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 9999; transition: opacity .1s; }
+
+  /* ── NÃO CLIQUE OVERLAY ── */
+  #naoclique-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    z-index: 9995;
+    align-items: center;
+    justify-content: center;
+  }
+  #naoclique-overlay.ativo { display: flex; }
+  #naoclique-contador {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff4444;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    white-space: nowrap;
+  }
+  #naoclique-btn {
+    background: #cc0000;
+    color: #fff;
+    border: 3px solid #ff4444;
+    border-radius: 16px;
+    padding: 22px 48px;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(255,0,0,.5);
+    letter-spacing: 1px;
+    transition: transform .1s;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    position: relative;
+    z-index: 9996;
+  }
+  #naoclique-btn:active { transform: scale(.95); }
+  .nc-popup {
+    position: fixed;
+    background: #1a0000;
+    border: 2px solid #ff3300;
+    border-radius: 10px;
+    padding: 14px 16px;
+    width: 210px;
+    font-size: 12px;
+    color: #fff;
+    line-height: 1.5;
+    box-shadow: 0 0 16px rgba(255,50,0,.5);
+    z-index: 9997;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    animation: ncIn .2s ease;
+  }
+  .nc-popup strong { display: block; color: #ff6666; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; }
+  .nc-popup button {
+    margin-top: 8px; width: 100%; background: #880000; color: #fff;
+    border: none; border-radius: 6px; padding: 5px; font-size: 11px;
+    font-weight: 700; cursor: pointer;
+  }
+  @keyframes ncIn { from { opacity:0; transform:scale(.7); } to { opacity:1; transform:scale(1); } }
+
+  /* ── RAT OVERLAY ── */
+  #rat-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    z-index: 9996;
+    cursor: none;
+  }
+  #rat-overlay.ativo { display: block; }
+  #rat-alerta {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(180,0,0,.85);
+    border: 1px solid #ff2222;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    white-space: nowrap;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  #rat-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: none;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #fff;
+  }
+  #rat-center h2 { font-size: clamp(18px,3vw,32px); color: #ff4444; }
+  #rat-center p  { font-size: 14px; opacity: .6; text-align: center; max-width: 420px; line-height: 1.6; }
+  #rat-status {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    opacity: .55;
+    letter-spacing: 1px;
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    white-space: nowrap;
+  }
+  #rat-cursor {
+    position: absolute;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    pointer-events: none;
+    z-index: 9997;
+    filter: drop-shadow(0 0 6px rgba(255,0,0,.8));
+  }
+  #rat-cursor svg { width: 20px; height: 20px; }
+
+  /* ── FUGITIVO OVERLAY ── */
+  #fugitivo-popup {
+    display: none;
+    position: fixed;
+    background: #1e0000;
+    border: 2px solid #ff0000;
+    border-radius: 12px;
+    padding: 24px 28px;
+    width: 300px;
+    text-align: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(255,0,0,.6);
+    user-select: none;
+    z-index: 9999;
+    top: 0; left: 0;
+  }
+  #fugitivo-popup h3 { color: #ff4444; margin: 0 0 10px; font-size: 15px; }
+  #fugitivo-popup p  { font-size: 13px; opacity: .85; margin: 0 0 16px; line-height: 1.5; }
+  #fugitivo-btn {
+    background: darkred;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  #fugitivo-btn:hover { background: #8b0000; }
+
   pre {
     background: rgba(0,0,0,.5);
     border: 1px solid rgba(255,255,255,.1);
@@ -618,82 +858,139 @@
       <button class="script-tab" onclick="showScript(1, this)">💬 Chuva de Pop-ups</button>
       <button class="script-tab" onclick="showScript(2, this)">📁 Pasta Infinita</button>
       <button class="script-tab" onclick="showScript(3, this)">🖱️ Janela Fugitiva</button>
+      <button class="script-tab" onclick="showScript(4, this)">💣 Explosão</button>
+      <button class="script-tab" onclick="showScript(5, this)">🖱️ Cursor RAT</button>
+      <button class="script-tab" onclick="showScript(6, this)">🚫 Não Clique</button>
     </div>
 
     <div class="script-box active" id="script0">
-      <div class="script-title">demo-rotacao.bat — Simula vírus que mexe na tela</div>
-      <div class="script-desc">Gira a tela em 90° → 180° → 270° → 0° repetindo o ciclo <strong>5 vezes</strong>. Usa Ctrl+Alt+Seta do driver de vídeo. <strong>100% inofensivo.</strong></div>
+      <div class="script-title">rotacao.html — Simula vírus que gira o navegador</div>
+      <div class="script-desc">Gira a página inteira em 90° → 180° → 270° → 0°, repetindo <strong>5 vezes</strong>. Salve como <code>.html</code> e abra no navegador. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runRotacao(event)">▶ Testar agora</button>
       <div class="pre-wrap">
       <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
-<pre>@echo off
-<span class="comment">:: Simula virus que fica rotacionando a tela sem parar</span>
-echo Simulando virus de rotacao de tela...
-echo O ciclo vai rodar 5 vezes — aguente firme!
-timeout /t 2 /nobreak
+<pre><span class="comment">&lt;!-- Salve como rotacao.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;Simulação de Vírus&lt;/title&gt;
+&lt;style&gt;
+  body {
+    margin:0; background:#111; color:#fff;
+    font-family:sans-serif; display:flex;
+    flex-direction:column; align-items:center;
+    justify-content:center; height:100vh;
+    transition: transform 0.6s ease;
+    transform-origin: center center;
+  }
+  h1   { font-size:2rem; color:#ff4444; }
+  p    { opacity:.7; }
+  #msg { margin-top:20px; font-size:1.1rem; color:#fd0; }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+  &lt;h1&gt;💀 VÍRUS ATIVADO!&lt;/h1&gt;
+  &lt;p&gt;Tentando girar sua tela...&lt;/p&gt;
+  &lt;div id=<span class="str">"msg"</span>&gt;Aguarde...&lt;/div&gt;
 
-<span class="comment">:: Macro de rotacao: Direita=90 | Baixo=180 | Esquerda=270 | Cima=0</span>
-set wsh=powershell -command "$wsh=New-Object -ComObject WScript.Shell; $wsh.SendKeys(
+&lt;script&gt;
+  const angles = [90, 180, 270, 0];
+  const labels = [<span class="str">'90°'</span>, <span class="str">'180°'</span>, <span class="str">'270°'</span>, <span class="str">'0° (normal)'</span>];
+  const cycles = 5;
+  const msg    = document.getElementById(<span class="str">'msg'</span>);
+  let step = 0;
 
-for /l %%c in (1,1,5) do (
-    echo Ciclo %%c de 5...
-
-    echo   90 graus
-    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{RIGHT}')"</span>
-    timeout /t 2 /nobreak >nul
-
-    echo   180 graus
-    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{DOWN}')"</span>
-    timeout /t 2 /nobreak >nul
-
-    echo   270 graus ^(-90^)
-    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{LEFT}')"</span>
-    timeout /t 2 /nobreak >nul
-
-    echo   0 graus ^(normal^)
-    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{UP}')"</span>
-    timeout /t 2 /nobreak >nul
-)
-
-echo.
-echo Fim! Tela restaurada para 0 graus.
-echo LICAO: Um virus real faria isso infinitamente — sem voce conseguir parar.
-pause</pre>
+  const interval = setInterval(() => {
+    const cycle  = Math.floor(step / 4) + 1;
+    const idx    = step % 4;
+    document.body.style.transform = <span class="str">`rotate(${angles[idx]}deg)`</span>;
+    msg.textContent = <span class="str">`Ciclo ${cycle}/${cycles} — ${labels[idx]}`</span>;
+    step++;
+    if (step >= cycles * 4) {
+      clearInterval(interval);
+      document.body.style.transform = <span class="str">'rotate(0deg)'</span>;
+      msg.textContent = <span class="str">'✅ Fim! Tela restaurada. Vírus real faria isso para sempre!'</span>;
+      msg.style.color = <span class="str">'#4f8'</span>;
+    }
+  }, 800);
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
       </div>
     </div>
 
     <div class="script-box" id="script1">
-      <div class="script-title">demo-popups.bat — Simula Adware (chuva de pop-ups)</div>
-      <div class="script-desc">Abre <strong>10 pop-ups</strong> em sequência com textos de fraude reais. Ensina a reconhecer padrões de engenharia social. <strong>100% inofensivo.</strong></div>
+      <div class="script-title">popups.html — Simula Adware (chuva de 20 pop-ups)</div>
+      <div class="script-desc">Abre <strong>20 pop-ups</strong> espalhados pela tela com textos de fraude reais. Salve como <code>.html</code> e abra no navegador. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runPopups(event)">▶ Testar agora</button>
       <div class="pre-wrap">
       <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
-<pre>@echo off
-echo Simulando adware — 10 pop-ups em sequencia...
-echo Feche cada janela para ver a proxima aparecer!
-timeout /t 2 /nobreak
+<pre><span class="comment">&lt;!-- Salve como popups.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;ALERTA&lt;/title&gt;
+&lt;style&gt;
+  body { margin:0; background:#111; height:100vh; overflow:hidden; }
+  .popup {
+    position:fixed; background:#1a0a00; border:2px solid #ff6600;
+    border-radius:10px; padding:16px 18px; width:260px;
+    font-family:sans-serif; color:#fff; font-size:13px;
+    box-shadow:0 0 20px rgba(255,80,0,.5); line-height:1.5;
+    animation: aparecer .3s ease;
+  }
+  .popup.erro  { border-color:#ff0000; background:#1a0000; box-shadow:0 0 20px rgba(255,0,0,.5); }
+  .popup.info  { border-color:#ffcc00; background:#1a1400; box-shadow:0 0 20px rgba(255,200,0,.4); }
+  .popup b     { display:block; margin-bottom:6px; font-size:12px; opacity:.6; text-transform:uppercase; letter-spacing:1px; }
+  .popup button {
+    margin-top:10px; background:#cc3300; color:#fff; border:none;
+    border-radius:6px; padding:6px 16px; font-size:12px;
+    font-weight:700; cursor:pointer; width:100%;
+  }
+  .popup.info button { background:#886600; }
+  @keyframes aparecer { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+&lt;script&gt;
+  const msgs = [
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'PRÊMIO ESPECIAL'</span>,         msg:<span class="str">'PARABÉNS! Você ganhou um iPhone 16 Pro! Clique para resgatar!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'ALERTA CRÍTICO'</span>,          msg:<span class="str">'47 vírus detectados! Clique OK para limpar AGORA!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'BANCO CENTRAL DO BRASIL'</span>, msg:<span class="str">'Sua conta foi BLOQUEADA! Ligue: 0800-FAKE-123'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'OFERTA RELÂMPAGO'</span>,        msg:<span class="str">'Antivírus grátis por 24h! Proteja seu PC agora!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'MINISTÉRIO DA FAZENDA'</span>,   msg:<span class="str">'Você foi selecionado para R$ 1.500,00 do governo!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'WINDOWS ACTIVATION'</span>,      msg:<span class="str">'Seu Windows expira em 24h! Ative agora gratuitamente!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'ALERTA DE PRIVACIDADE'</span>,   msg:<span class="str">'Hackers acessando sua webcam AGORA. Clique para bloquear!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'SORTEIO ESPECIAL'</span>,        msg:<span class="str">'Você é o visitante 1.000.000! Resgate R$ 500!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'ALERTA DO BANCO'</span>,         msg:<span class="str">'Seu cartão foi clonado! Acesse o link para cancelar!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'NETFLIX GRÁTIS'</span>,          msg:<span class="str">'Assine Netflix por 1 ano sem pagar nada! Oferta exclusiva!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'SISTEMA COMPROMETIDO'</span>,    msg:<span class="str">'Seu computador está sendo hackeado AGORA MESMO!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'RECEITA FEDERAL'</span>,         msg:<span class="str">'Restituição de R$ 3.200 disponível. Confirme seus dados!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'ALERTA DE SENHA'</span>,         msg:<span class="str">'Sua senha foi comprometida em 3 sites. Troque agora!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'PROMOÇÃO EXCLUSIVA'</span>,      msg:<span class="str">'90% de desconto só hoje! Oferta expira em 00:05!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'MINISTÉRIO DA SAÚDE'</span>,     msg:<span class="str">'Alerta de saúde na sua região. Acesse o link urgente!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'PARABÉNS GANHADOR!'</span>,      msg:<span class="str">'Você ganhou R$ 5.000 no sorteio de aniversário!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'SEGURANÇA DA CONTA'</span>,      msg:<span class="str">'Acesso suspeito detectado. Confirme sua identidade!'</span>},
+    {t:<span class="str">'erro'</span>, titulo:<span class="str">'ATUALIZAÇÃO URGENTE'</span>,     msg:<span class="str">'Falha crítica de segurança! Atualize seu sistema AGORA!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'AMAZON PRIME'</span>,            msg:<span class="str">'3 meses de Prime grátis! Ative antes que expire!'</span>},
+    {t:<span class="str">'info'</span>, titulo:<span class="str">'✅ FIM DA SIMULAÇÃO'</span>,      msg:<span class="str">'Todas essas mensagens eram FALSAS — exatamente como adware real faz. Nunca clique!'</span>},
+  ];
 
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('PARABENS! Voce ganhou um iPhone 15 Pro! Clique OK para resgatar!', 'PREMIO ESPECIAL', 'OK', 'Warning')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('ATENCAO: Seu computador tem 47 virus detectados! Clique OK para limpar AGORA!', 'ALERTA CRITICO DE SEGURANCA', 'OK', 'Error')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Sua conta bancaria foi BLOQUEADA por atividade suspeita! Ligue: 0800-FAKE-123', 'BANCO CENTRAL DO BRASIL', 'OK', 'Error')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('OFERTA RELAMPAGO: Antivirus gratis por 24h! Proteja seu PC agora!', 'Oferta Especial Limitada', 'OK', 'Information')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Voce foi selecionado para receber R$ 1.500,00 do governo! Confirme seus dados!', 'MINISTERIO DA FAZENDA', 'OK', 'Warning')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('AVISO: Seu Windows vai expirar em 24 horas! Ative agora gratuitamente!', 'Windows Activation Center', 'OK', 'Error')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Seu IP foi rastreado! Hackers estao acessando sua webcam AGORA. Clique para bloquear!', 'ALERTA DE PRIVACIDADE', 'OK', 'Error')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Parabens! Voce e o visitante 1.000.000! Resgate seu premio de R$ 500 em creditos!', 'SORTEIO ESPECIAL', 'OK', 'Warning')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('URGENTE: Seu cartao de credito foi clonado! Acesse o link para cancelar a compra!', 'ALERTA DO BANCO', 'OK', 'Error')"</span>
-
-powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('FIM DA SIMULACAO! Todas essas mensagens eram FALSAS — exatamente como adware real faz. Nunca clique nelas!', 'Aula de Seguranca Digital', 'OK', 'Information')"</span>
-
-echo.
-echo FIM — 10 pop-ups exibidos. Nenhum dano causado!
-pause</pre>
+  msgs.forEach((m, i) => {
+    setTimeout(() => {
+      const p = document.createElement(<span class="str">'div'</span>);
+      p.className = <span class="str">`popup ${m.t}`</span>;
+      p.style.left = Math.random() * (innerWidth  - 280) + <span class="str">'px'</span>;
+      p.style.top  = Math.random() * (innerHeight - 160) + <span class="str">'px'</span>;
+      p.innerHTML  = <span class="str">`&lt;b&gt;${m.titulo}&lt;/b&gt;${m.msg}&lt;button onclick="this.closest('.popup').remove()"&gt;✕ Fechar&lt;/button&gt;`</span>;
+      document.body.appendChild(p);
+    }, i * 300);
+  });
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
       </div>
     </div>
 
@@ -740,91 +1037,406 @@ pause</pre>
     </div>
 
     <div class="script-box" id="script3">
-      <div class="script-title">demo-fugitivo.bat — Janela que foge do mouse</div>
-      <div class="script-desc">Abre um pop-up que <strong>foge da seta do mouse</strong> sempre que você tenta fechar. Simula adware que dificulta sua remoção. <strong>100% inofensivo.</strong></div>
+      <div class="script-title">fugitivo.html — Pop-up que foge do mouse no navegador</div>
+      <div class="script-desc">Salve o código abaixo como <strong>fugitivo.html</strong> e abra no navegador. O pop-up <strong>foge da seta do mouse</strong> sempre que você tenta fechar — simula adware que dificulta sua remoção. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runFugitivo(event)">▶ Testar agora</button>
       <div class="pre-wrap">
       <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
-<pre>@echo off
-echo Simulando virus que foge do mouse...
-echo Tente clicar no botao OK — boa sorte!
-timeout /t 2 /nobreak
+<pre><span class="comment">&lt;!-- Salve como fugitivo.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;ALERTA DE VÍRUS&lt;/title&gt;
+&lt;style&gt;
+  body { background:#111; margin:0; height:100vh; }
+  #popup {
+    position:fixed; background:#1e0000; border:2px solid red;
+    border-radius:10px; padding:24px 28px; width:300px; text-align:center;
+    font-family:sans-serif; color:#fff; box-shadow:0 0 40px rgba(255,0,0,.6);
+    user-select:none;
+  }
+  h2  { color:#ff4444; margin:0 0 10px; font-size:15px; }
+  p   { font-size:13px; opacity:.85; margin:0 0 16px; line-height:1.5; }
+  btn { background:darkred; color:#fff; border:none; border-radius:8px;
+        padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer; }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+&lt;div id=<span class="str">"popup"</span>&gt;
+  &lt;h2&gt;⚠ VÍRUS DETECTADO!&lt;/h2&gt;
+  &lt;p&gt;Seu computador está em risco!&lt;br&gt;Clique em OK para remover!&lt;/p&gt;
+  &lt;button onclick=<span class="str">"encerrar()"</span>&gt;OK — Clique aqui!&lt;/button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  const popup = document.getElementById(<span class="str">'popup'</span>);
+  let px = innerWidth/2 - 150, py = innerHeight/2 - 80;
+  popup.style.cssText += <span class="str">`left:${px}px;top:${py}px`</span>;
 
-powershell -NoProfile -Command <span class="str">"
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-
-$screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
-$rng    = New-Object System.Random
-
-$form = New-Object System.Windows.Forms.Form
-$form.Text            = 'VOCE TEM UM VIRUS GRAVE!!!'
-$form.Size            = New-Object System.Drawing.Size(320, 160)
-$form.StartPosition   = 'CenterScreen'
-$form.TopMost         = $true
-$form.FormBorderStyle = 'FixedDialog'
-$form.BackColor       = [System.Drawing.Color]::FromArgb(30,0,0)
-$form.ForeColor       = [System.Drawing.Color]::Red
-
-$lbl = New-Object System.Windows.Forms.Label
-$lbl.Text      = 'Clique em OK para remover o virus!'
-$lbl.ForeColor = [System.Drawing.Color]::White
-$lbl.Font      = New-Object System.Drawing.Font('Segoe UI', 10, [System.Drawing.FontStyle]::Bold)
-$lbl.AutoSize  = $true
-$lbl.Location  = New-Object System.Drawing.Point(20, 30)
-$form.Controls.Add($lbl)
-
-$btn = New-Object System.Windows.Forms.Button
-$btn.Text      = 'OK — Clique aqui!'
-$btn.Size      = New-Object System.Drawing.Size(140, 35)
-$btn.Location  = New-Object System.Drawing.Point(85, 80)
-$btn.BackColor = [System.Drawing.Color]::DarkRed
-$btn.ForeColor = [System.Drawing.Color]::White
-$btn.FlatStyle = 'Flat'
-$btn.Add_Click({ $form.Close() })
-$form.Controls.Add($btn)
-
-$timer = New-Object System.Windows.Forms.Timer
-$timer.Interval = 30
-$timer.Add_Tick({
-    $mouse = [System.Windows.Forms.Cursor]::Position
-    $cx = $form.Left + $form.Width  / 2
-    $cy = $form.Top  + $form.Height / 2
-    $dx = $cx - $mouse.X
-    $dy = $cy - $mouse.Y
-    $dist = [Math]::Sqrt($dx * $dx + $dy * $dy)
-
-    if ($dist -lt 180) {
-        if ($dist -gt 1) {
-            $speed = [int]([Math]::Max(60, (180 - $dist) * 1.2))
-            $nx = $form.Left + [int]($dx / $dist * $speed)
-            $ny = $form.Top  + [int]($dy / $dist * $speed)
-        } else {
-            $nx = $rng.Next($screen.Left, $screen.Right  - $form.Width)
-            $ny = $rng.Next($screen.Top,  $screen.Bottom - $form.Height)
-        }
-
-        # Se bate na borda, teleporta para posicao aleatoria
-        if ($nx -lt $screen.Left -or $nx -gt $screen.Right  - $form.Width -or
-            $ny -lt $screen.Top  -or $ny -gt $screen.Bottom - $form.Height) {
-            $nx = $rng.Next($screen.Left, $screen.Right  - $form.Width)
-            $ny = $rng.Next($screen.Top,  $screen.Bottom - $form.Height)
-        }
-
-        $form.Left = $nx
-        $form.Top  = $ny
+  document.addEventListener(<span class="str">'mousemove'</span>, e => {
+    const cx = px + 150, cy = py + 80;
+    const dx = cx - e.clientX, dy = cy - e.clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist &lt; 180) {
+      const spd = Math.max(80, (180 - dist) * 1.5);
+      px = Math.max(0, Math.min(innerWidth  - 300, px + dx/dist * spd));
+      py = Math.max(0, Math.min(innerHeight - 160, py + dy/dist * spd));
+      popup.style.left = px + <span class="str">'px'</span>;
+      popup.style.top  = py + <span class="str">'px'</span>;
     }
-})
-$timer.Start()
-$form.ShowDialog() | Out-Null
-$timer.Stop()
-"</span>
+  });
 
-echo Conseguiu fechar! Nenhum dano causado.
-echo LICAO: Adware real usa truques parecidos para dificultar a remocao.
-pause</pre>
+  function encerrar() {
+    popup.innerHTML = <span class="str">'&lt;h2 style="color:lime"&gt;✅ Conseguiu!&lt;/h2&gt;&lt;p&gt;Nenhum dano causado.&lt;/p&gt;'</span>;
+    popup.style.borderColor = <span class="str">'lime'</span>;
+    setTimeout(() => popup.remove(), 2000);
+  }
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
       </div>
     </div>
 
+    <div class="script-box" id="script4">
+      <div class="script-title">explosao.html — Contagem regressiva com explosão</div>
+      <div class="script-desc">Conta de <strong>10 até 0</strong> com tela pulsando em vermelho, depois explode com partículas e flash. Salve como <code>.html</code> e abra no navegador. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runExplosao(event)">▶ Testar agora</button>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre><span class="comment">&lt;!-- Salve como explosao.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;ALERTA CRÍTICO&lt;/title&gt;
+&lt;style&gt;
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0000; color:#fff; font-family:sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; height:100vh; overflow:hidden;
+    transition: background .3s;
+  }
+  #aviso { font-size:1rem; letter-spacing:3px; text-transform:uppercase; opacity:.6; margin-bottom:16px; }
+  #numero {
+    font-size:clamp(120px,25vw,240px); font-weight:900;
+    color:#ff2222; line-height:1; transition:transform .15s;
+    text-shadow: 0 0 60px rgba(255,0,0,.8);
+  }
+  #msg { margin-top:24px; font-size:1.1rem; opacity:.7; letter-spacing:1px; }
+  canvas { position:fixed; inset:0; pointer-events:none; }
+  #flash { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity .1s; }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+&lt;canvas id=<span class="str">"c"</span>&gt;&lt;/canvas&gt;
+&lt;div id=<span class="str">"flash"</span>&gt;&lt;/div&gt;
+&lt;div id=<span class="str">"aviso"</span>&gt;⚠ ALERTA CRÍTICO DE SEGURANÇA ⚠&lt;/div&gt;
+&lt;div id=<span class="str">"numero"</span>&gt;10&lt;/div&gt;
+&lt;div id=<span class="str">"msg"</span>&gt;Sistema comprometido. Removendo dados...&lt;/div&gt;
+
+&lt;script&gt;
+  const numEl  = document.getElementById(<span class="str">'numero'</span>);
+  const msgEl  = document.getElementById(<span class="str">'msg'</span>);
+  const flash  = document.getElementById(<span class="str">'flash'</span>);
+  const canvas = document.getElementById(<span class="str">'c'</span>);
+  const ctx    = canvas.getContext(<span class="str">'2d'</span>);
+  canvas.width = innerWidth; canvas.height = innerHeight;
+
+  <span class="comment">// Partículas</span>
+  let particles = [], animId;
+  function boom() {
+    const cx = innerWidth/2, cy = innerHeight/2;
+    for (let i = 0; i &lt; 200; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 4 + Math.random() * 14;
+      particles.push({
+        x:cx, y:cy,
+        vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - 6,
+        life:1, color:`hsl(${Math.random()*60},100%,60%)`,
+        size: 4 + Math.random() * 6
+      });
+    }
+    animId = requestAnimationFrame(drawParticles);
+  }
+  function drawParticles() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles = particles.filter(p =&gt; p.life &gt; 0.02);
+    particles.forEach(p =&gt; {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.35;
+      p.vx *= 0.98; p.life -= 0.018;
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle   = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+      ctx.fill();
+    });
+    if (particles.length) requestAnimationFrame(drawParticles);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  <span class="comment">// Contagem</span>
+  let count = 10;
+  const interval = setInterval(() => {
+    count--;
+    if (count &gt; 0) {
+      numEl.textContent = count;
+      numEl.style.transform = <span class="str">'scale(1.3)'</span>;
+      const r = Math.min(255, 80 + (10 - count) * 18);
+      document.body.style.background = <span class="str">`rgb(${r},0,0)`</span>;
+      setTimeout(() =&gt; numEl.style.transform = <span class="str">'scale(1)'</span>, 150);
+    } else {
+      clearInterval(interval);
+      numEl.textContent = <span class="str">'💥'</span>;
+      numEl.style.textShadow = <span class="str">'none'</span>;
+      document.body.style.background = <span class="str">'#ff4400'</span>;
+      flash.style.opacity = <span class="str">'1'</span>;
+      setTimeout(() =&gt; flash.style.opacity = <span class="str">'0'</span>, 200);
+      boom();
+      msgEl.textContent = <span class="str">'✅ Fim da simulação! Nenhum dano causado.'</span>;
+      setTimeout(() =&gt; document.body.style.background = <span class="str">'#0a0000'</span>, 1200);
+    }
+  }, 1000);
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="script-box" id="script5">
+      <div class="script-title">cursor-rat.html — Simula RAT controlando o mouse</div>
+      <div class="script-desc">Esconde o cursor real e exibe um cursor <strong>controlado pelo "invasor"</strong> se movendo sozinho pela tela. Ensina sobre <strong>RAT (Remote Access Trojan)</strong> — vírus que dão controle total do PC a um hacker. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runRAT(event)">▶ Testar agora</button>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre><span class="comment">&lt;!-- Salve como cursor-rat.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;Sistema Invadido&lt;/title&gt;
+&lt;style&gt;
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0d0d; color:#fff; font-family:sans-serif;
+         height:100vh; overflow:hidden; cursor:none; }
+  #alerta {
+    position:fixed; top:24px; left:50%; transform:translateX(-50%);
+    background:rgba(180,0,0,.85); border:1px solid #ff2222;
+    border-radius:8px; padding:10px 24px; font-size:13px;
+    font-weight:700; letter-spacing:1px; color:#fff; white-space:nowrap;
+  }
+  #status {
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    font-size:13px; opacity:.55; letter-spacing:1px;
+  }
+  #center {
+    position:fixed; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:12px;
+    pointer-events:none;
+  }
+  #center h1 { font-size:clamp(20px,4vw,36px); color:#ff4444; }
+  #center p  { font-size:14px; opacity:.6; text-align:center; max-width:400px; line-height:1.6; }
+  #cursor {
+    position:fixed; top:0; left:0; width:20px; height:20px;
+    pointer-events:none; z-index:9999;
+    filter: drop-shadow(0 0 6px rgba(255,0,0,.8));
+  }
+  #cursor svg { width:20px; height:20px; }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+&lt;div id=<span class="str">"alerta"</span>&gt;🔴 ACESSO REMOTO ATIVO — INVASOR CONTROLANDO SEU PC&lt;/div&gt;
+&lt;div id=<span class="str">"center"</span>&gt;
+  &lt;h1&gt;👁️ Você está sendo controlado&lt;/h1&gt;
+  &lt;p&gt;Um RAT (Remote Access Trojan) permite que o hacker veja sua tela e controle seu mouse e teclado — sem você perceber.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=<span class="str">"status"</span>&gt;Aguarde...&lt;/div&gt;
+&lt;div id=<span class="str">"cursor"</span>&gt;
+  &lt;svg viewBox=<span class="str">"0 0 20 20"</span> fill=<span class="str">"red"</span> xmlns=<span class="str">"http://www.w3.org/2000/svg"</span>&gt;
+    &lt;path d=<span class="str">"M2 2 L2 15 L6 11 L9 18 L11 17 L8 10 L13 10 Z"</span>/&gt;
+  &lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  const cur    = document.getElementById(<span class="str">'cursor'</span>);
+  const status = document.getElementById(<span class="str">'status'</span>);
+  const moves  = [
+    <span class="str">'Abrindo arquivos...'</span>, <span class="str">'Lendo senhas salvas...'</span>, <span class="str">'Capturando tela...'</span>,
+    <span class="str">'Acessando câmera...'</span>,  <span class="str">'Copiando documentos...'</span>, <span class="str">'Enviando dados...'</span>,
+    <span class="str">'Instalando backdoor...'</span>, <span class="str">'Lendo histórico do navegador...'</span>,
+    <span class="str">'Capturando dados bancários...'</span>, <span class="str">'Acessando carteira digital...'</span>,
+  ];
+
+  let cx = innerWidth/2, cy = innerHeight/2;
+  let tx = cx, ty = cy, step = 0;
+
+  function moveTo(x, y, speed, label) {
+    tx = x; ty = y;
+    status.textContent = label;
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function animate() {
+    cx = lerp(cx, tx, 0.06);
+    cy = lerp(cy, ty, 0.06);
+    cur.style.transform = <span class="str">`translate(${cx}px,${cy}px)`</span>;
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  let idx = 0, total = 20, done = 0;
+  const iv = setInterval(() => {
+    if (done >= total) {
+      clearInterval(iv);
+      status.textContent = <span class="str">'✅ Simulação encerrada. Vírus real faria isso sem você ver nada.'</span>;
+      status.style.opacity = <span class="str">'1'</span>;
+      status.style.color   = <span class="str">'#4f8'</span>;
+      cur.style.display    = <span class="str">'none'</span>;
+      document.body.style.cursor = <span class="str">'default'</span>;
+      return;
+    }
+    const jitter = done > 14;
+    const baseX  = jitter ? Math.random() * innerWidth  : 80 + Math.random() * (innerWidth  - 160);
+    const baseY  = jitter ? Math.random() * innerHeight : 80 + Math.random() * (innerHeight - 160);
+    moveTo(baseX, baseY, 0.06, moves[idx % moves.length]);
+    idx++;
+    done++;
+    if (jitter) { <span class="comment">// pânico no final</span>
+      setTimeout(() =&gt; moveTo(Math.random()*innerWidth, Math.random()*innerHeight, 0.18, moves[idx%moves.length]), 200);
+      setTimeout(() =&gt; moveTo(Math.random()*innerWidth, Math.random()*innerHeight, 0.18, moves[idx%moves.length]), 400);
+    }
+  }, 700);
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="script-box" id="script6">
+      <div class="script-title">nao-clique.html — Botão que multiplica pop-ups a cada clique</div>
+      <div class="script-desc">Quanto mais você clica em <strong>"Não Clique Aqui"</strong>, mais pop-ups aparecem. Ensina sobre <strong>armadilhas de clique</strong> (clickbait) usadas por adware. <strong>100% inofensivo.</strong></div>
+      <button type="button" class="btn-demo" onclick="runNaoClique(event)">▶ Testar agora</button>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre><span class="comment">&lt;!-- Salve como nao-clique.html e abra no navegador --&gt;</span>
+<span class="cmd">&lt;!DOCTYPE html&gt;</span>
+<span class="cmd">&lt;html lang="pt-BR"&gt;</span>
+<span class="cmd">&lt;head&gt;</span>
+&lt;meta charset=<span class="str">"UTF-8"</span>&gt;
+&lt;title&gt;Não Clique&lt;/title&gt;
+&lt;style&gt;
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0d0d; display:flex; align-items:center;
+         justify-content:center; height:100vh; overflow:hidden;
+         font-family:sans-serif; }
+  #btn-nao {
+    background:#cc0000; color:#fff; border:3px solid #ff4444;
+    border-radius:16px; padding:22px 48px; font-size:clamp(18px,3vw,28px);
+    font-weight:900; cursor:pointer; transition:transform .1s;
+    box-shadow:0 0 40px rgba(255,0,0,.5); letter-spacing:1px;
+  }
+  #btn-nao:active { transform:scale(.95); }
+  #contador {
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    color:#ff4444; font-size:14px; font-weight:700; letter-spacing:1px;
+    opacity:.8;
+  }
+  .nc-popup {
+    position:fixed; background:#1a0000; border:2px solid #ff3300;
+    border-radius:10px; padding:14px 16px; width:220px;
+    font-size:12px; color:#fff; line-height:1.5;
+    box-shadow:0 0 16px rgba(255,50,0,.5);
+    animation:ncIn .2s ease;
+  }
+  .nc-popup strong { display:block; color:#ff6666; margin-bottom:4px; font-size:11px; text-transform:uppercase; }
+  .nc-popup button {
+    margin-top:8px; width:100%; background:#880000; color:#fff;
+    border:none; border-radius:6px; padding:5px; font-size:11px;
+    font-weight:700; cursor:pointer;
+  }
+  @keyframes ncIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
+&lt;/style&gt;
+<span class="cmd">&lt;/head&gt;</span>
+<span class="cmd">&lt;body&gt;</span>
+&lt;div id=<span class="str">"contador"</span>&gt;0 cliques — 0 pop-ups&lt;/div&gt;
+&lt;button id=<span class="str">"btn-nao"</span> onclick=<span class="str">"clicar()"</span>&gt;🚫 NÃO CLIQUE AQUI&lt;/button&gt;
+
+&lt;script&gt;
+  const msgs = [
+    <span class="str">'EU FALEI PARA NÃO CLICAR! 😡'</span>,   <span class="str">'Tá vendo o que acontece?'</span>,
+    <span class="str">'Para de clicar! Por favor...'</span>,     <span class="str">'Você foi avisado!'</span>,
+    <span class="str">'Mais um clique... sério? 😤'</span>,     <span class="str">'Cada clique = mais vírus 🦠'</span>,
+    <span class="str">'Não tem jeito com você!'</span>,          <span class="str">'O vírus agradece seus cliques!'</span>,
+    <span class="str">'ÚLTIMO AVISO!!!'</span>,                   <span class="str">'Ok, agora ficou grave 💀'</span>,
+    <span class="str">'Isso é exatamente o que adware quer!'</span>, <span class="str">'Para. De. Clicar.'</span>,
+    <span class="str">'Curiosidade demais te prejudica!'</span>,  <span class="str">'Seu PC chora com cada clique...'</span>,
+    <span class="str">'Hacker agradecido 🙏'</span>,             <span class="str">'NÃO!!! Para isso AGORA!'</span>,
+  ];
+  let cliques = 0, total = 0, mi = 0;
+
+  function clicar() {
+    cliques++;
+    const qtd = cliques &lt;= 5 ? 2 : cliques &lt;= 10 ? 3 : 5;
+    for (let i = 0; i &lt; qtd; i++) spawnPopup();
+    document.getElementById(<span class="str">'contador'</span>).textContent =
+      <span class="str">`${cliques} clique${cliques>1?'s':''} — ${total} pop-up${total>1?'s':''}`</span>;
+  }
+
+  function spawnPopup() {
+    total++;
+    const p   = document.createElement(<span class="str">'div'</span>);
+    p.className = <span class="str">'nc-popup'</span>;
+    p.style.left = Math.random() * (innerWidth  - 230) + <span class="str">'px'</span>;
+    p.style.top  = Math.random() * (innerHeight - 120) + <span class="str">'px'</span>;
+    p.onclick    = e =&gt; e.stopPropagation();
+    const msg = msgs[mi++ % msgs.length];
+    p.innerHTML = <span class="str">`&lt;strong&gt;⚠ AVISO ${total}&lt;/strong&gt;${msg}&lt;button onclick="event.stopPropagation();const el=this.closest('.nc-popup');el.style.pointerEvents='none';setTimeout(()=&gt;el.remove(),80)"&gt;✕ Fechar (se conseguir)&lt;/button&gt;`</span>;
+    document.body.appendChild(p);
+  }
+&lt;/script&gt;
+<span class="cmd">&lt;/body&gt;</span>
+<span class="cmd">&lt;/html&gt;</span></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── FUGITIVO OVERLAY ── -->
+  <div id="fugitivo-popup">
+    <h3>⚠ VÍRUS DETECTADO!</h3>
+    <p>Seu computador está em risco!<br>Clique em OK para remover!</p>
+    <button id="fugitivo-btn" onclick="closeFugitivo()">OK — Clique aqui!</button>
+  </div>
+
+  <!-- ── NÃO CLIQUE OVERLAY ── -->
+  <div id="naoclique-overlay">
+    <div id="naoclique-contador">0 cliques — 0 pop-ups</div>
+    <button id="naoclique-btn" type="button" onclick="ncClicar()">🚫 NÃO CLIQUE AQUI</button>
+  </div>
+
+  <!-- ── RAT OVERLAY ── -->
+  <div id="rat-overlay">
+    <div id="rat-alerta">🔴 ACESSO REMOTO ATIVO — INVASOR CONTROLANDO SEU PC</div>
+    <div id="rat-center">
+      <h2>👁️ Você está sendo controlado</h2>
+      <p>Um RAT (Remote Access Trojan) permite que o hacker veja sua tela e controle seu mouse e teclado — sem você perceber nada.</p>
+    </div>
+    <div id="rat-status">Aguarde...</div>
+    <div id="rat-cursor">
+      <svg viewBox="0 0 20 20" fill="red" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L2 15 L6 11 L9 18 L11 17 L8 10 L13 10 Z"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── EXPLOSÃO OVERLAY ── -->
+  <canvas id="bomba-canvas"></canvas>
+  <div id="bomba-flash"></div>
+  <div id="bomba-overlay">
+    <div id="bomba-aviso">⚠ ALERTA CRÍTICO DE SEGURANÇA ⚠</div>
+    <div id="bomba-numero">10</div>
+    <div id="bomba-msg">Sistema comprometido. Removendo dados...</div>
   </div>
 
 </div><!-- /carousel -->
@@ -953,6 +1565,283 @@ pause</pre>
     document.querySelectorAll('.script-box').forEach((b, i) => b.classList.toggle('active', i === idx));
     document.querySelectorAll('.script-tab').forEach(t => t.classList.remove('active'));
     tabEl.classList.add('active');
+  }
+
+  // ── NÃO CLIQUE ──
+  const ncMsgs = [
+    'EU FALEI PARA NÃO CLICAR! 😡',    'Tá vendo o que acontece?',
+    'Para de clicar! Por favor...',      'Você foi avisado!',
+    'Mais um clique... sério? 😤',      'Cada clique = mais vírus 🦠',
+    'Não tem jeito com você!',           'O vírus agradece seus cliques!',
+    'ÚLTIMO AVISO!!!',                   'Ok, agora ficou grave 💀',
+    'Isso é exatamente o que adware quer!', 'Para. De. Clicar.',
+    'Curiosidade demais te prejudica!',  'Seu PC chora com cada clique...',
+    'Hacker agradecido 🙏',             'NÃO!!! Para isso AGORA!',
+  ];
+  let ncCliques = 0, ncTotal = 0, ncMi = 0, ncBlocked = false;
+
+  function runNaoClique(e) {
+    e.stopPropagation();
+    ncCliques = 0; ncTotal = 0; ncMi = 0;
+    document.querySelectorAll('.nc-popup').forEach(el => el.remove());
+    document.getElementById('naoclique-contador').textContent = '0 cliques — 0 pop-ups';
+    document.getElementById('naoclique-overlay').classList.add('ativo');
+  }
+
+  function ncClicar() {
+    if (ncBlocked) return;
+    ncCliques++;
+    const qtd = ncCliques <= 5 ? 2 : ncCliques <= 10 ? 3 : 5;
+    for (let i = 0; i < qtd; i++) ncSpawn();
+    document.getElementById('naoclique-contador').textContent =
+      `${ncCliques} clique${ncCliques > 1 ? 's' : ''} — ${ncTotal} pop-up${ncTotal > 1 ? 's' : ''}`;
+  }
+
+  function ncSpawn() {
+    ncTotal++;
+    const p = document.createElement('div');
+    p.className  = 'nc-popup';
+    p.style.left = Math.random() * (window.innerWidth  - 220) + 'px';
+    p.style.top  = Math.random() * (window.innerHeight - 130) + 'px';
+    const msg = ncMsgs[ncMi++ % ncMsgs.length];
+    p.innerHTML = `<strong>⚠ AVISO ${ncTotal}</strong>${msg}<button onclick="ncClicar();ncBlocked=true;setTimeout(()=>ncBlocked=false,150);this.closest('.nc-popup').remove()">✕ Fechar (se conseguir)</button>`;
+    document.getElementById('naoclique-overlay').appendChild(p);
+  }
+
+  // ── RAT ──
+  function runRAT(e) {
+    e.stopPropagation();
+    const overlay = document.getElementById('rat-overlay');
+    const status  = document.getElementById('rat-status');
+    const cur     = document.getElementById('rat-cursor');
+
+    status.textContent  = 'Aguarde...';
+    status.style.color  = '#fff';
+    status.style.opacity = '.55';
+    cur.style.display   = 'block';
+    overlay.classList.add('ativo');
+
+    const ratMoves = [
+      'Abrindo arquivos...', 'Lendo senhas salvas...', 'Capturando tela...',
+      'Acessando câmera...', 'Copiando documentos...', 'Enviando dados...',
+      'Instalando backdoor...', 'Lendo histórico do navegador...',
+      'Capturando dados bancários...', 'Acessando carteira digital...',
+    ];
+
+    let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    let tx = cx, ty = cy, idx = 0, done = 0;
+    const total = 20;
+
+    function animCursor() {
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      cur.style.transform = `translate(${cx}px,${cy}px)`;
+      if (overlay.classList.contains('ativo')) requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    const iv = setInterval(() => {
+      if (done >= total) {
+        clearInterval(iv);
+        status.textContent   = '✅ Simulação encerrada. Vírus real faria isso sem você ver nada.';
+        status.style.color   = '#4f8';
+        status.style.opacity = '1';
+        cur.style.display    = 'none';
+        setTimeout(() => overlay.classList.remove('ativo'), 3000);
+        return;
+      }
+      const panic = done > 14;
+      tx = panic ? Math.random() * window.innerWidth  : 80 + Math.random() * (window.innerWidth  - 160);
+      ty = panic ? Math.random() * window.innerHeight : 80 + Math.random() * (window.innerHeight - 160);
+      status.textContent = ratMoves[idx % ratMoves.length];
+      idx++; done++;
+      if (panic) {
+        setTimeout(() => { tx = Math.random() * window.innerWidth;  ty = Math.random() * window.innerHeight; status.textContent = ratMoves[idx++ % ratMoves.length]; }, 200);
+        setTimeout(() => { tx = Math.random() * window.innerWidth;  ty = Math.random() * window.innerHeight; status.textContent = ratMoves[idx++ % ratMoves.length]; }, 400);
+      }
+    }, 700);
+  }
+
+  // ── POPUPS ──
+  const adwareMsgs = [
+    {t:'erro', titulo:'PRÊMIO ESPECIAL',         msg:'PARABÉNS! Você ganhou um iPhone 16 Pro! Clique para resgatar!'},
+    {t:'erro', titulo:'ALERTA CRÍTICO',          msg:'47 vírus detectados! Clique OK para limpar AGORA!'},
+    {t:'erro', titulo:'BANCO CENTRAL DO BRASIL', msg:'Sua conta foi BLOQUEADA! Ligue: 0800-FAKE-123'},
+    {t:'info', titulo:'OFERTA RELÂMPAGO',        msg:'Antivírus grátis por 24h! Proteja seu PC agora!'},
+    {t:'info', titulo:'MINISTÉRIO DA FAZENDA',   msg:'Você foi selecionado para R$ 1.500,00 do governo!'},
+    {t:'erro', titulo:'WINDOWS ACTIVATION',      msg:'Seu Windows expira em 24h! Ative agora gratuitamente!'},
+    {t:'erro', titulo:'ALERTA DE PRIVACIDADE',   msg:'Hackers acessando sua webcam AGORA. Clique para bloquear!'},
+    {t:'info', titulo:'SORTEIO ESPECIAL',        msg:'Você é o visitante 1.000.000! Resgate R$ 500!'},
+    {t:'erro', titulo:'ALERTA DO BANCO',         msg:'Seu cartão foi clonado! Acesse o link para cancelar!'},
+    {t:'info', titulo:'NETFLIX GRÁTIS',          msg:'Assine Netflix por 1 ano sem pagar nada!'},
+    {t:'erro', titulo:'SISTEMA COMPROMETIDO',    msg:'Seu computador está sendo hackeado AGORA MESMO!'},
+    {t:'info', titulo:'RECEITA FEDERAL',         msg:'Restituição de R$ 3.200 disponível. Confirme seus dados!'},
+    {t:'erro', titulo:'ALERTA DE SENHA',         msg:'Sua senha foi comprometida em 3 sites. Troque agora!'},
+    {t:'info', titulo:'PROMOÇÃO EXCLUSIVA',      msg:'90% de desconto só hoje! Oferta expira em 00:05!'},
+    {t:'erro', titulo:'MINISTÉRIO DA SAÚDE',     msg:'Alerta de saúde na sua região. Acesse o link urgente!'},
+    {t:'info', titulo:'PARABÉNS GANHADOR!',      msg:'Você ganhou R$ 5.000 no sorteio de aniversário!'},
+    {t:'erro', titulo:'SEGURANÇA DA CONTA',      msg:'Acesso suspeito detectado. Confirme sua identidade!'},
+    {t:'erro', titulo:'ATUALIZAÇÃO URGENTE',     msg:'Falha crítica de segurança! Atualize seu sistema AGORA!'},
+    {t:'info', titulo:'AMAZON PRIME',            msg:'3 meses de Prime grátis! Ative antes que expire!'},
+    {t:'info', titulo:'✅ FIM DA SIMULAÇÃO',      msg:'Todas essas mensagens eram FALSAS — exatamente como adware real faz. Nunca clique!'},
+  ];
+
+  function runPopups(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.adware-popup').forEach(el => el.remove());
+    adwareMsgs.forEach((m, i) => {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'adware-popup ' + m.t;
+        p.style.left = Math.random() * (window.innerWidth  - 260) + 'px';
+        p.style.top  = Math.random() * (window.innerHeight - 170) + 'px';
+        p.innerHTML  = `<strong>${m.titulo}</strong><p>${m.msg}</p><button onclick="this.closest('.adware-popup').remove()">✕ Fechar</button>`;
+        document.body.appendChild(p);
+      }, i * 300);
+    });
+  }
+
+  // ── EXPLOSÃO ──
+  function runExplosao(e) {
+    e.stopPropagation();
+    const overlay = document.getElementById('bomba-overlay');
+    const numEl   = document.getElementById('bomba-numero');
+    const msgEl   = document.getElementById('bomba-msg');
+    const flash   = document.getElementById('bomba-flash');
+    const canvas  = document.getElementById('bomba-canvas');
+    const ctx     = canvas.getContext('2d');
+
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+
+    numEl.textContent        = '10';
+    numEl.style.transform    = 'scale(1)';
+    numEl.style.textShadow   = '0 0 60px rgba(255,0,0,.8)';
+    numEl.style.color        = '#ff2222';
+    msgEl.textContent        = 'Sistema comprometido. Removendo dados...';
+    overlay.style.background = '#0a0000';
+    overlay.classList.add('ativo');
+
+    let count = 10;
+    let particles = [];
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0.02);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.35;
+        p.vx *= 0.98; p.life -= 0.018;
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle   = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      if (particles.length) requestAnimationFrame(drawParticles);
+      else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.style.display = 'none'; }
+    }
+
+    function explode() {
+      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      for (let i = 0; i < 220; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 5 + Math.random() * 16;
+        particles.push({
+          x: cx, y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 7,
+          life: 1,
+          color: `hsl(${Math.random() * 60},100%,60%)`,
+          size: 4 + Math.random() * 7
+        });
+      }
+      requestAnimationFrame(drawParticles);
+    }
+
+    const tick = setInterval(() => {
+      count--;
+      if (count > 0) {
+        numEl.textContent     = count;
+        numEl.style.transform = 'scale(1.35)';
+        const r = Math.min(255, 80 + (10 - count) * 18);
+        overlay.style.background = `rgb(${r},0,0)`;
+        setTimeout(() => numEl.style.transform = 'scale(1)', 150);
+      } else {
+        clearInterval(tick);
+        numEl.textContent      = '💥';
+        numEl.style.color      = '#fff';
+        numEl.style.textShadow = 'none';
+        overlay.style.background = '#ff4400';
+        flash.style.opacity = '1';
+        setTimeout(() => flash.style.opacity = '0', 200);
+        explode();
+        msgEl.textContent = '✅ Fim da simulação! Nenhum dano causado.';
+        setTimeout(() => overlay.style.background = '#0a0000', 1200);
+        setTimeout(() => overlay.classList.remove('ativo'), 5000);
+      }
+    }, 1000);
+  }
+
+  // ── ROTAÇÃO ──
+  let rotTimer = null;
+  function runRotacao(e) {
+    e.stopPropagation();
+    if (rotTimer) return;
+    const angles = [90, 180, 270, 0];
+    const cycles = 5;
+    let step = 0;
+    rotTimer = setInterval(() => {
+      document.body.style.transition = 'transform 0.6s ease';
+      document.body.style.transform  = `rotate(${angles[step % 4]}deg)`;
+      step++;
+      if (step >= cycles * 4) {
+        clearInterval(rotTimer);
+        rotTimer = null;
+        setTimeout(() => {
+          document.body.style.transform = 'rotate(0deg)';
+        }, 700);
+      }
+    }, 900);
+  }
+
+  // ── FUGITIVO ──
+  let fugPx = 0, fugPy = 0, fugActive = false;
+  const fugEl = document.getElementById('fugitivo-popup');
+
+  function runFugitivo(e) {
+    e.stopPropagation();
+    fugPx = window.innerWidth  / 2 - 150;
+    fugPy = window.innerHeight / 2 - 80;
+    fugEl.style.left    = fugPx + 'px';
+    fugEl.style.top     = fugPy + 'px';
+    fugEl.style.display = 'block';
+    fugEl.querySelector('h3').textContent   = '⚠ VÍRUS DETECTADO!';
+    fugEl.querySelector('p').textContent    = 'Seu computador está em risco! Clique em OK para remover!';
+    fugEl.style.borderColor = '#ff0000';
+    fugActive = true;
+  }
+
+  document.addEventListener('mousemove', e => {
+    if (!fugActive) return;
+    const cx = fugPx + 150, cy = fugPy + 80;
+    const dx = cx - e.clientX, dy = cy - e.clientY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 180) {
+      const spd = Math.max(80, (180 - dist) * 1.5);
+      fugPx = Math.max(0, Math.min(window.innerWidth  - 300, fugPx + dx / dist * spd));
+      fugPy = Math.max(0, Math.min(window.innerHeight - 160, fugPy + dy / dist * spd));
+      fugEl.style.left = fugPx + 'px';
+      fugEl.style.top  = fugPy + 'px';
+    }
+  });
+
+  function closeFugitivo() {
+    fugActive = false;
+    fugEl.querySelector('h3').textContent = '✅ Conseguiu fechar!';
+    fugEl.querySelector('p').textContent  = 'Nenhum dano causado. Adware real usa truques assim para dificultar a remoção.';
+    fugEl.style.borderColor = '#00cc55';
+    setTimeout(() => { fugEl.style.display = 'none'; }, 2500);
   }
 
   function copyScript(btn) {
