@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segurança Digital — Vírus de Computador</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ── CAROUSEL ── */
+  .carousel {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity .45s ease, transform .45s ease;
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* ── SLIDE BACKGROUNDS ── */
+  .slide-1 { background: linear-gradient(135deg, #1a0a2e 0%, #16003a 60%, #0d0d0d 100%); }
+  .slide-2 { background: linear-gradient(135deg, #0a1628 0%, #0d2137 60%, #0d0d0d 100%); }
+  .slide-3 { background: linear-gradient(135deg, #1a1200 0%, #2a1d00 60%, #0d0d0d 100%); }
+  .slide-4 { background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 60%, #0d0d0d 100%); }
+  .slide-5 { background: linear-gradient(135deg, #0a001a 0%, #1e003a 60%, #0d0d0d 100%); }
+  .slide-6 { background: linear-gradient(135deg, #001a08 0%, #002d12 60%, #0d0d0d 100%); }
+  .slide-7 { background: linear-gradient(135deg, #001020 0%, #001c38 60%, #0d0d0d 100%); }
+  .slide-8 { background: linear-gradient(135deg, #0d0d0d 0%, #101c10 60%, #001400 100%); }
+
+  /* ── QUIZ ── */
+  .slide-quiz { background: linear-gradient(135deg, #1a0a2e 0%, #0a1a2e 100%); }
+
+  /* ── SCRIPTS ── */
+  .slide-scripts { background: linear-gradient(135deg, #0a0a1a 0%, #0a1a0a 100%); }
+
+  /* ── TYPOGRAPHY ── */
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: .5;
+    margin-bottom: 20px;
+  }
+
+  .emoji-big {
+    font-size: 80px;
+    margin-bottom: 24px;
+    line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,.3));
+  }
+
+  h1 {
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+
+  h2 {
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: clamp(14px, 1.6vw, 20px);
+    opacity: .7;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .highlight {
+    color: #ff4444;
+    font-weight: 700;
+  }
+
+  .highlight-blue { color: #4af; font-weight: 700; }
+  .highlight-green { color: #4f8; font-weight: 700; }
+  .highlight-yellow { color: #fd0; font-weight: 700; }
+  .highlight-purple { color: #c8f; font-weight: 700; }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 780px;
+    margin-top: 24px;
+  }
+
+  .card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px;
+    padding: 20px 22px;
+    text-align: left;
+  }
+
+  .card-icon { font-size: 28px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; opacity: .65; line-height: 1.5; }
+
+  /* ── LIST ── */
+  .check-list {
+    list-style: none;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: clamp(14px, 1.5vw, 18px);
+    line-height: 1.4;
+  }
+
+  .check-list li span:first-child { font-size: 20px; flex-shrink: 0; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    margin-bottom: 20px;
+  }
+
+  /* ── ANALOGY BOX ── */
+  .analogy {
+    background: rgba(255,255,255,.05);
+    border-left: 3px solid;
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    max-width: 560px;
+    width: 100%;
+    margin-top: 20px;
+    font-size: clamp(13px, 1.3vw, 16px);
+    line-height: 1.6;
+    opacity: .85;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-container {
+    max-width: 660px;
+    width: 100%;
+  }
+
+  .quiz-question {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-question.active { display: flex; }
+
+  .quiz-q {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+
+  .quiz-opt {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: clamp(13px, 1.4vw, 16px);
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+    text-align: left;
+    color: #fff;
+  }
+
+  .quiz-opt:hover { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.25); }
+  .quiz-opt.correct { background: rgba(0,220,80,.15); border-color: #0d8; color: #0f8; }
+  .quiz-opt.wrong { background: rgba(220,0,0,.15); border-color: #d33; color: #f44; }
+
+  .quiz-feedback {
+    font-size: 14px;
+    min-height: 20px;
+    opacity: .8;
+    margin-top: 4px;
+  }
+
+  .quiz-nav {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    align-items: center;
+  }
+
+  .quiz-counter {
+    font-size: 13px;
+    opacity: .5;
+    margin-left: auto;
+  }
+
+  /* ── SCRIPTS ── */
+  .script-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .script-tab {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: .2s;
+    color: #fff;
+  }
+
+  .script-tab:hover, .script-tab.active {
+    background: rgba(255,255,255,.18);
+    border-color: rgba(255,255,255,.3);
+  }
+
+  .script-box {
+    display: none;
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .script-box.active { display: block; }
+
+  .script-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .script-desc {
+    font-size: 13px;
+    opacity: .6;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .pre-wrap {
+    position: relative;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s;
+    z-index: 2;
+  }
+
+  .copy-btn:hover { background: rgba(255,255,255,.22); }
+  .copy-btn.copied { background: rgba(0,200,80,.25); border-color: #0c8; color: #0f8; }
+
+  pre {
+    background: rgba(0,0,0,.5);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    padding: 18px 20px;
+    padding-top: 42px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 260px;
+    color: #c8f;
+    white-space: pre;
+  }
+
+  pre .comment { color: #555; }
+  pre .cmd { color: #4af; }
+  pre .str { color: #4f8; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    transition: .2s;
+  }
+
+  .btn:hover { background: rgba(255,255,255,.18); }
+  .btn-primary { background: #fff; color: #000; border-color: #fff; }
+  .btn-primary:hover { background: #ddd; }
+
+  /* ── NAVIGATION ── */
+  .nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 50px;
+    padding: 10px 20px;
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: .7;
+    transition: opacity .2s;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  .nav-btn:hover { opacity: 1; background: rgba(255,255,255,.1); }
+  .nav-btn:disabled { opacity: .2; cursor: default; }
+
+  .dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.3);
+    cursor: pointer;
+    transition: .2s;
+  }
+
+  .dot.active { background: #fff; width: 18px; border-radius: 3px; }
+
+  .slide-counter {
+    font-size: 12px;
+    opacity: .4;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  /* ── SCORE ── */
+  .score-box {
+    text-align: center;
+    display: none;
+  }
+  .score-box.show { display: block; }
+  .score-num { font-size: 72px; font-weight: 800; color: #4f8; }
+  .score-label { font-size: 18px; opacity: .6; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="carousel" id="carousel">
+
+  <!-- ── SLIDE 1: GANCHO ── -->
+  <div class="slide slide-1 active">
+    <div class="tag">Segurança Digital · Aula</div>
+    <div class="emoji-big">💀</div>
+    <h1>Seu computador<br>já foi <span class="highlight">hackeado</span>?</h1>
+    <p class="subtitle">Em 2017, um vírus chamado <strong>WannaCry</strong> travou hospitais inteiros no mundo — sem ninguém clicar em nada.<br><br>Hoje você vai entender como isso funciona — e criar um vírus fake para ver na prática.</p>
+  </div>
+
+  <!-- ── SLIDE 2: O QUE É ── -->
+  <div class="slide slide-2">
+    <div class="tag">Conceito base</div>
+    <div class="emoji-big">🦠</div>
+    <h2>O que é um <span class="highlight-blue">Vírus</span> de computador?</h2>
+    <ul class="check-list">
+      <li><span>💡</span><span>Vírus = <strong>programa feito para causar dano</strong></span></li>
+      <li><span>📡</span><span>Assim como gripe passa de pessoa para pessoa, vírus de computador passam de máquina para máquina</span></li>
+      <li><span>🎭</span><span>A maioria se <strong>disfarça</strong> de algo útil para enganar você</span></li>
+    </ul>
+  </div>
+
+  <!-- ── SLIDE 3: VÍRUS TRADICIONAL ── -->
+  <div class="slide slide-3">
+    <div class="badge">Tipo 1</div>
+    <div class="emoji-big">📎</div>
+    <h2>Vírus <span class="highlight-yellow">Tradicional</span></h2>
+    <ul class="check-list">
+      <li><span>🕵️</span><span>Se <strong>esconde dentro de arquivos</strong> (jogos, filmes, programas)</span></li>
+      <li><span>▶️</span><span>Ativa quando você <strong>abre o arquivo</strong></span></li>
+      <li><span>🗂️</span><span>Pode apagar, copiar ou criptografar seus dados</span></li>
+    </ul>
+    <div class="analogy" style="border-color:#fd0">
+      🎮 <em>Exemplo real:</em> Você baixa um "jogo grátis" de site desconhecido. Junto com o jogo, vem um vírus escondido que começa a rodar em segundo plano.
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: TROJAN ── -->
+  <div class="slide slide-4">
+    <div class="badge">Tipo 2</div>
+    <div class="emoji-big">🐴</div>
+    <h2>Trojan — <span class="highlight">Cavalo de Troia</span></h2>
+    <ul class="check-list">
+      <li><span>🎁</span><span>Parece <strong>algo útil</strong> — mas é uma armadilha</span></li>
+      <li><span>🚪</span><span>Abre uma <strong>porta secreta</strong> para o hacker entrar no seu PC</span></li>
+      <li><span>👁️</span><span>Pode espionar tudo que você digita (senhas, mensagens)</span></li>
+    </ul>
+    <div class="analogy" style="border-color:#f44">
+      🏛️ <em>A história original:</em> Na Grécia antiga, soldados se esconderam dentro de um cavalo de madeira gigante para invadir Troia. O vírus faz a mesma coisa — entra disfarçado.
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5: RANSOMWARE ── -->
+  <div class="slide slide-5">
+    <div class="badge">Tipo 3</div>
+    <div class="emoji-big">🔒</div>
+    <h2><span class="highlight-purple">Ransomware</span></h2>
+    <ul class="check-list">
+      <li><span>🔐</span><span><strong>Tranca todos os seus arquivos</strong> com uma chave que só o hacker tem</span></li>
+      <li><span>💰</span><span>Pede <strong>resgate em dinheiro</strong> para devolver o acesso</span></li>
+      <li><span>🏥</span><span>WannaCry (2017) travou hospitais — médicos não conseguiam ver prontuários</span></li>
+    </ul>
+    <div class="analogy" style="border-color:#c8f">
+      💸 <em>Ransom</em> = resgate em inglês. É um sequestro dos seus dados.
+    </div>
+  </div>
+
+  <!-- ── SLIDE 6: WORM ── -->
+  <div class="slide slide-6">
+    <div class="badge">Tipo 4</div>
+    <div class="emoji-big">🐛</div>
+    <h2>Worm — <span class="highlight-green">Verme Digital</span></h2>
+    <ul class="check-list">
+      <li><span>🌐</span><span>Se espalha <strong>sozinho pela rede</strong> — sem precisar que você clique em nada</span></li>
+      <li><span>🔁</span><span>Se <strong>replica automaticamente</strong> de máquina em máquina</span></li>
+      <li><span>📶</span><span>Pode travar redes inteiras só de se espalhando</span></li>
+    </ul>
+    <div class="analogy" style="border-color:#4f8">
+      🍕 <em>Imagine:</em> Uma corrente de WhatsApp que se manda sozinha para todos os contatos — sem você fazer nada.
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: PROTEÇÃO ── -->
+  <div class="slide slide-7">
+    <div class="tag">Como se proteger</div>
+    <div class="emoji-big">🛡️</div>
+    <h2>Sua <span class="highlight-blue">defesa</span> digital</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Antivírus atualizado</div>
+        <div class="card-desc">Detecta e bloqueia ameaças antes que causem dano</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">Não clique em links suspeitos</div>
+        <div class="card-desc">Email estranho, prêmio inesperado = armadilha</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏪</div>
+        <div class="card-title">Fontes oficiais</div>
+        <div class="card-desc">Baixe apps só de lojas oficiais (Play Store, App Store)</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">Senhas fortes e únicas</div>
+        <div class="card-desc">Uma senha para tudo = uma chave para todas as portas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8: RESUMO ── -->
+  <div class="slide slide-8">
+    <div class="tag">Resumo da aula</div>
+    <div class="emoji-big">⭐</div>
+    <h2>O que você aprendeu hoje</h2>
+    <ul class="check-list">
+      <li><span>🦠</span><span><strong>Vírus</strong> = programa feito para causar dano</span></li>
+      <li><span>📎</span><span><strong>Vírus Tradicional</strong> — se esconde em arquivos</span></li>
+      <li><span>🐴</span><span><strong>Trojan</strong> — entra disfarçado de algo útil</span></li>
+      <li><span>🔒</span><span><strong>Ransomware</strong> — sequestra seus arquivos</span></li>
+      <li><span>🐛</span><span><strong>Worm</strong> — se espalha sozinho pela rede</span></li>
+      <li><span>🛡️</span><span><strong>Proteção</strong> começa com hábitos digitais seguros</span></li>
+    </ul>
+  </div>
+
+  <!-- ── SLIDE QUIZ ── -->
+  <div class="slide slide-quiz">
+    <div class="tag">Quiz · Segurança Digital</div>
+    <div class="emoji-big" id="quizEmoji" style="font-size:48px;margin-bottom:16px">🧠</div>
+
+    <div class="quiz-container">
+
+      <div class="quiz-question active" id="q1">
+        <div class="quiz-q">1. Um programa que se esconde dentro de um arquivo e ativa quando você o abre é chamado de:</div>
+        <button class="quiz-opt" onclick="answer(this, false, 'Worm se espalha pela rede sozinho.')">a) Worm</button>
+        <button class="quiz-opt" onclick="answer(this, true, 'Correto! Vírus tradicional se esconde em arquivos.')">b) Vírus tradicional</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Ransomware tranca arquivos e pede resgate.')">c) Ransomware</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Antivírus protege — não ataca.')">d) Antivírus</button>
+        <div class="quiz-feedback" id="fb1"></div>
+      </div>
+
+      <div class="quiz-question" id="q2">
+        <div class="quiz-q">2. Por que Trojan se chama "Cavalo de Troia"?</div>
+        <button class="quiz-opt" onclick="answer(this, false, 'Velocidade não tem nada a ver.')">a) Porque é muito rápido</button>
+        <button class="quiz-opt" onclick="answer(this, true, 'Exato! Parece útil mas é uma armadilha — como o cavalo de madeira.')">b) Porque parece útil mas é uma armadilha</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'A origem é a história grega, não geográfica.')">c) Porque veio da Turquia</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Afeta computadores — não cavalos!')">d) Porque afeta cavalos de corrida</button>
+        <div class="quiz-feedback" id="fb2"></div>
+      </div>
+
+      <div class="quiz-question" id="q3">
+        <div class="quiz-q">3. O que um Ransomware faz?</div>
+        <button class="quiz-opt" onclick="answer(this, false, 'Vírus não acelera nada — pelo contrário.')">a) Acelera o computador</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Esse seria um antivírus killer — diferente.')">b) Apaga o antivírus</button>
+        <button class="quiz-opt" onclick="answer(this, true, 'Correto! Criptografa seus arquivos e exige pagamento.')">c) Trava seus arquivos e pede dinheiro</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Esse comportamento é de spam, não ransomware.')">d) Manda spam pelo email</button>
+        <div class="quiz-feedback" id="fb3"></div>
+      </div>
+
+      <div class="quiz-question" id="q4">
+        <div class="quiz-q">4. Qual atitude NÃO te protege de vírus?</div>
+        <button class="quiz-opt" onclick="answer(this, false, 'Antivírus atualizado é fundamental.')">a) Ter antivírus atualizado</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Não clicar em links é uma proteção essencial.')">b) Não clicar em links desconhecidos</button>
+        <button class="quiz-opt" onclick="answer(this, true, 'Certo! Deixar ligado 24h não protege nada.')">c) Deixar o computador ligado 24h</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Fontes oficiais reduzem muito o risco.')">d) Baixar só de fontes oficiais</button>
+        <div class="quiz-feedback" id="fb4"></div>
+      </div>
+
+      <div class="quiz-question" id="q5">
+        <div class="quiz-q">5. O que diferencia um Worm de um vírus comum?</div>
+        <button class="quiz-opt" onclick="answer(this, false, 'Cor não é critério de classificação.')">a) É mais colorido</button>
+        <button class="quiz-opt" onclick="answer(this, true, 'Correto! Worms se propagam pela rede sem ação do usuário.')">b) Se espalha sozinho pela rede, sem você clicar</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Worms afetam qualquer dispositivo na rede.')">c) Só ataca celulares</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'Worms podem causar danos graves.')">d) É inofensivo</button>
+        <div class="quiz-feedback" id="fb5"></div>
+      </div>
+
+      <div class="score-box" id="scoreBox">
+        <div class="score-num" id="scoreNum">0/5</div>
+        <div class="score-label" id="scoreLabel"></div>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn" id="btnPrevQ" onclick="prevQ()" disabled>← Anterior</button>
+        <button class="btn btn-primary" id="btnNextQ" onclick="nextQ()">Próxima →</button>
+        <div class="quiz-counter" id="quizCounter">1 / 5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE SCRIPTS ── -->
+  <div class="slide slide-scripts">
+    <div class="tag">Atividade Prática · Scripts .bat</div>
+    <div class="script-tabs">
+      <button class="script-tab active" onclick="showScript(0, this)">🔄 Rotação de Tela</button>
+      <button class="script-tab" onclick="showScript(1, this)">💬 Chuva de Pop-ups</button>
+      <button class="script-tab" onclick="showScript(2, this)">📁 Pasta Infinita</button>
+      <button class="script-tab" onclick="showScript(3, this)">🖱️ Janela Fugitiva</button>
+    </div>
+
+    <div class="script-box active" id="script0">
+      <div class="script-title">demo-rotacao.bat — Simula vírus que mexe na tela</div>
+      <div class="script-desc">Gira a tela em 90° → 180° → 270° → 0° repetindo o ciclo <strong>5 vezes</strong>. Usa Ctrl+Alt+Seta do driver de vídeo. <strong>100% inofensivo.</strong></div>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre>@echo off
+<span class="comment">:: Simula virus que fica rotacionando a tela sem parar</span>
+echo Simulando virus de rotacao de tela...
+echo O ciclo vai rodar 5 vezes — aguente firme!
+timeout /t 2 /nobreak
+
+<span class="comment">:: Macro de rotacao: Direita=90 | Baixo=180 | Esquerda=270 | Cima=0</span>
+set wsh=powershell -command "$wsh=New-Object -ComObject WScript.Shell; $wsh.SendKeys(
+
+for /l %%c in (1,1,5) do (
+    echo Ciclo %%c de 5...
+
+    echo   90 graus
+    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{RIGHT}')"</span>
+    timeout /t 2 /nobreak >nul
+
+    echo   180 graus
+    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{DOWN}')"</span>
+    timeout /t 2 /nobreak >nul
+
+    echo   270 graus ^(-90^)
+    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{LEFT}')"</span>
+    timeout /t 2 /nobreak >nul
+
+    echo   0 graus ^(normal^)
+    powershell -command <span class="str">"$w=New-Object -ComObject WScript.Shell; $w.SendKeys('^%{UP}')"</span>
+    timeout /t 2 /nobreak >nul
+)
+
+echo.
+echo Fim! Tela restaurada para 0 graus.
+echo LICAO: Um virus real faria isso infinitamente — sem voce conseguir parar.
+pause</pre>
+      </div>
+    </div>
+
+    <div class="script-box" id="script1">
+      <div class="script-title">demo-popups.bat — Simula Adware (chuva de pop-ups)</div>
+      <div class="script-desc">Abre <strong>10 pop-ups</strong> em sequência com textos de fraude reais. Ensina a reconhecer padrões de engenharia social. <strong>100% inofensivo.</strong></div>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre>@echo off
+echo Simulando adware — 10 pop-ups em sequencia...
+echo Feche cada janela para ver a proxima aparecer!
+timeout /t 2 /nobreak
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('PARABENS! Voce ganhou um iPhone 15 Pro! Clique OK para resgatar!', 'PREMIO ESPECIAL', 'OK', 'Warning')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('ATENCAO: Seu computador tem 47 virus detectados! Clique OK para limpar AGORA!', 'ALERTA CRITICO DE SEGURANCA', 'OK', 'Error')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Sua conta bancaria foi BLOQUEADA por atividade suspeita! Ligue: 0800-FAKE-123', 'BANCO CENTRAL DO BRASIL', 'OK', 'Error')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('OFERTA RELAMPAGO: Antivirus gratis por 24h! Proteja seu PC agora!', 'Oferta Especial Limitada', 'OK', 'Information')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Voce foi selecionado para receber R$ 1.500,00 do governo! Confirme seus dados!', 'MINISTERIO DA FAZENDA', 'OK', 'Warning')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('AVISO: Seu Windows vai expirar em 24 horas! Ative agora gratuitamente!', 'Windows Activation Center', 'OK', 'Error')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Seu IP foi rastreado! Hackers estao acessando sua webcam AGORA. Clique para bloquear!', 'ALERTA DE PRIVACIDADE', 'OK', 'Error')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Parabens! Voce e o visitante 1.000.000! Resgate seu premio de R$ 500 em creditos!', 'SORTEIO ESPECIAL', 'OK', 'Warning')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('URGENTE: Seu cartao de credito foi clonado! Acesse o link para cancelar a compra!', 'ALERTA DO BANCO', 'OK', 'Error')"</span>
+
+powershell -command <span class="str">"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('FIM DA SIMULACAO! Todas essas mensagens eram FALSAS — exatamente como adware real faz. Nunca clique nelas!', 'Aula de Seguranca Digital', 'OK', 'Information')"</span>
+
+echo.
+echo FIM — 10 pop-ups exibidos. Nenhum dano causado!
+pause</pre>
+      </div>
+    </div>
+
+    <div class="script-box" id="script2">
+      <div class="script-title">demo-worm.bat — Simula replicação de Worm</div>
+      <div class="script-desc">Cria 10 pastas dentro de %TEMP% e <strong>abre cada uma no Explorer</strong> — simulando a "explosão" visual de um worm. Deleta tudo no final. <strong>100% inofensivo.</strong></div>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre>@echo off
+echo Simulando replicacao de worm...
+echo Serao abertas 10 janelas do Explorer — feche depois!
+timeout /t 2 /nobreak
+
+<span class="comment">:: Cria pasta raiz da demo</span>
+mkdir <span class="str">"%TEMP%\aula_virus_demo"</span> 2>nul
+
+<span class="comment">:: Cria cada subpasta e abre no Explorer imediatamente</span>
+for /l %%i in (1,1,10) do (
+    mkdir <span class="str">"%TEMP%\aula_virus_demo\virus_copia_%%i"</span> 2>nul
+    echo Criando e abrindo copia %%i de 10...
+    start explorer <span class="str">"%TEMP%\aula_virus_demo\virus_copia_%%i"</span>
+    timeout /t 1 /nobreak >nul
+)
+
+echo.
+echo 10 janelas abertas! Isso e o que um worm faz —
+echo se replica e "aparece" em varios lugares ao mesmo tempo.
+echo.
+echo Fechando tudo e limpando em 5 segundos...
+timeout /t 5 /nobreak
+
+<span class="comment">:: Fecha todas as janelas do Explorer abertas pela demo</span>
+taskkill /f /im explorer.exe >nul 2>&1
+timeout /t 1 /nobreak >nul
+start explorer
+
+<span class="comment">:: Remove as pastas criadas</span>
+rmdir /s /q <span class="str">"%TEMP%\aula_virus_demo"</span> 2>nul
+
+echo Limpeza concluida! Nenhum dano causado.
+echo LICAO: Worms reais nao se fecham sozinhos — o antivirus tem que fazer isso.
+pause</pre>
+      </div>
+    </div>
+
+    <div class="script-box" id="script3">
+      <div class="script-title">demo-fugitivo.bat — Janela que foge do mouse</div>
+      <div class="script-desc">Abre um pop-up que <strong>foge da seta do mouse</strong> sempre que você tenta fechar. Simula adware que dificulta sua remoção. <strong>100% inofensivo.</strong></div>
+      <div class="pre-wrap">
+      <button class="copy-btn" onclick="copyScript(this)">⎘ Copiar</button>
+<pre>@echo off
+echo Simulando virus que foge do mouse...
+echo Tente clicar no botao OK — boa sorte!
+timeout /t 2 /nobreak
+
+powershell -NoProfile -Command <span class="str">"
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+$screen = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+$rng    = New-Object System.Random
+
+$form = New-Object System.Windows.Forms.Form
+$form.Text            = 'VOCE TEM UM VIRUS GRAVE!!!'
+$form.Size            = New-Object System.Drawing.Size(320, 160)
+$form.StartPosition   = 'CenterScreen'
+$form.TopMost         = $true
+$form.FormBorderStyle = 'FixedDialog'
+$form.BackColor       = [System.Drawing.Color]::FromArgb(30,0,0)
+$form.ForeColor       = [System.Drawing.Color]::Red
+
+$lbl = New-Object System.Windows.Forms.Label
+$lbl.Text      = 'Clique em OK para remover o virus!'
+$lbl.ForeColor = [System.Drawing.Color]::White
+$lbl.Font      = New-Object System.Drawing.Font('Segoe UI', 10, [System.Drawing.FontStyle]::Bold)
+$lbl.AutoSize  = $true
+$lbl.Location  = New-Object System.Drawing.Point(20, 30)
+$form.Controls.Add($lbl)
+
+$btn = New-Object System.Windows.Forms.Button
+$btn.Text      = 'OK — Clique aqui!'
+$btn.Size      = New-Object System.Drawing.Size(140, 35)
+$btn.Location  = New-Object System.Drawing.Point(85, 80)
+$btn.BackColor = [System.Drawing.Color]::DarkRed
+$btn.ForeColor = [System.Drawing.Color]::White
+$btn.FlatStyle = 'Flat'
+$btn.Add_Click({ $form.Close() })
+$form.Controls.Add($btn)
+
+$timer = New-Object System.Windows.Forms.Timer
+$timer.Interval = 30
+$timer.Add_Tick({
+    $mouse = [System.Windows.Forms.Cursor]::Position
+    $cx = $form.Left + $form.Width  / 2
+    $cy = $form.Top  + $form.Height / 2
+    $dx = $cx - $mouse.X
+    $dy = $cy - $mouse.Y
+    $dist = [Math]::Sqrt($dx * $dx + $dy * $dy)
+
+    if ($dist -lt 180) {
+        if ($dist -gt 1) {
+            $speed = [int]([Math]::Max(60, (180 - $dist) * 1.2))
+            $nx = $form.Left + [int]($dx / $dist * $speed)
+            $ny = $form.Top  + [int]($dy / $dist * $speed)
+        } else {
+            $nx = $rng.Next($screen.Left, $screen.Right  - $form.Width)
+            $ny = $rng.Next($screen.Top,  $screen.Bottom - $form.Height)
+        }
+
+        # Se bate na borda, teleporta para posicao aleatoria
+        if ($nx -lt $screen.Left -or $nx -gt $screen.Right  - $form.Width -or
+            $ny -lt $screen.Top  -or $ny -gt $screen.Bottom - $form.Height) {
+            $nx = $rng.Next($screen.Left, $screen.Right  - $form.Width)
+            $ny = $rng.Next($screen.Top,  $screen.Bottom - $form.Height)
+        }
+
+        $form.Left = $nx
+        $form.Top  = $ny
+    }
+})
+$timer.Start()
+$form.ShowDialog() | Out-Null
+$timer.Stop()
+"</span>
+
+echo Conseguiu fechar! Nenhum dano causado.
+echo LICAO: Adware real usa truques parecidos para dificultar a remocao.
+pause</pre>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /carousel -->
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+  <button class="nav-btn" id="btnPrev" onclick="prevSlide()">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="btnNext" onclick="nextSlide()">→</button>
+  <div class="slide-counter" id="counter">1 / 10</div>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current < n ? current : current].classList.remove('exit'), 450);
+
+    const prev = current;
+    current = n;
+
+    slides[current].classList.add('active');
+    setTimeout(() => slides[prev].classList.remove('exit'), 450);
+
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('btnPrev').disabled = current === 0;
+    document.getElementById('btnNext').disabled = current === total - 1;
+  }
+
+  function prevSlide() { if (current > 0) goTo(current - 1); }
+  function nextSlide() { if (current < total - 1) goTo(current + 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+  });
+
+  // Init
+  goTo(0);
+
+  // ── QUIZ ──
+  let currentQ = 1;
+  const totalQ = 5;
+  let answers = {};
+
+  function answer(btn, correct, feedback) {
+    const q = currentQ;
+    if (answers[q] !== undefined) return;
+    answers[q] = correct;
+
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+      document.querySelectorAll(`#q${q} .quiz-opt`).forEach(b => {
+        if (b.onclick.toString().includes('true')) b.classList.add('correct');
+      });
+    }
+    document.getElementById('fb' + q).textContent = feedback;
+    document.getElementById('quizEmoji').textContent = correct ? '✅' : '❌';
+    setTimeout(() => document.getElementById('quizEmoji').textContent = '🧠', 1200);
+  }
+
+  function nextQ() {
+    if (currentQ < totalQ) {
+      document.getElementById('q' + currentQ).classList.remove('active');
+      currentQ++;
+      document.getElementById('q' + currentQ).classList.add('active');
+      document.getElementById('quizCounter').textContent = currentQ + ' / ' + totalQ;
+      document.getElementById('btnPrevQ').disabled = currentQ === 1;
+      document.getElementById('btnNextQ').textContent = currentQ === totalQ ? 'Ver resultado 🎯' : 'Próxima →';
+    } else {
+      showScore();
+    }
+  }
+
+  function prevQ() {
+    if (currentQ > 1) {
+      document.getElementById('q' + currentQ).classList.remove('active');
+      currentQ--;
+      document.getElementById('q' + currentQ).classList.add('active');
+      document.getElementById('quizCounter').textContent = currentQ + ' / ' + totalQ;
+      document.getElementById('btnPrevQ').disabled = currentQ === 1;
+      document.getElementById('btnNextQ').textContent = 'Próxima →';
+    }
+  }
+
+  function showScore() {
+    document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+    const score = Object.values(answers).filter(Boolean).length;
+    document.getElementById('scoreNum').textContent = score + '/' + totalQ;
+    const labels = ['Vai revisar o material!', 'Quase lá!', 'Bom trabalho!', 'Muito bem!', 'Especialista em segurança!'];
+    document.getElementById('scoreLabel').textContent = labels[score] || labels[4];
+    document.getElementById('scoreBox').classList.add('show');
+    document.getElementById('btnNextQ').textContent = 'Recomeçar';
+    document.getElementById('btnNextQ').onclick = resetQuiz;
+  }
+
+  function resetQuiz() {
+    currentQ = 1;
+    answers = {};
+    document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('correct', 'wrong'));
+    document.querySelectorAll('.quiz-feedback').forEach(f => f.textContent = '');
+    document.getElementById('scoreBox').classList.remove('show');
+    document.getElementById('q1').classList.add('active');
+    document.getElementById('quizCounter').textContent = '1 / ' + totalQ;
+    document.getElementById('btnPrevQ').disabled = true;
+    document.getElementById('btnNextQ').textContent = 'Próxima →';
+    document.getElementById('btnNextQ').onclick = nextQ;
+  }
+
+  // ── SCRIPTS ──
+  function showScript(idx, tabEl) {
+    document.querySelectorAll('.script-box').forEach((b, i) => b.classList.toggle('active', i === idx));
+    document.querySelectorAll('.script-tab').forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+  }
+
+  function copyScript(btn) {
+    const pre = btn.closest('.pre-wrap').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '⎘ Copiar';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
