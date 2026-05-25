@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segurança na Internet 🔒</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a1628;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header-info {
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .header-info strong { color: rgba(255,255,255,0.9); }
+
+    .carousel-wrapper { width: 100%; max-width: 720px; }
+
+    .slide {
+      display: none;
+      border-radius: 24px;
+      padding: 44px 40px;
+      min-height: 440px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: fadeIn 0.35s ease;
+    }
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-1  { background: linear-gradient(135deg, #1a6b3c, #2ecc71); color: #fff; }
+    .slide-2  { background: linear-gradient(135deg, #1565c0, #42a5f5); color: #fff; }
+    .slide-3  { background: linear-gradient(135deg, #6a1b9a, #ce93d8); color: #fff; }
+    .slide-4  { background: linear-gradient(135deg, #bf360c, #ff8a65); color: #fff; }
+    .slide-5  { background: linear-gradient(135deg, #00695c, #80cbc4); color: #1a1a2e; }
+    .slide-6  { background: linear-gradient(135deg, #f57f17, #ffe082); color: #1a1a2e; }
+    .slide-7  { background: linear-gradient(135deg, #880e4f, #f48fb1); color: #fff; }
+    .slide-8  { background: linear-gradient(135deg, #1a237e, #5c6bc0); color: #fff; }
+    .slide-9  { background: linear-gradient(135deg, #004d40, #26a69a); color: #fff; }
+    .slide-10 { background: linear-gradient(135deg, #212121, #37474f); color: #fff; border: 2px solid rgba(255,255,255,0.1); }
+    .slide-11 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
+
+    .slide-emoji { font-size: 68px; margin-bottom: 18px; line-height: 1; }
+    .slide-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
+    .slide-title { font-size: 26px; font-weight: 800; margin-bottom: 18px; line-height: 1.25; }
+    .slide-body { font-size: 17px; line-height: 1.75; max-width: 560px; }
+    .slide-body p { margin-bottom: 8px; }
+
+    .hl {
+      display: inline-block;
+      background: rgba(255,255,255,0.22);
+      border-radius: 8px;
+      padding: 2px 12px;
+      font-weight: 700;
+    }
+
+    /* Ask the class box */
+    .ask-box {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 16px 20px;
+      width: 100%;
+      max-width: 540px;
+      text-align: left;
+    }
+    .ask-box .ask-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .ask-box ul { list-style: none; }
+    .ask-box ul li { font-size: 16px; padding: 5px 0; }
+    .ask-box ul li::before { content: "💬 "; }
+
+    /* City comparison */
+    .city-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+      margin-top: 16px;
+    }
+    .city-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 16px 14px;
+      font-size: 15px;
+      text-align: left;
+    }
+    .city-card .city-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+    .city-card strong { display: block; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
+
+    /* Rule card */
+    .rule-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 24px 28px;
+      width: 100%;
+      max-width: 480px;
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      text-align: left;
+    }
+    .rule-icon { font-size: 52px; flex-shrink: 0; }
+    .rule-content .rule-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .rule-content .rule-text { font-size: 16px; line-height: 1.6; opacity: 0.9; }
+    .rule-content .rule-analogy {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    /* Summary list */
+    .summary-list { list-style: none; text-align: left; margin-top: 8px; width: 100%; max-width: 480px; }
+    .summary-list li { font-size: 17px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; gap: 10px; align-items: flex-start; }
+    .summary-list li:last-child { border-bottom: none; }
+
+    /* Flip cards - Verdadeiro ou Falso */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 560px;
+      margin-top: 8px;
+    }
+    .flip-card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid transparent;
+    }
+    .flip-card:hover { background: rgba(255,255,255,0.22); }
+    .flip-card.vtrue  { background: rgba(56,239,125,0.25); border-color: #38ef7d; }
+    .flip-card.vfalse { background: rgba(229,45,39,0.25);  border-color: #e52d27; }
+    .flip-card .fc-answer { display: none; font-size: 16px; font-weight: 800; margin-top: 4px; }
+    .flip-card.vtrue  .fc-answer,
+    .flip-card.vfalse .fc-answer { display: block; }
+    .flip-card.vtrue  .fc-text,
+    .flip-card.vfalse .fc-text { font-size: 11px; opacity: 0.75; }
+
+    /* ===== QUIZ ===== */
+    .quiz-container { width: 100%; max-width: 620px; }
+    .quiz-header { text-align: center; margin-bottom: 24px; }
+    .quiz-header .quiz-emoji { font-size: 56px; }
+    .quiz-header h2 { font-size: 22px; font-weight: 800; margin-top: 10px; color: #fff; }
+    .quiz-header p { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
+    .quiz-score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 8px 20px;
+      margin-bottom: 20px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .quiz-score-bar span { opacity: 0.8; }
+    .quiz-score-bar strong { font-size: 16px; }
+
+    .question-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .question-card.active { display: block; animation: fadeIn 0.3s ease; }
+
+    .q-number { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+    .q-text { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 20px; line-height: 1.4; }
+
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover:not(:disabled) { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
+    .option-btn .opt-letter { font-weight: 800; font-size: 15px; opacity: 0.7; min-width: 20px; }
+    .option-btn.correct { background: rgba(56,239,125,0.25); border-color: #38ef7d; }
+    .option-btn.wrong   { background: rgba(229,45,39,0.25);  border-color: #e52d27; }
+    .option-btn:disabled { cursor: default; }
+
+    .feedback-msg {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+    }
+    .feedback-msg.show { display: block; animation: fadeIn 0.2s ease; }
+    .feedback-msg.ok  { background: rgba(56,239,125,0.2); color: #38ef7d; }
+    .feedback-msg.err { background: rgba(229,45,39,0.2);  color: #ff7675; }
+
+    .next-q-btn {
+      margin-top: 16px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 11px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+      transition: all 0.2s;
+    }
+    .next-q-btn.show { display: inline-block; }
+    .next-q-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .quiz-result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      animation: fadeIn 0.4s ease;
+    }
+    .quiz-result.show { display: flex; }
+    .result-emoji { font-size: 80px; margin-bottom: 16px; }
+    .result-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+    .result-subtitle { font-size: 16px; opacity: 0.8; margin-bottom: 24px; }
+    .result-score {
+      font-size: 56px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2ecc71, #1a6b3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .result-max { font-size: 16px; opacity: 0.6; margin-bottom: 28px; }
+    .restart-btn {
+      background: linear-gradient(135deg, #2ecc71, #1a6b3c);
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .restart-btn:hover { transform: scale(1.05); }
+
+    /* ===== WRITING ACTIVITY ===== */
+    .writing-container {
+      width: 100%;
+      max-width: 560px;
+    }
+    .writing-intro {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .writing-field {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+    .writing-field:focus-within { border-color: #2ecc71; }
+    .writing-field .field-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #2ecc71;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .writing-field textarea {
+      width: 100%;
+      min-height: 80px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #fff;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.6;
+    }
+    .writing-field textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .writing-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #2ecc71, #1a6b3c);
+      border: none;
+      border-radius: 50px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.2s;
+    }
+    .writing-submit:hover { transform: scale(1.02); }
+    .writing-result {
+      display: none;
+      background: rgba(46,204,113,0.15);
+      border: 2px solid #2ecc71;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+      text-align: left;
+      animation: fadeIn 0.3s ease;
+    }
+    .writing-result.show { display: block; }
+    .writing-result .wr-title { font-size: 15px; font-weight: 800; color: #2ecc71; margin-bottom: 12px; }
+    .writing-result .rule-item { font-size: 16px; padding: 8px 0; border-bottom: 1px solid rgba(46,204,113,0.2); display: flex; gap: 10px; }
+    .writing-result .rule-item:last-child { border-bottom: none; }
+
+    /* Nav */
+    .nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 26px; }
+    .nav-btn {
+      background: rgba(255,255,255,0.13);
+      border: 2px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 50px;
+      padding: 11px 26px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.04); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .progress { color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 600; min-width: 60px; text-align: center; }
+    .dots { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.28); transition: all 0.3s; cursor: pointer; }
+    .dot.active { background: #2ecc71; transform: scale(1.3); }
+
+    /* ===== JOGO DA VELHA ===== */
+    .ttt-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+      max-width: 300px;
+      margin: 14px auto;
+    }
+    .ttt-cell {
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 16px;
+      height: 88px;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .ttt-cell:hover:not(.ttt-taken) { background: rgba(255,255,255,0.28); transform: scale(1.06); }
+    .ttt-cell.ttt-taken { cursor: default; }
+    .ttt-cell.ttt-win { background: rgba(56,239,125,0.45); border-color: #38ef7d; animation: cellPop 0.4s ease; }
+    .ttt-cell.ttt-bot-win { background: rgba(229,45,39,0.4); border-color: #e52d27; }
+    @keyframes cellPop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+    .shake { animation: shake 0.4s ease; }
+    .ttt-msg {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin: 10px 0 6px;
+      min-height: 26px;
+      transition: all 0.2s;
+    }
+    .ttt-msg-win  { color: #38ef7d !important; font-size: 19px !important; }
+    .ttt-msg-lose { color: #ff8a65 !important; }
+    .ttt-msg-tie  { color: #ffd200 !important; }
+    .ttt-next-unlock {
+      display: none;
+      background: linear-gradient(135deg, #38ef7d, #1a6b3c);
+      border: none;
+      border-radius: 50px;
+      padding: 13px 30px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: transform 0.2s;
+    }
+    .ttt-next-unlock.show { display: inline-block; animation: fadeIn 0.35s ease; }
+    .ttt-next-unlock:hover { transform: scale(1.05); }
+    .ttt-restart-btn {
+      display: none;
+      background: rgba(255,255,255,0.18);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 11px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.2s;
+    }
+    .ttt-restart-btn.show { display: inline-block; }
+    .ttt-restart-btn:hover { background: rgba(255,255,255,0.28); }
+    .ttt-legend { font-size: 14px; opacity: 0.7; margin-bottom: 4px; }
+
+    /* ===== CHARADA ===== */
+    .charada-box {
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 24px 28px;
+      width: 100%;
+      max-width: 480px;
+      margin: 16px auto 0;
+      font-size: 19px;
+      line-height: 1.8;
+      font-style: italic;
+    }
+    .charada-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .charada-input {
+      flex: 1;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-size: 16px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .charada-input::placeholder { color: rgba(255,255,255,0.4); }
+    .charada-input:focus { border-color: rgba(255,255,255,0.7); }
+    .charada-input.charada-wrong { border-color: #e52d27; animation: shake 0.4s ease; }
+    .charada-btn {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .charada-btn:hover { background: rgba(255,255,255,0.32); }
+    .charada-feedback {
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      min-height: 24px;
+      transition: all 0.2s;
+    }
+    .charada-feedback.ok  { color: #38ef7d; }
+    .charada-feedback.err { color: #ff8a65; }
+    .charada-hint { font-size: 13px; opacity: 0.55; margin-top: 6px; }
+
+    /* ===== ESCUDO DE HERÓI ===== */
+    .shield-phase { width:100%; display:flex; flex-direction:column; align-items:center; animation:fadeIn 0.4s ease; }
+    .avatar-grid { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+    .avatar-opt {
+      font-size:34px; background:rgba(255,255,255,0.1); border:3px solid transparent;
+      border-radius:16px; width:62px; height:62px; display:flex; align-items:center;
+      justify-content:center; cursor:pointer; transition:all 0.2s; user-select:none;
+    }
+    .avatar-opt:hover { background:rgba(255,255,255,0.22); transform:scale(1.1); }
+    .avatar-opt.selected { border-color:#ffd200; background:rgba(255,210,0,0.2); transform:scale(1.14); }
+    .sh-label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:2px; opacity:0.6; margin-top:14px; }
+    .hero-name-input {
+      margin-top:10px; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.25);
+      border-radius:50px; padding:12px 22px; font-size:17px; color:#fff; outline:none;
+      text-align:center; width:100%; max-width:320px; font-family:inherit; transition:border-color 0.2s;
+    }
+    .hero-name-input::placeholder { color:rgba(255,255,255,0.35); }
+    .hero-name-input:focus { border-color:rgba(255,255,255,0.65); }
+    .shield-start-btn {
+      margin-top:18px; background:linear-gradient(135deg,#f7971e,#ffd200); border:none;
+      border-radius:50px; padding:14px 34px; font-size:17px; font-weight:800;
+      color:#1a1a1a; cursor:pointer; transition:transform 0.2s;
+    }
+    .shield-start-btn:hover { transform:scale(1.05); }
+    .sh-err { color:#ff8a65; font-size:14px; margin-top:8px; min-height:20px; }
+
+    /* Shield visual */
+    .shield-visual {
+      background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.14);
+      border-radius:20px; padding:14px 20px; display:flex; flex-direction:column;
+      align-items:center; gap:6px; width:100%; max-width:380px;
+    }
+    .shield-av-big { font-size:50px; line-height:1; }
+    .shield-hero-name { font-size:16px; font-weight:800; opacity:0.9; }
+    .shield-segs { display:flex; gap:10px; margin-top:6px; }
+    .sh-seg {
+      width:74px; height:74px; background:rgba(255,255,255,0.07);
+      border:2px dashed rgba(255,255,255,0.2); border-radius:14px; font-size:30px;
+      display:flex; align-items:center; justify-content:center; transition:all 0.4s;
+    }
+    .sh-seg.filled { background:rgba(255,210,0,0.22); border:2px solid #ffd200; animation:achPop 0.45s ease; }
+
+    /* Rule step */
+    .rule-step-wrap { width:100%; max-width:460px; margin-top:14px; display:flex; flex-direction:column; align-items:center; }
+    .rs-label { font-size:18px; font-weight:800; color:#ffd200; margin-bottom:5px; }
+    .rs-hint { font-size:14px; opacity:0.6; font-style:italic; margin-bottom:10px; text-align:center; }
+    .rs-textarea {
+      width:100%; min-height:84px; background:rgba(255,255,255,0.1);
+      border:2px solid rgba(255,255,255,0.22); border-radius:16px;
+      padding:14px 16px; font-size:16px; color:#fff; outline:none;
+      resize:none; font-family:inherit; line-height:1.6; transition:border-color 0.2s;
+    }
+    .rs-textarea::placeholder { color:rgba(255,255,255,0.35); }
+    .rs-textarea:focus { border-color:#ffd200; }
+    .rs-add-btn {
+      margin-top:12px; background:linear-gradient(135deg,#f7971e,#ffd200); border:none;
+      border-radius:50px; padding:13px 0; font-size:16px; font-weight:800;
+      color:#1a1a1a; cursor:pointer; width:100%; transition:transform 0.2s;
+    }
+    .rs-add-btn:hover { transform:scale(1.02); }
+
+    /* Certificate */
+    .certificate {
+      background:linear-gradient(160deg,#0d0d1a,#1a1040,#0d0d1a);
+      border:3px solid #ffd200; border-radius:24px; padding:26px 22px;
+      width:100%; max-width:460px; text-align:center;
+      box-shadow:0 0 50px rgba(255,210,0,0.35), 0 0 100px rgba(255,210,0,0.12);
+      animation:certReveal 0.65s cubic-bezier(0.23,1,0.32,1);
+    }
+    @keyframes certReveal {
+      0%   { opacity:0; transform:scale(0.8) translateY(20px); }
+      100% { opacity:1; transform:scale(1) translateY(0); }
+    }
+    .cert-stars-row { font-size:22px; letter-spacing:4px; color:#ffd200; }
+    .cert-title-top { font-size:11px; font-weight:800; letter-spacing:5px; text-transform:uppercase; color:#ffd200; margin:8px 0 2px; }
+    .cert-main-title { font-size:22px; font-weight:800; color:#fff; margin-bottom:12px; }
+    .cert-av { font-size:66px; line-height:1; margin:4px 0; }
+    .cert-hero-name { font-size:24px; font-weight:800; color:#ffd200; margin-bottom:14px; }
+    .cert-rules-list { text-align:left; display:flex; flex-direction:column; gap:9px; margin-bottom:14px; }
+    .cert-rule-item {
+      background:rgba(255,255,255,0.07); border-left:4px solid #ffd200;
+      border-radius:10px; padding:10px 14px; font-size:14px;
+      display:flex; gap:10px; align-items:flex-start; color:rgba(255,255,255,0.92);
+      animation:fadeIn 0.4s ease;
+    }
+    .cert-rn { font-size:18px; flex-shrink:0; }
+    .cert-seal { font-size:12px; color:#ffd200; opacity:0.75; letter-spacing:2px; margin-top:4px; }
+    .cert-share-btn {
+      margin-top:14px; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.28);
+      border-radius:50px; padding:12px 26px; font-size:15px; font-weight:700;
+      color:#fff; cursor:pointer; transition:all 0.2s;
+    }
+    .cert-share-btn:hover { background:rgba(255,255,255,0.2); }
+    .cert-toast {
+      display:none; margin-top:10px; background:rgba(56,239,125,0.18);
+      border:2px solid #38ef7d; border-radius:50px; padding:10px 20px;
+      font-size:14px; color:#38ef7d; font-weight:700; animation:fadeIn 0.3s ease;
+    }
+    .cert-toast.show { display:block; }
+    .cert-restart {
+      display:none; margin-top:8px; background:transparent; border:none;
+      color:rgba(255,255,255,0.45); font-size:13px; cursor:pointer; text-decoration:underline;
+    }
+    .cert-restart.show { display:block; }
+
+    /* ===== CONQUISTAS (slide final) ===== */
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+      margin: 12px auto 0;
+    }
+    .ach-card {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ach-card:hover:not(.ach-unlocked) { background: rgba(255,255,255,0.15); transform: scale(1.03); }
+    .ach-card.ach-unlocked {
+      background: rgba(56,239,125,0.18);
+      border-color: #38ef7d;
+      cursor: default;
+      animation: achPop 0.4s ease;
+    }
+    @keyframes achPop {
+      0%   { transform: scale(0.9); }
+      60%  { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .ach-lock { font-size: 32px; }
+    .ach-locked-text { font-size: 12px; opacity: 0.5; }
+    .ach-icon { font-size: 34px; display: none; }
+    .ach-rule { font-size: 13px; font-weight: 700; line-height: 1.4; display: none; color: #fff; }
+    .ach-check { font-size: 18px; display: none; color: #38ef7d; }
+    .ach-card.ach-unlocked .ach-lock,
+    .ach-card.ach-unlocked .ach-locked-text { display: none; }
+    .ach-card.ach-unlocked .ach-icon,
+    .ach-card.ach-unlocked .ach-rule,
+    .ach-card.ach-unlocked .ach-check { display: block; }
+    .mission-banner {
+      display: none;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      border-radius: 16px;
+      padding: 18px 24px;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      width: 100%;
+      max-width: 520px;
+      animation: achPop 0.5s ease;
+    }
+    .mission-banner.show { display: block; }
+    .mission-banner .mission-sub { font-size: 14px; font-weight: 600; margin-top: 4px; opacity: 0.75; }
+    .stars-row { font-size: 28px; letter-spacing: 4px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<div class="carousel-wrapper">
+
+  <div class="header-info">
+    <strong>Aula de segunda-feira</strong> · 8–11 anos · 1h30 · Segurança na Internet 🔒
+  </div>
+
+  <!-- SLIDE 1: Gancho -->
+  <div class="slide slide-1 active">
+    <div class="slide-emoji">🌐</div>
+    <div class="slide-label">Slide 1 · Gancho</div>
+    <div class="slide-title">A internet é incrível!</div>
+    <div class="slide-body">
+      <p>Você pode jogar, aprender e falar com amigos. 🎮📚💬</p>
+      <p>Mas a internet também tem lugares perigosos.</p>
+      <p><strong>Você sabe como se proteger?</strong></p>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que vocês fazem na internet?"</li>
+          <li>"Alguém já recebeu uma mensagem estranha?"</li>
+          <li>"O que vocês fariam se isso acontecesse?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: A internet é como a cidade -->
+  <div class="slide slide-2">
+    <div class="slide-emoji">🏙️</div>
+    <div class="slide-label">Slide 2 · Analogia</div>
+    <div class="slide-title">A internet é como a cidade!</div>
+    <div class="slide-body">
+      <div class="city-grid">
+        <div class="city-card">
+          <span class="city-icon">🌳</span>
+          <strong>Na cidade</strong>
+          Parques seguros para brincar
+        </div>
+        <div class="city-card">
+          <span class="city-icon">✅</span>
+          <strong>Na internet</strong>
+          Sites legais e confiáveis
+        </div>
+        <div class="city-card">
+          <span class="city-icon">⚠️</span>
+          <strong>Na cidade</strong>
+          Lugares que não vamos sozinhos
+        </div>
+        <div class="city-card">
+          <span class="city-icon">🚫</span>
+          <strong>Na internet</strong>
+          Sites e pessoas perigosas
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Na cidade, você vai a todo lugar sozinho?"</li>
+          <li>"Na internet é diferente?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Regra 1 - Senha -->
+  <div class="slide slide-3">
+    <div class="slide-emoji">🔑</div>
+    <div class="slide-label">Slide 3 · Regra 1</div>
+    <div class="slide-title">Regra 1: Senha é segredo!</div>
+    <div class="slide-body">
+      <div class="rule-card">
+        <div class="rule-icon">🔑</div>
+        <div class="rule-content">
+          <div class="rule-title">Senha = chave da sua casa</div>
+          <div class="rule-text">Você não dá a chave da sua casa para qualquer pessoa, né? A senha é igual!</div>
+          <div class="rule-analogy">💡 Não diga sua senha para ninguém — nem para amigos!</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Por que a gente não compartilha a chave de casa?"</li>
+          <li>"O que pode acontecer se alguém souber sua senha?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Regra 2 - Estranhos -->
+  <div class="slide slide-4">
+    <div class="slide-emoji">🚫</div>
+    <div class="slide-label">Slide 4 · Regra 2</div>
+    <div class="slide-title">Regra 2: Não fale com estranhos!</div>
+    <div class="slide-body">
+      <div class="rule-card">
+        <div class="rule-icon">🚫</div>
+        <div class="rule-content">
+          <div class="rule-title">Online = igual à rua</div>
+          <div class="rule-text">Na rua, você não conversa com estranhos. Na internet é igual!</div>
+          <div class="rule-analogy">💡 Se alguém desconhecido falar com você, conta para um adulto!</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Se um adulto que você não conhece falar com você na rua, o que você faz?"</li>
+          <li>"Na internet deve ser diferente?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE JOGO DA VELHA (entre regra 2 e 3) -->
+  <div class="slide" style="background: linear-gradient(135deg, #7b2ff7, #f107a3); color: #fff;">
+    <div class="slide-emoji">🎮</div>
+    <div class="slide-label">Mini Jogo · Vença o robô para continuar!</div>
+    <div class="slide-title">Desafio do Robô! 😈</div>
+    <div class="slide-body" style="width:100%; max-width:420px;">
+      <p>Vença o robô no jogo da velha para desbloquear a próxima regra! 🏆</p>
+      <p class="ttt-legend">Você é <strong>🌟</strong> · Robô é <strong>🤖</strong></p>
+      <div class="ttt-board" id="ttt-board">
+        <div class="ttt-cell" onclick="tttMove(0)"></div>
+        <div class="ttt-cell" onclick="tttMove(1)"></div>
+        <div class="ttt-cell" onclick="tttMove(2)"></div>
+        <div class="ttt-cell" onclick="tttMove(3)"></div>
+        <div class="ttt-cell" onclick="tttMove(4)"></div>
+        <div class="ttt-cell" onclick="tttMove(5)"></div>
+        <div class="ttt-cell" onclick="tttMove(6)"></div>
+        <div class="ttt-cell" onclick="tttMove(7)"></div>
+        <div class="ttt-cell" onclick="tttMove(8)"></div>
+      </div>
+      <div class="ttt-msg" id="ttt-msg">Sua vez! Clique em uma célula 🌟</div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:4px;">
+        <button class="ttt-restart-btn" id="ttt-restart-btn" onclick="tttRestart()">🔄 Tentar de novo</button>
+        <button class="ttt-next-unlock" id="ttt-next-unlock" onclick="goTo(current + 1)">Continuar a aula! 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Regra 3 - Permissão -->
+  <div class="slide slide-5">
+    <div class="slide-emoji">🛑</div>
+    <div class="slide-label">Slide 5 · Regra 3</div>
+    <div class="slide-title">Regra 3: Peça permissão!</div>
+    <div class="slide-body">
+      <div class="rule-card" style="background: rgba(0,0,0,0.15);">
+        <div class="rule-icon">🛑</div>
+        <div class="rule-content">
+          <div class="rule-title">Antes de baixar ou clicar</div>
+          <div class="rule-text">Antes de baixar um jogo ou clicar em algo novo, pergunta para um adulto!</div>
+          <div class="rule-analogy">💡 Igual a pedir permissão antes de comer um doce na casa dos outros!</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.15);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Vocês pedem permissão antes de baixar jogos?"</li>
+          <li>"Por que isso é importante?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Regra 4 - Dados pessoais -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">🏠</div>
+    <div class="slide-label">Slide 6 · Regra 4</div>
+    <div class="slide-title">Regra 4: Seus dados são seus!</div>
+    <div class="slide-body">
+      <div class="rule-card" style="background: rgba(0,0,0,0.12);">
+        <div class="rule-icon">🏠</div>
+        <div class="rule-content">
+          <div class="rule-title">Não coloque na internet:</div>
+          <div class="rule-text">
+            ❌ Seu nome completo<br>
+            ❌ O nome da sua escola<br>
+            ❌ Seu endereço<br>
+            ❌ Sua foto com localização
+          </div>
+          <div class="rule-analogy" style="background: rgba(0,0,0,0.1);">💡 Esses dados são seus! Cuide deles!</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.12);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que pode acontecer se um estranho souber onde você mora?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Regra 5 - Conta para alguém -->
+  <div class="slide slide-7">
+    <div class="slide-emoji">💬</div>
+    <div class="slide-label">Slide 7 · Regra 5</div>
+    <div class="slide-title">Regra 5: Sentiu algo estranho? Conta!</div>
+    <div class="slide-body">
+      <div class="rule-card">
+        <div class="rule-icon">💬</div>
+        <div class="rule-content">
+          <div class="rule-title">Nunca é culpa sua!</div>
+          <div class="rule-text">Se algo na internet te deixou com medo ou com vergonha...</div>
+          <div class="rule-text" style="margin-top: 8px;">🗣️ Conta para pai, mãe ou professor!</div>
+          <div class="rule-analogy">💡 Igual a contar para um adulto quando algo te machuca na escola!</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Por que às vezes a gente fica com vergonha de contar?"</li>
+          <li>"Por que é importante contar mesmo assim?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Verdadeiro ou Falso -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🤔</div>
+    <div class="slide-label">Slide 8 · Verdadeiro ou Falso — clique pra revelar!</div>
+    <div class="slide-title">Verdadeiro ou Falso?</div>
+    <div class="slide-body">
+      <div class="flip-grid">
+        <div class="flip-card" onclick="flipCard(this, false)">
+          <div>
+            <div class="fc-text">"Posso dar minha senha para meu melhor amigo"</div>
+            <div class="fc-answer">❌ FALSO — senha é segredo!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, true)">
+          <div>
+            <div class="fc-text">"Se alguém desconhecido me mandar mensagem, conto para um adulto"</div>
+            <div class="fc-answer">✅ VERDADEIRO!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, false)">
+          <div>
+            <div class="fc-text">"Posso baixar qualquer jogo sem pedir permissão"</div>
+            <div class="fc-answer">❌ FALSO — peça sempre!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, false)">
+          <div>
+            <div class="fc-text">"Posso colocar meu endereço no perfil de um jogo"</div>
+            <div class="fc-answer">❌ FALSO — seus dados são seus!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, true)" style="grid-column: 1 / -1;">
+          <div>
+            <div class="fc-text">"Se algo me deixar com medo na internet, não é culpa minha e devo contar para um adulto"</div>
+            <div class="fc-answer">✅ VERDADEIRO — sempre conte!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Charada — responda para avançar -->
+  <div class="slide" style="background: linear-gradient(135deg, #0f3460, #e94560); color: #fff;">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 9 · Charada — responda para continuar!</div>
+    <div class="slide-title">Você consegue adivinhar? 🤔</div>
+    <div class="slide-body" style="width:100%; max-width:520px; display:flex; flex-direction:column; align-items:center;">
+      <div class="charada-box">
+        🤫 Sou pequenininha,<br>
+        mas guardo um grande poder.<br>
+        Sou feita de letras e números<br>
+        que ninguém pode ver.<br><br>
+        Cuido da sua conta,<br>
+        protejo o seu perfil.<br>
+        Nem seu melhor amigo<br>
+        pode me descobrir! 🔐<br><br>
+        <strong>O que sou eu?</strong>
+      </div>
+      <div class="charada-input-row">
+        <input
+          class="charada-input"
+          id="charada-input"
+          type="text"
+          placeholder="Digite a resposta..."
+          onkeydown="if(event.key==='Enter') charadaCheck()"
+          autocomplete="off"
+        />
+        <button class="charada-btn" onclick="charadaCheck()">Responder 🚀</button>
+      </div>
+      <div class="charada-feedback" id="charada-feedback"></div>
+      <div class="charada-hint" id="charada-hint">💡 Dica: usamos ela para entrar em jogos e redes sociais</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Quiz intro -->
+  <div class="slide slide-9">
+    <div class="slide-emoji">🏆</div>
+    <div class="slide-label">Slide 9 · Quiz</div>
+    <div class="slide-title">Hora do Quiz!</div>
+    <div class="slide-body">
+      <p>Vamos ver o que você aprendeu? 😄</p>
+      <p><strong>5 perguntas</strong> sobre segurança na internet.</p>
+      <p>Pode responder em grupo ou individual!</p>
+      <p style="margin-top:16px"><em>Clique em "Próximo" pra começar ➡️</em></p>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Quiz interativo -->
+  <div class="slide slide-10">
+    <div class="slide-label">Slide 10 · Quiz Interativo</div>
+
+    <div class="quiz-container">
+
+      <div class="quiz-header">
+        <div class="quiz-emoji">🔒</div>
+        <h2>Quiz: Segurança na Internet</h2>
+        <p>Escolha a resposta certa!</p>
+      </div>
+
+      <div class="quiz-score-bar">
+        <span>Pergunta <strong id="q-current">1</strong> de <strong>5</strong></span>
+        <span>Pontos: <strong id="q-score">0</strong></span>
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-card active" data-q="0">
+        <div class="q-number">Pergunta 1</div>
+        <div class="q-text">Para quem você pode dizer sua senha?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Para o meu melhor amigo</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Para qualquer adulto</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Para ninguém — senha é segredo!</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Para o professor</button>
+        </div>
+        <div class="feedback-msg ok">✅ Isso! Senha é segredo — não diga para ninguém!</div>
+        <div class="feedback-msg err">❌ Senha é segredo! Não diga para ninguém, nem para amigos.</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question-card" data-q="1">
+        <div class="q-number">Pergunta 2</div>
+        <div class="q-text">Um adulto que você não conhece te mandou mensagem no jogo. O que você faz?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Fico conversando — ele parece legal</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">B</span> Não respondo e conto para um adulto de confiança</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> Digo meu nome e onde moro</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Mando uma foto minha</button>
+        </div>
+        <div class="feedback-msg ok">✅ Perfeito! Não responda e conte para um adulto de confiança!</div>
+        <div class="feedback-msg err">❌ Nunca converse com estranhos online! Conte para um adulto de confiança.</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question-card" data-q="2">
+        <div class="q-number">Pergunta 3</div>
+        <div class="q-text">Você quer baixar um jogo novo. O que você faz primeiro?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Baixo logo, parece legal!</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Peço para meu amigo baixar</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Peço permissão para um adulto responsável</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Clico em qualquer link que aparecer</button>
+        </div>
+        <div class="feedback-msg ok">✅ Isso! Sempre peça permissão antes de baixar qualquer coisa!</div>
+        <div class="feedback-msg err">❌ Sempre peça permissão para um adulto antes de baixar algo novo!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question-card" data-q="3">
+        <div class="q-number">Pergunta 4</div>
+        <div class="q-text">O que você NÃO deve colocar no perfil de um jogo?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Um apelido divertido</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Minha cor favorita</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Meu nome completo e o nome da minha escola</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Meu personagem favorito</button>
+        </div>
+        <div class="feedback-msg ok">✅ Exato! Seus dados pessoais são seus — não coloque na internet!</div>
+        <div class="feedback-msg err">❌ Nunca coloque seu nome completo, escola ou endereço na internet!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question-card" data-q="4">
+        <div class="q-number">Pergunta 5</div>
+        <div class="q-text">Você viu algo na internet que te deixou com medo. O que você faz?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Fico quieto com medo de me meter em problema</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Mostro para os amigos</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Conto para pai, mãe ou professor — nunca é minha culpa!</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Fico usando a internet normalmente</button>
+        </div>
+        <div class="feedback-msg ok">✅ Muito bem! Sempre conte para um adulto — você não está em apuros, ele vai te ajudar!</div>
+        <div class="feedback-msg err">❌ Sempre conte para um adulto de confiança! Nunca é culpa sua!</div>
+        <button class="next-q-btn" onclick="showResult()">Ver resultado 🏆</button>
+      </div>
+
+      <!-- Result -->
+      <div class="quiz-result">
+        <div class="result-emoji" id="result-emoji">🏆</div>
+        <div class="result-title" id="result-title">Incrível!</div>
+        <div class="result-subtitle" id="result-subtitle">Você é um herói da segurança!</div>
+        <div class="result-score" id="result-score">5</div>
+        <div class="result-max">de 5 pontos</div>
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Jogar de novo</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Atividade de escrita -->
+  <div class="slide" style="background:linear-gradient(135deg,#0d1b2a,#1b263b,#415a77); color:#fff; padding:32px 24px;">
+    <div class="slide-body" style="width:100%; max-width:560px; display:flex; flex-direction:column; align-items:center; padding:0;">
+
+      <!-- FASE 1: Escolha de herói -->
+      <div id="shield-phase1" class="shield-phase">
+        <div style="font-size:52px; margin-bottom:10px;">🛡️</div>
+        <div class="slide-label" style="margin-bottom:4px;">Slide · Seu Escudo de Herói</div>
+        <div class="slide-title" style="margin-bottom:10px;">Vamos criar seu Escudo! ⚔️</div>
+        <p style="font-size:14px; opacity:0.7; margin-bottom:14px; text-align:center;">Escreva suas 3 regras e monte seu escudo pessoal de proteção na internet!</p>
+        <div class="sh-label">Escolha seu herói:</div>
+        <div class="avatar-grid">
+          <div class="avatar-opt selected" onclick="selectAvatar(this,'🦸')">🦸</div>
+          <div class="avatar-opt" onclick="selectAvatar(this,'🦸‍♀️')">🦸‍♀️</div>
+          <div class="avatar-opt" onclick="selectAvatar(this,'🐉')">🐉</div>
+          <div class="avatar-opt" onclick="selectAvatar(this,'🦊')">🦊</div>
+          <div class="avatar-opt" onclick="selectAvatar(this,'🤖')">🤖</div>
+          <div class="avatar-opt" onclick="selectAvatar(this,'🦄')">🦄</div>
+        </div>
+        <div class="sh-label">Seu nome de herói:</div>
+        <input id="hero-name" class="hero-name-input" type="text" placeholder="Ex: Super Jeff, Guerreira Ana..." maxlength="20" />
+        <button class="shield-start-btn" onclick="shieldStart()">Criar meu Escudo! 🛡️</button>
+        <div class="sh-err" id="sh-err"></div>
+      </div>
+
+      <!-- FASE 2: Escrita das regras -->
+      <div id="shield-phase2" class="shield-phase" style="display:none;">
+        <div class="shield-visual">
+          <div class="shield-av-big" id="sh-av-display">🦸</div>
+          <div class="shield-hero-name" id="sh-name-display">Herói</div>
+          <div class="shield-segs">
+            <div class="sh-seg" id="sh-seg1">?</div>
+            <div class="sh-seg" id="sh-seg2">?</div>
+            <div class="sh-seg" id="sh-seg3">?</div>
+          </div>
+        </div>
+        <div class="rule-step-wrap">
+          <div class="rs-label" id="rs-label">📜 Regra 1 de 3</div>
+          <div class="rs-hint" id="rs-hint">O que você nunca vai esquecer depois de hoje?</div>
+          <textarea class="rs-textarea" id="rs-textarea" placeholder="Escreva com suas palavras..."></textarea>
+          <button class="rs-add-btn" onclick="addShieldRule()">⚡ Gravar no Escudo!</button>
+        </div>
+      </div>
+
+      <!-- FASE 3: Certificado -->
+      <div id="shield-phase3" class="shield-phase" style="display:none;">
+        <div class="certificate">
+          <div class="cert-stars-row">⭐⭐⭐⭐⭐</div>
+          <div class="cert-title-top">Certificado</div>
+          <div class="cert-main-title">Herói da Internet 🌐</div>
+          <div class="cert-av" id="cert-av">🦸</div>
+          <div class="cert-hero-name" id="cert-hero-name">Super Herói</div>
+          <div class="cert-rules-list">
+            <div class="cert-rule-item"><span class="cert-rn">🥇</span><span id="cert-r1"></span></div>
+            <div class="cert-rule-item"><span class="cert-rn">🥈</span><span id="cert-r2"></span></div>
+            <div class="cert-rule-item"><span class="cert-rn">🥉</span><span id="cert-r3"></span></div>
+          </div>
+          <div class="cert-seal">🔒 PROTETOR DA INTERNET 🔒</div>
+          <div class="cert-stars-row" style="margin-top:8px;">⭐⭐⭐⭐⭐</div>
+        </div>
+        <button class="cert-share-btn" onclick="certShare()">📢 Mostrar para a turma!</button>
+        <div class="cert-toast" id="cert-toast">🎉 Chame o professor para ver seu certificado!</div>
+        <button class="cert-restart show" onclick="shieldRestart()">↩ Recomeçar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Resumo -->
+  <div class="slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color: #fff;">
+    <div class="slide-emoji">🦸</div>
+    <div class="slide-label">Slide Final · Desbloqueie suas conquistas!</div>
+    <div class="slide-title">Você virou um Herói da Internet! 🌟</div>
+    <div class="slide-body" style="width:100%; max-width:560px; display:flex; flex-direction:column; align-items:center;">
+      <p style="font-size:14px; opacity:0.65; margin-bottom:4px;">Clique em cada conquista para desbloquear 👆</p>
+
+      <div class="achievement-grid" id="achievement-grid">
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 1</div>
+          <div class="ach-icon">🔑</div>
+          <div class="ach-rule">Senha é segredo — ninguém pode saber!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 2</div>
+          <div class="ach-icon">🚫</div>
+          <div class="ach-rule">Não fale com estranhos — online igual à rua!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 3</div>
+          <div class="ach-icon">🛑</div>
+          <div class="ach-rule">Peça permissão antes de baixar qualquer coisa!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 4</div>
+          <div class="ach-icon">🏠</div>
+          <div class="ach-rule">Seus dados são seus — não coloque na internet!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)" style="grid-column: 1 / -1;">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 5 — A mais importante!</div>
+          <div class="ach-icon">💬</div>
+          <div class="ach-rule">Sentiu algo estranho? Conta para um adulto — nunca é sua culpa! 💪</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+      </div>
+
+      <div class="mission-banner" id="mission-banner">
+        🏆 MISSÃO CUMPRIDA! 🏆
+        <div class="mission-sub">Você completou a aula de Segurança na Internet!</div>
+        <div class="stars-row">⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button class="nav-btn" id="prev" onclick="changeSlide(-1)" disabled>← Anterior</button>
+    <span class="progress" id="progress">1 / 12</span>
+    <button class="nav-btn" id="next" onclick="changeSlide(1)">Próximo →</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const dotsEl = document.getElementById('dots');
+  const TTT_SLIDE_INDEX = 4;
+  const CHARADA_SLIDE_INDEX = 9;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+    document.getElementById('progress').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('prev').disabled = current === 0;
+    document.getElementById('next').disabled = current === total - 1;
+    if (current === TTT_SLIDE_INDEX) { tttInit(); document.getElementById('next').disabled = true; }
+    if (current === CHARADA_SLIDE_INDEX) { charadaReset(); document.getElementById('next').disabled = true; }
+  }
+
+  function changeSlide(dir) {
+    if (dir === 1 && current === TTT_SLIDE_INDEX && !tttWon) {
+      const nextBtn = document.getElementById('next');
+      nextBtn.classList.add('shake');
+      setTimeout(() => nextBtn.classList.remove('shake'), 450);
+      return;
+    }
+    const n = current + dir;
+    if (n >= 0 && n < total) goTo(n);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  // ===== ESCUDO DE HERÓI =====
+  let shieldAvatar = '🦸';
+  let shieldRules  = [];
+  let shieldStep   = 0;
+  const RS_HINTS = [
+    'O que você nunca vai esquecer depois de hoje? 💭',
+    'Mais uma regra para proteger você online! 💡',
+    'A última — qual é a mais especial para você? 🏆',
+  ];
+  const SEG_ICONS = ['🥇','🥈','🥉'];
+
+  function selectAvatar(el, emoji) {
+    document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
+    el.classList.add('selected');
+    shieldAvatar = emoji;
+  }
+
+  function shieldStart() {
+    const name = document.getElementById('hero-name').value.trim();
+    const err  = document.getElementById('sh-err');
+    if (!name) { err.textContent = 'Escreva seu nome de herói! ✏️'; return; }
+    err.textContent = '';
+    shieldRules = []; shieldStep = 0;
+    document.getElementById('sh-av-display').textContent   = shieldAvatar;
+    document.getElementById('sh-name-display').textContent = name;
+    ['sh-seg1','sh-seg2','sh-seg3'].forEach(id => {
+      const s = document.getElementById(id);
+      s.textContent = '?'; s.classList.remove('filled');
+    });
+    updateRuleStep();
+    document.getElementById('shield-phase1').style.display = 'none';
+    document.getElementById('shield-phase2').style.display = 'flex';
+  }
+
+  function updateRuleStep() {
+    document.getElementById('rs-label').textContent = `📜 Regra ${shieldStep + 1} de 3`;
+    document.getElementById('rs-hint').textContent  = RS_HINTS[shieldStep];
+    const ta = document.getElementById('rs-textarea');
+    ta.value = ''; ta.focus();
+  }
+
+  function addShieldRule() {
+    const val = document.getElementById('rs-textarea').value.trim();
+    if (!val) {
+      const ta = document.getElementById('rs-textarea');
+      ta.classList.add('charada-wrong');
+      setTimeout(() => ta.classList.remove('charada-wrong'), 450);
+      return;
+    }
+    shieldRules.push(val);
+    const seg = document.getElementById('sh-seg' + (shieldStep + 1));
+    seg.textContent = SEG_ICONS[shieldStep]; seg.classList.add('filled');
+    shieldStep++;
+    if (shieldStep === 3) { setTimeout(showCertificate, 550); }
+    else { updateRuleStep(); }
+  }
+
+  function showCertificate() {
+    const name = document.getElementById('hero-name').value.trim();
+    document.getElementById('cert-av').textContent        = shieldAvatar;
+    document.getElementById('cert-hero-name').textContent = name;
+    document.getElementById('cert-r1').textContent        = shieldRules[0];
+    document.getElementById('cert-r2').textContent        = shieldRules[1];
+    document.getElementById('cert-r3').textContent        = shieldRules[2];
+    document.getElementById('shield-phase2').style.display = 'none';
+    document.getElementById('shield-phase3').style.display = 'flex';
+  }
+
+  function certShare() {
+    document.getElementById('cert-toast').classList.add('show');
+  }
+
+  function shieldRestart() {
+    document.getElementById('cert-toast').classList.remove('show');
+    document.getElementById('shield-phase3').style.display = 'none';
+    document.getElementById('shield-phase1').style.display = 'flex';
+  }
+
+  // ===== CONQUISTAS =====
+  function unlockAch(card) {
+    if (card.classList.contains('ach-unlocked')) return;
+    card.classList.add('ach-unlocked');
+    const all = document.querySelectorAll('.ach-card');
+    if ([...all].every(c => c.classList.contains('ach-unlocked'))) {
+      setTimeout(() => document.getElementById('mission-banner').classList.add('show'), 300);
+    }
+  }
+
+  // ===== CHARADA =====
+  const CHARADA_ANSWERS = ['senha', 'a senha', 'minha senha'];
+  let charadaWrongCount = 0;
+
+  function charadaReset() {
+    const input = document.getElementById('charada-input');
+    const fb = document.getElementById('charada-feedback');
+    const hint = document.getElementById('charada-hint');
+    input.value = '';
+    input.classList.remove('charada-wrong');
+    fb.textContent = '';
+    fb.className = 'charada-feedback';
+    hint.style.display = 'block';
+    charadaWrongCount = 0;
+  }
+
+  function charadaCheck() {
+    const input = document.getElementById('charada-input');
+    const fb = document.getElementById('charada-feedback');
+    const val = input.value.trim().toLowerCase();
+
+    if (CHARADA_ANSWERS.includes(val)) {
+      fb.textContent = '🎉 ISSO! Senha é segredo! Você passou! 🔑✨';
+      fb.className = 'charada-feedback ok';
+      input.disabled = true;
+      document.getElementById('next').disabled = false;
+      document.getElementById('charada-hint').style.display = 'none';
+    } else {
+      charadaWrongCount++;
+      input.classList.add('charada-wrong');
+      setTimeout(() => input.classList.remove('charada-wrong'), 450);
+
+      const msgs = [
+        '❌ Não foi dessa vez! Tente de novo 😄',
+        '🤔 Quase! Pense nos slides anteriores...',
+        '😅 Dica: ela protege sua conta nos jogos!',
+        '💪 Você consegue! Olha a dica embaixo da charada...',
+      ];
+      fb.textContent = msgs[Math.min(charadaWrongCount - 1, msgs.length - 1)];
+      fb.className = 'charada-feedback err';
+      input.select();
+    }
+  }
+
+  // ===== JOGO DA VELHA =====
+  let tttBoard = ['','','','','','','','',''];
+  let tttWon = false;
+  let tttBusy = false;
+
+  const WIN_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function tttCells() { return document.querySelectorAll('.ttt-cell'); }
+  function tttMsg(txt, cls) {
+    const el = document.getElementById('ttt-msg');
+    el.textContent = txt;
+    el.className = 'ttt-msg' + (cls ? ' ' + cls : '');
+  }
+
+  function tttInit() {
+    tttBoard = ['','','','','','','','',''];
+    tttWon = false;
+    tttBusy = false;
+    tttCells().forEach((cell, i) => {
+      cell.textContent = '';
+      cell.className = 'ttt-cell';
+      cell.onclick = () => tttMove(i);
+    });
+    document.getElementById('ttt-restart-btn').classList.remove('show');
+    document.getElementById('ttt-next-unlock').classList.remove('show');
+    tttMsg('Sua vez! Clique em uma célula 🌟');
+  }
+
+  function tttMove(idx) {
+    if (tttBoard[idx] || tttBusy || tttWon) return;
+    tttBoard[idx] = 'p';
+    tttCells()[idx].textContent = '🌟';
+    tttCells()[idx].classList.add('ttt-taken');
+
+    const win = tttCheck('p');
+    if (win) { tttPlayerWins(win); return; }
+    if (tttFull()) { tttTie(); return; }
+
+    tttBusy = true;
+    tttMsg('🤖 Hmm, deixa eu pensar...');
+    setTimeout(tttBotMove, 700);
+  }
+
+  function tttBotMove() {
+    const empty = tttBoard.map((v, i) => v === '' ? i : -1).filter(i => i !== -1);
+    // 30% chance of random blunder, 70% minimax optimal
+    const move = Math.random() < 0.3
+      ? empty[Math.floor(Math.random() * empty.length)]
+      : tttMinimax([...tttBoard], 'b', 0).index;
+
+    tttBoard[move] = 'b';
+    tttCells()[move].textContent = '🤖';
+    tttCells()[move].classList.add('ttt-taken');
+    tttBusy = false;
+
+    const win = tttCheck('b');
+    if (win) { tttBotWins(win); return; }
+    if (tttFull()) { tttTie(); return; }
+    tttMsg('Sua vez! Clique em uma célula 🌟');
+  }
+
+  function tttMinimax(board, player, depth) {
+    if (tttCheckBoard(board, 'b')) return { score: 10 - depth };
+    if (tttCheckBoard(board, 'p')) return { score: depth - 10 };
+    const empty = board.map((v, i) => v === '' ? i : -1).filter(i => i !== -1);
+    if (empty.length === 0) return { score: 0 };
+
+    const moves = empty.map(idx => {
+      const b = [...board];
+      b[idx] = player;
+      return { index: idx, score: tttMinimax(b, player === 'b' ? 'p' : 'b', depth + 1).score };
+    });
+
+    return player === 'b'
+      ? moves.reduce((best, m) => m.score > best.score ? m : best, { score: -Infinity, index: -1 })
+      : moves.reduce((best, m) => m.score < best.score ? m : best, { score: Infinity,  index: -1 });
+  }
+
+  function tttCheckBoard(board, player) {
+    return WIN_LINES.some(line => line.every(i => board[i] === player));
+  }
+
+  function tttCheck(player) {
+    for (const line of WIN_LINES) {
+      if (line.every(i => tttBoard[i] === player)) return line;
+    }
+    return null;
+  }
+
+  function tttFull() { return tttBoard.every(v => v !== ''); }
+
+  function tttPlayerWins(line) {
+    tttWon = true;
+    line.forEach(i => tttCells()[i].classList.add('ttt-win'));
+    tttMsg('🎉 VOCÊ VENCEU! Herói da internet! 🦸‍♀️🦸', 'ttt-msg-win');
+    document.getElementById('next').disabled = false;
+    document.getElementById('ttt-next-unlock').classList.add('show');
+  }
+
+  function tttBotWins(line) {
+    tttBusy = true;
+    line.forEach(i => tttCells()[i].classList.add('ttt-bot-win'));
+    tttMsg('😅 O robô ganhou dessa vez! Mas você consegue! 💪', 'ttt-msg-lose');
+    document.getElementById('ttt-restart-btn').classList.add('show');
+  }
+
+  function tttTie() {
+    tttBusy = true;
+    tttMsg('🤝 Empatamos! Tente de novo para passar! 😄', 'ttt-msg-tie');
+    document.getElementById('ttt-restart-btn').classList.add('show');
+  }
+
+  function tttRestart() {
+    tttInit();
+  }
+
+  // ===== FLIP CARDS =====
+  function flipCard(el, isTrue) {
+    el.classList.add(isTrue ? 'vtrue' : 'vfalse');
+  }
+
+  // ===== QUIZ =====
+  let qIndex = 0;
+  let score = 0;
+  const questions = document.querySelectorAll('.question-card');
+
+  function answer(btn, correct) {
+    const card = btn.closest('.question-card');
+    card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+    if (correct) {
+      btn.classList.add('correct');
+      score++;
+      document.getElementById('q-score').textContent = score;
+      card.querySelectorAll('.feedback-msg.ok')[0].classList.add('show');
+    } else {
+      btn.classList.add('wrong');
+      card.querySelectorAll('.option-btn').forEach(b => {
+        if (b.onclick.toString().includes('true')) b.classList.add('correct');
+      });
+      card.querySelectorAll('.feedback-msg.err')[0].classList.add('show');
+    }
+    card.querySelector('.next-q-btn').classList.add('show');
+  }
+
+  function nextQ() {
+    questions[qIndex].classList.remove('active');
+    qIndex++;
+    if (qIndex < questions.length) {
+      questions[qIndex].classList.add('active');
+      document.getElementById('q-current').textContent = qIndex + 1;
+    }
+  }
+
+  function showResult() {
+    questions[qIndex].classList.remove('active');
+    document.getElementById('q-current').textContent = 5;
+    const result = document.querySelector('.quiz-result');
+    result.classList.add('show');
+    const pct = score / 5;
+    let emoji, title, subtitle;
+    if (pct === 1)      { emoji = '🏆'; title = 'Perfeito!';       subtitle = 'Você é um super herói da segurança! 🦸'; }
+    else if (pct >= .8) { emoji = '🌟'; title = 'Muito bem!';      subtitle = 'Quase perfeito! Você mandou muito bem!'; }
+    else if (pct >= .6) { emoji = '😊'; title = 'Bom trabalho!';   subtitle = 'Mais da metade certa! Continue assim!'; }
+    else if (pct >= .4) { emoji = '💪'; title = 'Vai lá!';         subtitle = 'Você tá aprendendo! Vamos revisar juntos?'; }
+    else                { emoji = '📚'; title = 'Quase lá!';       subtitle = 'Não desiste! Vamos revisar e tentar de novo!'; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-subtitle').textContent = subtitle;
+    document.getElementById('result-score').textContent = score;
+  }
+
+  function restartQuiz() {
+    score = 0; qIndex = 0;
+    document.getElementById('q-score').textContent = 0;
+    document.getElementById('q-current').textContent = 1;
+    document.querySelector('.quiz-result').classList.remove('show');
+    questions.forEach(q => {
+      q.classList.remove('active');
+      q.querySelectorAll('.option-btn').forEach(b => {
+        b.disabled = false;
+        b.classList.remove('correct', 'wrong');
+      });
+      q.querySelectorAll('.feedback-msg').forEach(m => m.classList.remove('show'));
+      q.querySelector('.next-q-btn').classList.remove('show');
+    });
+    questions[0].classList.add('active');
+  }
+
+  // ===== WRITING ACTIVITY =====
+  function showWritingResult() {
+    const r1 = document.getElementById('rule1').value.trim();
+    const r2 = document.getElementById('rule2').value.trim();
+    const r3 = document.getElementById('rule3').value.trim();
+
+    if (!r1 && !r2 && !r3) {
+      alert('Escreva pelo menos uma regra! ✏️');
+      return;
+    }
+
+    document.getElementById('wr-rule1').innerHTML = r1 ? '🥇 ' + r1 : '';
+    document.getElementById('wr-rule2').innerHTML = r2 ? '🥈 ' + r2 : '';
+    document.getElementById('wr-rule3').innerHTML = r3 ? '🥉 ' + r3 : '';
+
+    document.getElementById('wr-rule1').style.display = r1 ? 'flex' : 'none';
+    document.getElementById('wr-rule2').style.display = r2 ? 'flex' : 'none';
+    document.getElementById('wr-rule3').style.display = r3 ? 'flex' : 'none';
+
+    document.getElementById('writing-result').classList.add('show');
+    document.getElementById('writing-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+
+</body>
+</html>
