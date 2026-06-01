@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O que tem dentro do computador? 💻</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a1628;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header-info {
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .header-info strong { color: rgba(255,255,255,0.9); }
+
+    .carousel-wrapper { width: 100%; max-width: 720px; }
+
+    .slide {
+      display: none;
+      border-radius: 24px;
+      padding: 44px 40px;
+      min-height: 440px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: fadeIn 0.35s ease;
+    }
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-1  { background: linear-gradient(135deg, #1a237e, #3949ab); color: #fff; }
+    .slide-2  { background: linear-gradient(135deg, #4a148c, #8e24aa); color: #fff; }
+    .slide-3  { background: linear-gradient(135deg, #b71c1c, #ef5350); color: #fff; }
+    .slide-4  { background: linear-gradient(135deg, #0d47a1, #42a5f5); color: #fff; }
+    .slide-5  { background: linear-gradient(135deg, #1b5e20, #66bb6a); color: #fff; }
+    .slide-6  { background: linear-gradient(135deg, #e65100, #ffa726); color: #fff; }
+    .slide-7  { background: linear-gradient(135deg, #880e4f, #ec407a); color: #fff; }
+    .slide-8  { background: linear-gradient(135deg, #006064, #26c6da); color: #fff; }
+    .slide-9  { background: linear-gradient(135deg, #212121, #37474f); color: #fff; border: 2px solid rgba(255,255,255,0.1); }
+    .slide-10 { background: linear-gradient(135deg, #1a6b3c, #2ecc71); color: #fff; }
+
+    .slide-emoji { font-size: 68px; margin-bottom: 18px; line-height: 1; }
+    .slide-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
+    .slide-title { font-size: 26px; font-weight: 800; margin-bottom: 18px; line-height: 1.25; }
+    .slide-body { font-size: 17px; line-height: 1.75; max-width: 560px; }
+    .slide-body p { margin-bottom: 8px; }
+
+    .hl {
+      display: inline-block;
+      background: rgba(255,255,255,0.22);
+      border-radius: 8px;
+      padding: 2px 12px;
+      font-weight: 700;
+    }
+
+    /* Ask the class box */
+    .ask-box {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 16px 20px;
+      width: 100%;
+      max-width: 540px;
+      text-align: left;
+    }
+    .ask-box .ask-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .ask-box ul { list-style: none; }
+    .ask-box ul li { font-size: 16px; padding: 5px 0; }
+    .ask-box ul li::before { content: "💬 "; }
+
+    /* Body-Computer comparison grid */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 540px;
+      margin-top: 16px;
+    }
+    .comp-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 16px 14px;
+      font-size: 15px;
+      text-align: center;
+    }
+    .comp-card .comp-icon { font-size: 34px; display: block; margin-bottom: 6px; }
+    .comp-card strong { display: block; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; margin-bottom: 4px; }
+
+    /* Part card */
+    .part-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 24px 28px;
+      width: 100%;
+      max-width: 500px;
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      text-align: left;
+    }
+    .part-icon { font-size: 56px; flex-shrink: 0; }
+    .part-content .part-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .part-content .part-text { font-size: 16px; line-height: 1.6; opacity: 0.95; }
+    .part-content .part-analogy {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .part-content .part-examples {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.8;
+      font-style: italic;
+    }
+
+    /* Flip cards - match/connect */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 560px;
+      margin-top: 8px;
+    }
+    .flip-card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid transparent;
+    }
+    .flip-card:hover { background: rgba(255,255,255,0.22); }
+    .flip-card.vtrue  { background: rgba(56,239,125,0.25); border-color: #38ef7d; }
+    .flip-card.vfalse { background: rgba(229,45,39,0.25);  border-color: #e52d27; }
+    .flip-card .fc-answer { display: none; font-size: 16px; font-weight: 800; margin-top: 4px; }
+    .flip-card.vtrue  .fc-answer,
+    .flip-card.vfalse .fc-answer { display: block; }
+    .flip-card.vtrue  .fc-text,
+    .flip-card.vfalse .fc-text { font-size: 11px; opacity: 0.75; }
+
+    /* ===== MATCH GAME (Drag & Drop style — click to connect) ===== */
+    .match-container { width: 100%; max-width: 600px; }
+    .match-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .match-col-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .match-item {
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.22);
+      border-radius: 14px;
+      padding: 14px 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+    .match-item:hover { background: rgba(255,255,255,0.22); transform: scale(1.03); }
+    .match-item.selected { border-color: #ffd200; background: rgba(255,210,0,0.22); }
+    .match-item.matched { border-color: #38ef7d; background: rgba(56,239,125,0.22); cursor: default; }
+    .match-item.wrong-flash { border-color: #e52d27; background: rgba(229,45,39,0.22); animation: shake 0.4s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+    .match-score { font-size: 15px; margin-top: 12px; font-weight: 700; color: rgba(255,255,255,0.85); min-height: 24px; }
+    .match-result {
+      display: none;
+      margin-top: 16px;
+      background: rgba(56,239,125,0.18);
+      border: 2px solid #38ef7d;
+      border-radius: 16px;
+      padding: 18px 24px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #38ef7d;
+      animation: fadeIn 0.4s ease;
+    }
+    .match-result.show { display: block; }
+    .match-next-btn {
+      display: none;
+      margin-top: 14px;
+      background: linear-gradient(135deg, #38ef7d, #1a6b3c);
+      border: none;
+      border-radius: 50px;
+      padding: 13px 32px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .match-next-btn.show { display: inline-block; animation: fadeIn 0.35s ease; }
+    .match-next-btn:hover { transform: scale(1.05); }
+
+    /* ===== QUIZ ===== */
+    .quiz-container { width: 100%; max-width: 620px; }
+    .quiz-header { text-align: center; margin-bottom: 24px; }
+    .quiz-header .quiz-emoji { font-size: 56px; }
+    .quiz-header h2 { font-size: 22px; font-weight: 800; margin-top: 10px; color: #fff; }
+    .quiz-header p { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
+    .quiz-score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 8px 20px;
+      margin-bottom: 20px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .quiz-score-bar span { opacity: 0.8; }
+    .quiz-score-bar strong { font-size: 16px; }
+
+    .question-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .question-card.active { display: block; animation: fadeIn 0.3s ease; }
+
+    .q-number { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+    .q-text { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 20px; line-height: 1.4; }
+
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover:not(:disabled) { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
+    .option-btn .opt-letter { font-weight: 800; font-size: 15px; opacity: 0.7; min-width: 20px; }
+    .option-btn.correct { background: rgba(56,239,125,0.25); border-color: #38ef7d; }
+    .option-btn.wrong   { background: rgba(229,45,39,0.25);  border-color: #e52d27; }
+    .option-btn:disabled { cursor: default; }
+
+    .feedback-msg {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+    }
+    .feedback-msg.show { display: block; animation: fadeIn 0.2s ease; }
+    .feedback-msg.ok  { background: rgba(56,239,125,0.2); color: #38ef7d; }
+    .feedback-msg.err { background: rgba(229,45,39,0.2);  color: #ff7675; }
+
+    .next-q-btn {
+      margin-top: 16px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 11px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+      transition: all 0.2s;
+    }
+    .next-q-btn.show { display: inline-block; }
+    .next-q-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .quiz-result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      animation: fadeIn 0.4s ease;
+    }
+    .quiz-result.show { display: flex; }
+    .result-emoji { font-size: 80px; margin-bottom: 16px; }
+    .result-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+    .result-subtitle { font-size: 16px; opacity: 0.8; margin-bottom: 24px; }
+    .result-score {
+      font-size: 56px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2ecc71, #1a6b3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .result-max { font-size: 16px; opacity: 0.6; margin-bottom: 28px; }
+    .restart-btn {
+      background: linear-gradient(135deg, #2ecc71, #1a6b3c);
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .restart-btn:hover { transform: scale(1.05); }
+
+    /* Summary list */
+    .summary-list { list-style: none; text-align: left; margin-top: 8px; width: 100%; max-width: 500px; }
+    .summary-list li { font-size: 17px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; gap: 10px; align-items: flex-start; }
+    .summary-list li:last-child { border-bottom: none; }
+
+    /* ===== CONQUISTAS ===== */
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+      margin: 12px auto 0;
+    }
+    .ach-card {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .ach-card:hover:not(.ach-unlocked) { background: rgba(255,255,255,0.15); transform: scale(1.03); }
+    .ach-card.ach-unlocked {
+      background: rgba(56,239,125,0.18);
+      border-color: #38ef7d;
+      cursor: default;
+      animation: achPop 0.4s ease;
+    }
+    @keyframes achPop {
+      0%   { transform: scale(0.9); }
+      60%  { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .ach-lock { font-size: 32px; }
+    .ach-locked-text { font-size: 12px; opacity: 0.5; }
+    .ach-icon { font-size: 34px; display: none; }
+    .ach-rule { font-size: 13px; font-weight: 700; line-height: 1.4; display: none; color: #fff; }
+    .ach-check { font-size: 18px; display: none; color: #38ef7d; }
+    .ach-card.ach-unlocked .ach-lock,
+    .ach-card.ach-unlocked .ach-locked-text { display: none; }
+    .ach-card.ach-unlocked .ach-icon,
+    .ach-card.ach-unlocked .ach-rule,
+    .ach-card.ach-unlocked .ach-check { display: block; }
+    .mission-banner {
+      display: none;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      border-radius: 16px;
+      padding: 18px 24px;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      width: 100%;
+      max-width: 520px;
+      animation: achPop 0.5s ease;
+    }
+    .mission-banner.show { display: block; }
+    .mission-banner .mission-sub { font-size: 14px; font-weight: 600; margin-top: 4px; opacity: 0.75; }
+    .stars-row { font-size: 28px; letter-spacing: 4px; margin-top: 6px; }
+
+    /* ===== CHARADA ===== */
+    .charada-box {
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 24px 28px;
+      width: 100%;
+      max-width: 480px;
+      margin: 16px auto 0;
+      font-size: 19px;
+      line-height: 1.8;
+      font-style: italic;
+    }
+    .charada-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .charada-input {
+      flex: 1;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-size: 16px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .charada-input::placeholder { color: rgba(255,255,255,0.4); }
+    .charada-input:focus { border-color: rgba(255,255,255,0.7); }
+    .charada-input.charada-wrong { border-color: #e52d27; animation: shake 0.4s ease; }
+    .charada-btn {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .charada-btn:hover { background: rgba(255,255,255,0.32); }
+    .charada-feedback {
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      min-height: 24px;
+      transition: all 0.2s;
+    }
+    .charada-feedback.ok  { color: #38ef7d; }
+    .charada-feedback.err { color: #ff8a65; }
+    .charada-hint { font-size: 13px; opacity: 0.55; margin-top: 6px; }
+
+    /* Nav */
+    .nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 26px; }
+    .nav-btn {
+      background: rgba(255,255,255,0.13);
+      border: 2px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 50px;
+      padding: 11px 26px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.04); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .progress { color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 600; min-width: 60px; text-align: center; }
+    .dots { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.28); transition: all 0.3s; cursor: pointer; }
+    .dot.active { background: #2ecc71; transform: scale(1.3); }
+  </style>
+</head>
+<body>
+
+<div class="carousel-wrapper">
+
+  <div class="header-info">
+    <strong>Aula de segunda-feira</strong> · 8–11 anos · 45–60 min · O que tem dentro do computador? 💻🔧
+  </div>
+
+  <!-- SLIDE 1: Gancho -->
+  <div class="slide slide-1 active">
+    <div class="slide-emoji">🤔</div>
+    <div class="slide-label">Slide 1 · Gancho</div>
+    <div class="slide-title">O computador é vivo? 🤔</div>
+    <div class="slide-body">
+      <p>Ele não respira. Não come. Não dorme.</p>
+      <p><strong>Mas consegue fazer tantas coisas!</strong> 🎮📚🎵</p>
+      <p>Como é possível?</p>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O computador é vivo?"</li>
+          <li>"Como ele consegue fazer tantas coisas?"</li>
+          <li>"O que vocês acham que tem lá dentro?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Analogia geral -->
+  <div class="slide slide-2">
+    <div class="slide-emoji">🧠</div>
+    <div class="slide-label">Slide 2 · Analogia</div>
+    <div class="slide-title">O computador é como uma pessoa! 🧑</div>
+    <div class="slide-body">
+      <div class="comp-grid">
+        <div class="comp-card">
+          <span class="comp-icon">🧠</span>
+          <strong>Processador</strong>
+          O cérebro do computador
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">👀</span>
+          <strong>Monitor</strong>
+          Os olhos do computador
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">✋</span>
+          <strong>Mouse</strong>
+          As mãos do computador
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">💬</span>
+          <strong>Teclado</strong>
+          A boca do computador
+        </div>
+      </div>
+      <div class="ask-box" style="margin-top:16px;">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Qual parte do corpo você mais usa no dia a dia?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Processador = Cérebro -->
+  <div class="slide slide-3">
+    <div class="slide-emoji">🧠</div>
+    <div class="slide-label">Slide 3 · Processador</div>
+    <div class="slide-title">Processador = Cérebro! 🧠</div>
+    <div class="slide-body">
+      <div class="part-card">
+        <div class="part-icon">🧠</div>
+        <div class="part-content">
+          <div class="part-title">O processador pensa!</div>
+          <div class="part-text">Ele faz todos os cálculos e decide o que o computador vai fazer.</div>
+          <div class="part-analogy">💡 Igual ao seu cérebro quando você decide jogar, estudar ou correr!</div>
+          <div class="part-examples">Exemplos: abrir um jogo · rodar um vídeo · abrir o navegador</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que acontece se tirar o cérebro de uma pessoa?"</li>
+          <li>"E se tirar o processador do computador?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Monitor = Olhos -->
+  <div class="slide slide-4">
+    <div class="slide-emoji">👀</div>
+    <div class="slide-label">Slide 4 · Monitor</div>
+    <div class="slide-title">Monitor = Olhos! 👀</div>
+    <div class="slide-body">
+      <div class="part-card">
+        <div class="part-icon">👀</div>
+        <div class="part-content">
+          <div class="part-title">O monitor mostra tudo!</div>
+          <div class="part-text">É por ele que você vê os jogos, vídeos e sites.</div>
+          <div class="part-analogy">💡 Igual aos seus olhos — sem eles, você não enxerga nada!</div>
+          <div class="part-examples">Sem monitor = tela preta. Sem olhos = não enxerga.</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Se o monitor fosse uma parte do corpo, qual seria?"</li>
+          <li>"O que acontece se você tampar os olhos?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Mouse = Mãos -->
+  <div class="slide slide-5">
+    <div class="slide-emoji">✋</div>
+    <div class="slide-label">Slide 5 · Mouse</div>
+    <div class="slide-title">Mouse = Mãos! ✋</div>
+    <div class="slide-body">
+      <div class="part-card" style="background: rgba(0,0,0,0.15);">
+        <div class="part-icon">✋</div>
+        <div class="part-content">
+          <div class="part-title">O mouse dá comandos!</div>
+          <div class="part-text">Com ele você clica, arrasta e controla tudo na tela.</div>
+          <div class="part-analogy" style="background: rgba(0,0,0,0.2);">💡 Igual às suas mãos — com elas você pega, empurra e faz tudo!</div>
+          <div class="part-examples">Clique = toque com o dedo · Arrastar = empurrar algo</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.15);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Se o mouse fosse uma parte do corpo, qual seria?"</li>
+          <li>"O que você não conseguiria fazer sem as mãos?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Teclado = Boca -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">💬</div>
+    <div class="slide-label">Slide 6 · Teclado</div>
+    <div class="slide-title">Teclado = Boca! 💬</div>
+    <div class="slide-body">
+      <div class="part-card" style="background: rgba(0,0,0,0.15);">
+        <div class="part-icon">⌨️</div>
+        <div class="part-content">
+          <div class="part-title">O teclado fala com o computador!</div>
+          <div class="part-text">É por onde você digita palavras, números e comandos.</div>
+          <div class="part-analogy" style="background: rgba(0,0,0,0.2);">💡 Igual à sua boca — por onde você manda palavras para o mundo!</div>
+          <div class="part-examples">Digitar = falar · Pesquisar no Google = perguntar algo</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.15);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Como você enviaria uma mensagem sem o teclado?"</li>
+          <li>"Qual parte do corpo seria o teclado?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: HD/SSD = Memória -->
+  <div class="slide slide-7">
+    <div class="slide-emoji">💾</div>
+    <div class="slide-label">Slide 7 · HD / SSD</div>
+    <div class="slide-title">HD / SSD = Memória! 💾</div>
+    <div class="slide-body">
+      <div class="part-card">
+        <div class="part-icon">💾</div>
+        <div class="part-content">
+          <div class="part-title">O HD guarda tudo!</div>
+          <div class="part-text">É onde ficam guardadas fotos, vídeos, jogos e arquivos.</div>
+          <div class="part-analogy">💡 Igual à sua memória — você lembra do que comeu ontem? O HD "lembra" de tudo!</div>
+          <div class="part-examples">Fotos · Músicas · Jogos baixados · Trabalhos da escola</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que acontece se você apagar sua memória?"</li>
+          <li>"E se deletar tudo do computador?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Introdução Partes Internas -->
+  <div class="slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color: #fff;">
+    <div class="slide-emoji">🔧</div>
+    <div class="slide-label">Slide 8 · Partes Internas</div>
+    <div class="slide-title">Agora vamos abrir o computador! 🔧</div>
+    <div class="slide-body">
+      <p>Você já viu o que tem <strong>dentro</strong> de um computador?</p>
+      <p>Tem muitas peças escondidas lá dentro — cada uma tem um trabalho especial!</p>
+      <div class="comp-grid" style="margin-top:16px;">
+        <div class="comp-card">
+          <span class="comp-icon">🟢</span>
+          <strong>Placa-mãe</strong>
+          Conecta tudo
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">📋</span>
+          <strong>Memória RAM</strong>
+          Mesa de trabalho
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">❤️</span>
+          <strong>Fonte</strong>
+          Coração de energia
+        </div>
+        <div class="comp-card">
+          <span class="comp-icon">🎨</span>
+          <strong>Placa de Vídeo</strong>
+          Artista da tela
+        </div>
+      </div>
+      <div class="ask-box" style="margin-top:16px;">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Alguém já abriu um computador ou viu a placa verde por dentro?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Placa-mãe = Esqueleto -->
+  <div class="slide" style="background: linear-gradient(135deg, #1b5e20, #2e7d32); color: #fff;">
+    <div class="slide-emoji">🟢</div>
+    <div class="slide-label">Slide 9 · Placa-mãe</div>
+    <div class="slide-title">Placa-mãe = Esqueleto! 🦴</div>
+    <div class="slide-body">
+      <div class="part-card" style="background: rgba(0,0,0,0.2);">
+        <div class="part-icon">🦴</div>
+        <div class="part-content">
+          <div class="part-title">A placa-mãe conecta tudo!</div>
+          <div class="part-text">É uma placa verde grande que fica dentro do computador. Ela liga o processador, a memória, a placa de vídeo — tudo!</div>
+          <div class="part-analogy" style="background: rgba(0,0,0,0.2);">💡 Igual ao seu esqueleto — ele sustenta e conecta todos os órgãos do seu corpo!</div>
+          <div class="part-examples">Sem placa-mãe = nenhuma peça se fala · Sem esqueleto = corpo não fica de pé</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.2);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que seu esqueleto faz pelo seu corpo?"</li>
+          <li>"E a placa-mãe faz o mesmo pelo computador!"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Memória RAM = Mesa de Trabalho -->
+  <div class="slide" style="background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff;">
+    <div class="slide-emoji">📋</div>
+    <div class="slide-label">Slide 10 · Memória RAM</div>
+    <div class="slide-title">Memória RAM = Mesa de trabalho! 📋</div>
+    <div class="slide-body">
+      <div class="part-card">
+        <div class="part-icon">📋</div>
+        <div class="part-content">
+          <div class="part-title">A RAM guarda o que você está usando agora!</div>
+          <div class="part-text">Quando você abre um jogo, um vídeo e um site ao mesmo tempo, a RAM segura tudo isso enquanto você usa.</div>
+          <div class="part-analogy">💡 Igual à sua mesa — você coloca os cadernos que está usando agora. Quando vai embora, a mesa fica vazia!</div>
+          <div class="part-examples">Mais RAM = mais coisas abertas ao mesmo tempo · Desligou o PC = tudo sumiu da "mesa"</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que você coloca na sua mesa de estudos?"</li>
+          <li>"Quando você vai embora, o que acontece com o que estava na mesa?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Fonte = Coração -->
+  <div class="slide" style="background: linear-gradient(135deg, #b71c1c, #c62828); color: #fff;">
+    <div class="slide-emoji">❤️</div>
+    <div class="slide-label">Slide 11 · Fonte de Alimentação</div>
+    <div class="slide-title">Fonte = Coração! ❤️</div>
+    <div class="slide-body">
+      <div class="part-card">
+        <div class="part-icon">❤️</div>
+        <div class="part-content">
+          <div class="part-title">A fonte dá energia para tudo!</div>
+          <div class="part-text">Ela pega a energia da tomada e manda para cada peça do computador — processador, placa-mãe, HD, tudo!</div>
+          <div class="part-analogy">💡 Igual ao seu coração — ele bombeia sangue (energia) para todo o seu corpo!  Se o coração parar, o corpo para. Se a fonte queimar, o PC apaga!</div>
+          <div class="part-examples">Fonte fraca = PC desliga do nada · Coração fraco = cansaço</div>
+        </div>
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"O que acontece se o coração parar de bater?"</li>
+          <li>"E se a fonte do computador estragar?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Placa de Vídeo = Artista -->
+  <div class="slide" style="background: linear-gradient(135deg, #e65100, #bf360c); color: #fff;">
+    <div class="slide-emoji">🎨</div>
+    <div class="slide-label">Slide 12 · Placa de Vídeo (GPU)</div>
+    <div class="slide-title">Placa de Vídeo = Artista! 🎨</div>
+    <div class="slide-body">
+      <div class="part-card" style="background: rgba(0,0,0,0.15);">
+        <div class="part-icon">🎨</div>
+        <div class="part-content">
+          <div class="part-title">A GPU desenha tudo na tela!</div>
+          <div class="part-text">Ela é responsável pelos gráficos — jogos com imagens bonitas, vídeos suaves e tudo que aparece no monitor.</div>
+          <div class="part-analogy" style="background: rgba(0,0,0,0.15);">💡 Igual a um artista que pinta o que o cérebro (processador) manda! O artista deixa tudo mais bonito e rápido!</div>
+          <div class="part-examples">Placa boa = jogo lindo e rápido · Placa fraca = jogo travando</div>
+        </div>
+      </div>
+      <div class="ask-box" style="background: rgba(0,0,0,0.15);">
+        <div class="ask-label">Pergunte à turma</div>
+        <ul>
+          <li>"Vocês já viram um jogo travar e ficar feio na tela?"</li>
+          <li>"Provavelmente a placa de vídeo era fraca!"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Jogo de Ligar — Match interativo -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🎮</div>
+    <div class="slide-label">Slide 13 · Dinâmica — Clique para ligar!</div>
+    <div class="slide-title">Ligue a peça à parte do corpo! 🧩</div>
+    <div class="slide-body" style="width:100%; max-width:600px;">
+      <p style="font-size:14px; opacity:0.7; margin-bottom:8px;">Clique numa peça do computador e depois na parte do corpo correspondente!</p>
+      <div class="match-container">
+        <div class="match-cols">
+          <div>
+            <div class="match-col-title">💻 PEÇA DO COMPUTADOR</div>
+            <div class="match-item" id="mc-processador" data-id="processador" onclick="matchSelect('computer', this)">🧠 Processador</div>
+            <div class="match-item" id="mc-monitor"     data-id="monitor"     onclick="matchSelect('computer', this)">🖥️ Monitor</div>
+            <div class="match-item" id="mc-mouse"       data-id="mouse"       onclick="matchSelect('computer', this)">🖱️ Mouse</div>
+            <div class="match-item" id="mc-teclado"     data-id="teclado"     onclick="matchSelect('computer', this)">⌨️ Teclado</div>
+            <div class="match-item" id="mc-hd"          data-id="hd"          onclick="matchSelect('computer', this)">💾 HD / SSD</div>
+          </div>
+          <div>
+            <div class="match-col-title">🧑 PARTE DO CORPO</div>
+            <div class="match-item" id="mb-mao"    data-id="mouse"       onclick="matchSelect('body', this)">✋ Mão</div>
+            <div class="match-item" id="mb-cerebro" data-id="processador" onclick="matchSelect('body', this)">🧠 Cérebro</div>
+            <div class="match-item" id="mb-memoria" data-id="hd"          onclick="matchSelect('body', this)">🧩 Memória</div>
+            <div class="match-item" id="mb-boca"   data-id="teclado"     onclick="matchSelect('body', this)">💬 Boca</div>
+            <div class="match-item" id="mb-olhos"  data-id="monitor"     onclick="matchSelect('body', this)">👀 Olhos</div>
+          </div>
+        </div>
+        <div class="match-score" id="match-score">Acertos: 0 / 5</div>
+        <div class="match-result" id="match-result">🎉 Você ligou tudo certo! Incrível! 🏆</div>
+        <button class="match-next-btn" id="match-next-btn" onclick="goTo(current + 1)">Continuar a aula! 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Charada — responda para avançar -->
+  <div class="slide" style="background: linear-gradient(135deg, #0f3460, #533483); color: #fff;">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 9 · Charada — responda para continuar!</div>
+    <div class="slide-title">Você consegue adivinhar? 🤔</div>
+    <div class="slide-body" style="width:100%; max-width:520px; display:flex; flex-direction:column; align-items:center;">
+      <div class="charada-box">
+        💡 Sou pequenininho,<br>
+        mas penso por você.<br>
+        Faço contas em segundos<br>
+        que ninguém consegue ver.<br><br>
+        Sem mim o computador<br>
+        não sabe o que fazer.<br>
+        Sou o <strong>cérebro da máquina</strong> —<br>
+        o que sou eu? 🤖<br>
+      </div>
+      <div class="charada-input-row">
+        <input
+          class="charada-input"
+          id="charada-input"
+          type="text"
+          placeholder="Digite a resposta..."
+          onkeydown="if(event.key==='Enter') charadaCheck()"
+          autocomplete="off"
+        />
+        <button class="charada-btn" onclick="charadaCheck()">Responder 🚀</button>
+      </div>
+      <div class="charada-feedback" id="charada-feedback"></div>
+      <div class="charada-hint" id="charada-hint">💡 Dica: começa com P e termina com R</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Verdadeiro ou Falso -->
+  <div class="slide" style="background: linear-gradient(135deg, #1a237e, #5c6bc0); color: #fff;">
+    <div class="slide-emoji">🤔</div>
+    <div class="slide-label">Slide 10 · Verdadeiro ou Falso — clique pra revelar!</div>
+    <div class="slide-title">Verdadeiro ou Falso?</div>
+    <div class="slide-body">
+      <div class="flip-grid">
+        <div class="flip-card" onclick="flipCard(this, true)">
+          <div>
+            <div class="fc-text">"O processador é o cérebro do computador"</div>
+            <div class="fc-answer">✅ VERDADEIRO!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, false)">
+          <div>
+            <div class="fc-text">"O monitor é a mão do computador"</div>
+            <div class="fc-answer">❌ FALSO — monitor = olhos!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, true)">
+          <div>
+            <div class="fc-text">"O teclado é a boca do computador"</div>
+            <div class="fc-answer">✅ VERDADEIRO!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, false)">
+          <div>
+            <div class="fc-text">"O HD serve para mostrar imagens na tela"</div>
+            <div class="fc-answer">❌ FALSO — HD guarda arquivos!</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="flipCard(this, true)" style="grid-column: 1 / -1;">
+          <div>
+            <div class="fc-text">"O mouse serve para dar comandos, igual às nossas mãos"</div>
+            <div class="fc-answer">✅ VERDADEIRO! Mouse = mãos!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Quiz intro -->
+  <div class="slide slide-8" style="background: linear-gradient(135deg, #004d40, #00897b);">
+    <div class="slide-emoji">🏆</div>
+    <div class="slide-label">Slide 11 · Quiz</div>
+    <div class="slide-title">Hora do Quiz! 🧠</div>
+    <div class="slide-body">
+      <p>Vamos ver o que você aprendeu? 😄</p>
+      <p><strong>5 perguntas</strong> sobre as partes do computador.</p>
+      <p>Pode responder em grupo ou individual!</p>
+      <p style="margin-top:16px"><em>Clique em "Próximo" pra começar ➡️</em></p>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Quiz interativo -->
+  <div class="slide slide-9">
+    <div class="slide-label">Slide 12 · Quiz Interativo</div>
+
+    <div class="quiz-container">
+
+      <div class="quiz-header">
+        <div class="quiz-emoji">💻</div>
+        <h2>Quiz: Partes do Computador</h2>
+        <p>Escolha a resposta certa!</p>
+      </div>
+
+      <div class="quiz-score-bar">
+        <span>Pergunta <strong id="q-current">1</strong> de <strong>5</strong></span>
+        <span>Pontos: <strong id="q-score">0</strong></span>
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-card active" data-q="0">
+        <div class="q-number">Pergunta 1</div>
+        <div class="q-text">Qual é o "cérebro" do computador?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Monitor</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">B</span> Processador</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> Teclado</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Mouse</button>
+        </div>
+        <div class="feedback-msg ok">✅ Isso! O processador é o cérebro — ele pensa por todos! 🧠</div>
+        <div class="feedback-msg err">❌ O cérebro do computador é o Processador!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question-card" data-q="1">
+        <div class="q-number">Pergunta 2</div>
+        <div class="q-text">Qual parte do computador é como os "olhos"?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Teclado</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> HD</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Monitor</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Processador</button>
+        </div>
+        <div class="feedback-msg ok">✅ Perfeito! O monitor mostra tudo, igual aos seus olhos! 👀</div>
+        <div class="feedback-msg err">❌ Os "olhos" do computador são o Monitor!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question-card" data-q="2">
+        <div class="q-number">Pergunta 3</div>
+        <div class="q-text">Onde ficam guardados seus jogos e fotos no computador?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> No monitor</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> No mouse</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> No teclado</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">D</span> No HD ou SSD</button>
+        </div>
+        <div class="feedback-msg ok">✅ Exato! O HD/SSD é a memória — guarda tudo! 💾</div>
+        <div class="feedback-msg err">❌ Jogos e fotos ficam guardados no HD ou SSD!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question-card" data-q="3">
+        <div class="q-number">Pergunta 4</div>
+        <div class="q-text">Para que serve o mouse?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">A</span> Para clicar e dar comandos na tela</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Para guardar arquivos</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> Para mostrar imagens</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Para fazer cálculos</button>
+        </div>
+        <div class="feedback-msg ok">✅ Isso! O mouse é como as mãos — com ele você dá todos os comandos! ✋</div>
+        <div class="feedback-msg err">❌ O mouse serve para clicar e dar comandos — igual às mãos!</div>
+        <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question-card" data-q="4">
+        <div class="q-number">Pergunta 5</div>
+        <div class="q-text">Qual parte do computador é como a "boca"?</div>
+        <div class="options">
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Monitor</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Mouse</button>
+          <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Teclado</button>
+          <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Processador</button>
+        </div>
+        <div class="feedback-msg ok">✅ Muito bem! O teclado é a boca — por ele você "fala" com o computador! ⌨️</div>
+        <div class="feedback-msg err">❌ A "boca" do computador é o Teclado!</div>
+        <button class="next-q-btn" onclick="showResult()">Ver resultado 🏆</button>
+      </div>
+
+      <!-- Result -->
+      <div class="quiz-result">
+        <div class="result-emoji" id="result-emoji">🏆</div>
+        <div class="result-title" id="result-title">Incrível!</div>
+        <div class="result-subtitle" id="result-subtitle">Você conhece o computador por dentro!</div>
+        <div class="result-score" id="result-score">5</div>
+        <div class="result-max">de 5 pontos</div>
+        <button class="restart-btn" onclick="restartQuiz()">🔄 Jogar de novo</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Encerramento com conquistas -->
+  <div class="slide slide-10">
+    <div class="slide-emoji">🦾</div>
+    <div class="slide-label">Slide Final · Desbloqueie suas conquistas!</div>
+    <div class="slide-title">Você conhece o computador! 🌟</div>
+    <div class="slide-body" style="width:100%; max-width:560px; display:flex; flex-direction:column; align-items:center;">
+      <p style="font-size:14px; opacity:0.65; margin-bottom:4px;">Clique em cada conquista para desbloquear 👆</p>
+
+      <div class="achievement-grid" id="achievement-grid">
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 1</div>
+          <div class="ach-icon">🧠</div>
+          <div class="ach-rule">Processador = cérebro — ele pensa por todos!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 2</div>
+          <div class="ach-icon">👀</div>
+          <div class="ach-rule">Monitor = olhos — mostra tudo para a gente!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 3</div>
+          <div class="ach-icon">✋</div>
+          <div class="ach-rule">Mouse = mãos — com ele damos todos os comandos!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 4</div>
+          <div class="ach-icon">⌨️</div>
+          <div class="ach-rule">Teclado = boca — por ele digitamos nossas palavras!</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+        <div class="ach-card" onclick="unlockAch(this)" style="grid-column: 1 / -1;">
+          <div class="ach-lock">🔒</div>
+          <div class="ach-locked-text">Conquista 5 — A mais importante!</div>
+          <div class="ach-icon">💾</div>
+          <div class="ach-rule">HD/SSD = memória — guarda todos os nossos arquivos, jogos e fotos! 💪</div>
+          <div class="ach-check">✅ Desbloqueado!</div>
+        </div>
+      </div>
+
+      <div class="mission-banner" id="mission-banner">
+        🏆 MISSÃO CUMPRIDA! 🏆
+        <div class="mission-sub">Você completou a aula: O que tem dentro do computador?</div>
+        <div class="stars-row">⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button class="nav-btn" id="prev" onclick="changeSlide(-1)" disabled>← Anterior</button>
+    <span class="progress" id="progress">1 / 13</span>
+    <button class="nav-btn" id="next" onclick="changeSlide(1)">Próximo →</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const dotsEl = document.getElementById('dots');
+  const CHARADA_SLIDE_INDEX = 13;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+    document.getElementById('progress').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('prev').disabled = current === 0;
+    document.getElementById('next').disabled = current === total - 1;
+    if (current === CHARADA_SLIDE_INDEX) { charadaReset(); document.getElementById('next').disabled = true; }
+  }
+
+  function changeSlide(dir) {
+    const n = current + dir;
+    if (n >= 0 && n < total) goTo(n);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  // ===== MATCH GAME =====
+  let matchSelected = { computer: null, body: null };
+  let matchCount = 0;
+
+  function matchSelect(side, el) {
+    if (el.classList.contains('matched')) return;
+
+    if (matchSelected[side]) {
+      matchSelected[side].classList.remove('selected');
+    }
+    matchSelected[side] = el;
+    el.classList.add('selected');
+
+    if (matchSelected.computer && matchSelected.body) {
+      const compId = matchSelected.computer.dataset.id;
+      const bodyId = matchSelected.body.dataset.id;
+
+      if (compId === bodyId) {
+        matchSelected.computer.classList.remove('selected');
+        matchSelected.body.classList.remove('selected');
+        matchSelected.computer.classList.add('matched');
+        matchSelected.body.classList.add('matched');
+        matchSelected.computer.onclick = null;
+        matchSelected.body.onclick = null;
+        matchCount++;
+        document.getElementById('match-score').textContent = 'Acertos: ' + matchCount + ' / 5';
+        if (matchCount === 5) {
+          document.getElementById('match-result').classList.add('show');
+          document.getElementById('match-next-btn').classList.add('show');
+          document.getElementById('next').disabled = false;
+        }
+      } else {
+        const c = matchSelected.computer;
+        const b = matchSelected.body;
+        c.classList.add('wrong-flash');
+        b.classList.add('wrong-flash');
+        setTimeout(() => {
+          c.classList.remove('wrong-flash', 'selected');
+          b.classList.remove('wrong-flash', 'selected');
+        }, 500);
+      }
+      matchSelected = { computer: null, body: null };
+    }
+  }
+
+  // ===== CHARADA =====
+  const CHARADA_ANSWERS = ['processador', 'o processador'];
+  let charadaWrongCount = 0;
+
+  function charadaReset() {
+    const input = document.getElementById('charada-input');
+    const fb = document.getElementById('charada-feedback');
+    const hint = document.getElementById('charada-hint');
+    input.value = '';
+    input.classList.remove('charada-wrong');
+    input.disabled = false;
+    fb.textContent = '';
+    fb.className = 'charada-feedback';
+    hint.style.display = 'block';
+    charadaWrongCount = 0;
+  }
+
+  function charadaCheck() {
+    const input = document.getElementById('charada-input');
+    const fb = document.getElementById('charada-feedback');
+    const val = input.value.trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+    if (CHARADA_ANSWERS.map(a => a.normalize('NFD').replace(/[̀-ͯ]/g, '')).includes(val)) {
+      fb.textContent = '🎉 ISSO! Processador = o cérebro do computador! 🧠✨';
+      fb.className = 'charada-feedback ok';
+      input.disabled = true;
+      document.getElementById('next').disabled = false;
+      document.getElementById('charada-hint').style.display = 'none';
+    } else {
+      charadaWrongCount++;
+      input.classList.add('charada-wrong');
+      setTimeout(() => input.classList.remove('charada-wrong'), 450);
+      const msgs = [
+        '❌ Não foi dessa vez! Tente de novo 😄',
+        '🤔 Quase! Pense nos slides anteriores...',
+        '😅 Dica: começa com "Pro" e termina com "dor"!',
+        '💪 Você consegue! É o cérebro da máquina!',
+      ];
+      fb.textContent = msgs[Math.min(charadaWrongCount - 1, msgs.length - 1)];
+      fb.className = 'charada-feedback err';
+      input.select();
+    }
+  }
+
+  // ===== FLIP CARDS =====
+  function flipCard(el, isTrue) {
+    if (el.classList.contains('vtrue') || el.classList.contains('vfalse')) return;
+    el.classList.add(isTrue ? 'vtrue' : 'vfalse');
+  }
+
+  // ===== QUIZ =====
+  let qIndex = 0;
+  let score = 0;
+  const questions = document.querySelectorAll('.question-card');
+
+  function answer(btn, correct) {
+    const card = btn.closest('.question-card');
+    card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+    if (correct) {
+      btn.classList.add('correct');
+      score++;
+      document.getElementById('q-score').textContent = score;
+      card.querySelectorAll('.feedback-msg.ok')[0].classList.add('show');
+    } else {
+      btn.classList.add('wrong');
+      card.querySelectorAll('.option-btn').forEach(b => {
+        if (b.onclick.toString().includes('true')) b.classList.add('correct');
+      });
+      card.querySelectorAll('.feedback-msg.err')[0].classList.add('show');
+    }
+    card.querySelector('.next-q-btn').classList.add('show');
+  }
+
+  function nextQ() {
+    questions[qIndex].classList.remove('active');
+    qIndex++;
+    if (qIndex < questions.length) {
+      questions[qIndex].classList.add('active');
+      document.getElementById('q-current').textContent = qIndex + 1;
+    }
+  }
+
+  function showResult() {
+    questions[qIndex].classList.remove('active');
+    document.getElementById('q-current').textContent = 5;
+    const result = document.querySelector('.quiz-result');
+    result.classList.add('show');
+    const pct = score / 5;
+    let emoji, title, subtitle;
+    if (pct === 1)      { emoji = '🏆'; title = 'Perfeito!';       subtitle = 'Você conhece o computador por dentro! 🧠'; }
+    else if (pct >= .8) { emoji = '🌟'; title = 'Muito bem!';      subtitle = 'Quase perfeito! Você mandou muito bem!'; }
+    else if (pct >= .6) { emoji = '😊'; title = 'Bom trabalho!';   subtitle = 'Mais da metade certa! Continue assim!'; }
+    else if (pct >= .4) { emoji = '💪'; title = 'Vai lá!';         subtitle = 'Você tá aprendendo! Vamos revisar juntos?'; }
+    else                { emoji = '📚'; title = 'Quase lá!';       subtitle = 'Não desiste! Vamos revisar e tentar de novo!'; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-subtitle').textContent = subtitle;
+    document.getElementById('result-score').textContent = score;
+  }
+
+  function restartQuiz() {
+    score = 0; qIndex = 0;
+    document.getElementById('q-score').textContent = 0;
+    document.getElementById('q-current').textContent = 1;
+    document.querySelector('.quiz-result').classList.remove('show');
+    questions.forEach(q => {
+      q.classList.remove('active');
+      q.querySelectorAll('.option-btn').forEach(b => {
+        b.disabled = false;
+        b.classList.remove('correct', 'wrong');
+      });
+      q.querySelectorAll('.feedback-msg').forEach(m => m.classList.remove('show'));
+      q.querySelector('.next-q-btn').classList.remove('show');
+    });
+    questions[0].classList.add('active');
+  }
+
+  // ===== CONQUISTAS =====
+  function unlockAch(card) {
+    if (card.classList.contains('ach-unlocked')) return;
+    card.classList.add('ach-unlocked');
+    const all = document.querySelectorAll('.ach-card');
+    if ([...all].every(c => c.classList.contains('ach-unlocked'))) {
+      setTimeout(() => document.getElementById('mission-banner').classList.add('show'), 300);
+    }
+  }
+</script>
+
+</body>
+</html>
