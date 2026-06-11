@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O que tem dentro do computador? 💻</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #08101e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header-info {
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .header-info strong { color: rgba(255,255,255,0.85); }
+
+    .carousel-wrapper { width: 100%; max-width: 740px; }
+
+    .slide {
+      display: none;
+      border-radius: 24px;
+      padding: 44px 40px;
+      min-height: 460px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: fadeIn 0.35s ease;
+    }
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-emoji { font-size: 64px; margin-bottom: 18px; line-height: 1; }
+    .slide-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
+    .slide-title { font-size: 26px; font-weight: 800; margin-bottom: 18px; line-height: 1.25; }
+    .slide-body  { font-size: 17px; line-height: 1.75; max-width: 580px; }
+    .slide-body p { margin-bottom: 8px; }
+
+    .hl {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 2px 12px;
+      font-weight: 700;
+    }
+
+    /* ask box */
+    .ask-box {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px 18px;
+      width: 100%;
+      max-width: 560px;
+      text-align: left;
+    }
+    .ask-box .ask-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; opacity: 0.65; margin-bottom: 8px;
+    }
+    .ask-box ul { list-style: none; }
+    .ask-box ul li { font-size: 15px; padding: 4px 0; }
+    .ask-box ul li::before { content: "💬 "; }
+
+    /* component card */
+    .comp-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      text-align: left;
+      width: 100%;
+      max-width: 580px;
+    }
+    .comp-icon { font-size: 36px; flex-shrink: 0; }
+    .comp-content { flex: 1; }
+    .comp-name { font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+    .comp-title { font-size: 18px; font-weight: 700; margin: 4px 0 6px; }
+    .comp-desc { font-size: 15px; line-height: 1.6; opacity: 0.9; }
+    .comp-spec { display: inline-block; margin-top: 8px; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 600; }
+
+    /* specs table */
+    .specs-table { width: 100%; max-width: 620px; border-collapse: collapse; font-size: 14px; }
+    .specs-table th, .specs-table td { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.15); text-align: left; }
+    .specs-table th { background: rgba(255,255,255,0.18); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+    .specs-table tr:nth-child(even) td { background: rgba(255,255,255,0.05); }
+    .specs-table td.cat { font-weight: 700; opacity: 0.8; }
+
+    /* pc builder */
+    .builder-section { width: 100%; max-width: 600px; }
+    .builder-scenario {
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .builder-scenario h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .builder-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+    .builder-btn {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .builder-btn:hover { background: rgba(255,255,255,0.25); }
+    .builder-btn.correct { border-color: #4caf50; background: rgba(76,175,80,0.25); }
+    .builder-btn.wrong   { border-color: #f44336; background: rgba(244,67,54,0.2); }
+    .builder-feedback { font-size: 14px; margin-top: 10px; min-height: 20px; font-weight: 600; }
+
+    /* flip cards (V/F) */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 580px;
+    }
+    .flip-card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: background 0.2s;
+      user-select: none;
+    }
+    .flip-card:hover { background: rgba(255,255,255,0.2); }
+    .flip-card.revealed-true  { background: rgba(76,175,80,0.3); border: 2px solid #4caf50; }
+    .flip-card.revealed-false { background: rgba(244,67,54,0.25); border: 2px solid #f44336; }
+    .fc-text { font-weight: 600; margin-bottom: 6px; }
+    .fc-answer { display: none; font-size: 13px; margin-top: 6px; font-weight: 700; }
+    .flip-card.revealed-true .fc-answer,
+    .flip-card.revealed-false .fc-answer { display: block; }
+
+    /* quiz */
+    .quiz-container { width: 100%; max-width: 600px; }
+    .quiz-header { margin-bottom: 20px; }
+    .quiz-header h2 { font-size: 22px; font-weight: 800; }
+    .quiz-header p  { opacity: 0.7; font-size: 15px; }
+    .quiz-score-bar { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 16px; opacity: 0.75; }
+    .question-card { display: none; text-align: left; }
+    .question-card.active { display: block; }
+    .q-number { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; }
+    .q-text { font-size: 18px; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .option-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
+    .option-btn.correct { border-color: #4caf50; background: rgba(76,175,80,0.25); }
+    .option-btn.wrong   { border-color: #f44336; background: rgba(244,67,54,0.2); }
+    .option-btn:disabled { cursor: default; }
+    .opt-letter { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 2px 8px; font-size: 13px; font-weight: 800; }
+    .feedback-msg { display: none; margin-top: 14px; font-size: 15px; font-weight: 600; padding: 10px 14px; border-radius: 10px; }
+    .feedback-msg.ok  { background: rgba(76,175,80,0.25); }
+    .feedback-msg.err { background: rgba(244,67,54,0.2); }
+    .next-q-btn {
+      display: none; margin-top: 14px;
+      background: rgba(255,255,255,0.2); border: none; border-radius: 10px;
+      color: #fff; font-size: 15px; font-weight: 700; padding: 10px 20px; cursor: pointer;
+    }
+    .next-q-btn:hover { background: rgba(255,255,255,0.3); }
+
+    /* conquistas */
+    .trophy-grid { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 8px; }
+    .trophy-item { background: rgba(255,255,255,0.1); border-radius: 14px; padding: 12px 18px; font-size: 14px; font-weight: 600; }
+
+    /* nav */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 20px; width: 100%; max-width: 740px;
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.12);
+      border: none; border-radius: 12px;
+      color: #fff; font-size: 15px; font-weight: 700;
+      padding: 12px 24px; cursor: pointer; transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.22); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .slide-counter { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="header-info">
+    <strong>O que tem dentro do computador?</strong> · 11–16 anos · Quinta-feira
+  </div>
+
+  <div class="carousel-wrapper">
+
+    <!-- SLIDE 1: Gancho -->
+    <div class="slide active" style="background: linear-gradient(135deg, #0d1b3e, #1a237e); color: #fff;">
+      <div class="slide-emoji">💻</div>
+      <div class="slide-label">Slide 1 · Abertura</div>
+      <div class="slide-title">Seu PC conseguiria rodar Fortnite no gráfico máximo? 🎮</div>
+      <div class="slide-body">
+        <p>A maioria das pessoas usa computador todo dia — mas poucos sabem o que tem lá dentro.</p>
+        <p>Hoje vamos abrir essa caixa e entender <strong>cada peça, o que faz, e por que importa.</strong></p>
+        <div class="ask-box">
+          <div class="ask-label">Reflita antes de começar</div>
+          <ul>
+            <li>O que você acha que faz um PC ser rápido ou lento?</li>
+            <li>Qual a diferença entre um PC de R$ 1.500 e um de R$ 5.000?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Visão geral -->
+    <div class="slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff;">
+      <div class="slide-emoji">🗺️</div>
+      <div class="slide-label">Slide 2 · Visão Geral</div>
+      <div class="slide-title">O que existe dentro do computador?</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:560px; text-align:left;">
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">🧠</div>
+            <div class="comp-content"><div class="comp-name">CPU</div><div class="comp-title">Processador</div></div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">📋</div>
+            <div class="comp-content"><div class="comp-name">RAM</div><div class="comp-title">Memória</div></div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">💾</div>
+            <div class="comp-content"><div class="comp-name">SSD / HD</div><div class="comp-title">Armazenamento</div></div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">🎨</div>
+            <div class="comp-content"><div class="comp-name">GPU</div><div class="comp-title">Placa de Vídeo</div></div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">🔌</div>
+            <div class="comp-content"><div class="comp-name">Motherboard</div><div class="comp-title">Placa-mãe</div></div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0">
+            <div class="comp-icon">⚡</div>
+            <div class="comp-content"><div class="comp-name">PSU</div><div class="comp-title">Fonte</div></div>
+          </div>
+        </div>
+        <p style="margin-top:16px; opacity:0.7; font-size:14px;">Cada peça tem uma função específica. Juntas, formam o sistema.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: CPU -->
+    <div class="slide" style="background: linear-gradient(135deg, #0d47a1, #1565c0); color: #fff;">
+      <div class="slide-emoji">🧠</div>
+      <div class="slide-label">Slide 3 · CPU — Processador</div>
+      <div class="slide-title">O Processador — o cérebro multi-tarefa</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="comp-card">
+          <div class="comp-icon">🧠</div>
+          <div class="comp-content">
+            <div class="comp-name">CPU — Central Processing Unit</div>
+            <div class="comp-desc">Executa <strong>todas as instruções</strong> do sistema — desde abrir o navegador até rodar um jogo. Quanto mais núcleos (cores) e maior o clock (GHz), mais tarefas ele faz ao mesmo tempo.</div>
+            <span class="comp-spec">⚡ Ex: Intel i5 4-núcleos 3.5 GHz vs i9 16-núcleos 5.6 GHz</span>
+          </div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-label">Pense nisso</div>
+          <ul>
+            <li>Por que abrir muitas abas deixa o PC lento?</li>
+            <li>O que significa "4 núcleos"? — O cérebro faz 4 coisas ao mesmo tempo!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: RAM -->
+    <div class="slide" style="background: linear-gradient(135deg, #4a148c, #6a1b9a); color: #fff;">
+      <div class="slide-emoji">📋</div>
+      <div class="slide-label">Slide 4 · RAM — Memória</div>
+      <div class="slide-title">RAM — a mesa de trabalho do computador</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="comp-card">
+          <div class="comp-icon">📋</div>
+          <div class="comp-content">
+            <div class="comp-name">RAM — Random Access Memory</div>
+            <div class="comp-desc">Guarda <strong>temporariamente</strong> o que está sendo usado agora. É como a mesa do seu quarto — quanto maior a mesa, mais coisas você tem abertas ao mesmo tempo.</div>
+            <span class="comp-spec">📊 8 GB = básico · 16 GB = gamer · 32 GB = edição de vídeo/streaming</span>
+          </div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-label">Atenção!</div>
+          <ul>
+            <li>RAM ≠ armazenamento. Ao desligar o PC, a RAM é apagada.</li>
+            <li>Abrir 30 abas no Chrome pode usar 4–8 GB sozinho!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: HD vs SSD -->
+    <div class="slide" style="background: linear-gradient(135deg, #006064, #00838f); color: #fff;">
+      <div class="slide-emoji">💾</div>
+      <div class="slide-label">Slide 5 · Armazenamento</div>
+      <div class="slide-title">HD vs SSD — armário antigo vs gaveta turbo</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:560px;">
+          <div class="comp-card" style="margin-bottom:0; flex-direction:column; align-items:center; text-align:center;">
+            <div style="font-size:36px">🐢</div>
+            <div class="comp-name" style="margin-top:8px">HD</div>
+            <div class="comp-desc" style="font-size:14px; margin-top:6px">Disco magnético girando. Lento, barulhento, mas barato. ~150 MB/s</div>
+          </div>
+          <div class="comp-card" style="margin-bottom:0; flex-direction:column; align-items:center; text-align:center;">
+            <div style="font-size:36px">🚀</div>
+            <div class="comp-name" style="margin-top:8px">SSD</div>
+            <div class="comp-desc" style="font-size:14px; margin-top:6px">Chips de memória. Silencioso e ultra-rápido. ~500–7.000 MB/s (NVMe)</div>
+          </div>
+        </div>
+        <div class="ask-box" style="margin-top:14px">
+          <div class="ask-label">Por que o PC fica lento?</div>
+          <ul>
+            <li>PC com HD: liga em 60–90 segundos. Com SSD: 10–15 segundos.</li>
+            <li>Jogos em SSD: sem "telas de loading" eternas!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: GPU -->
+    <div class="slide" style="background: linear-gradient(135deg, #b71c1c, #c62828); color: #fff;">
+      <div class="slide-emoji">🎨</div>
+      <div class="slide-label">Slide 6 · GPU — Placa de Vídeo</div>
+      <div class="slide-title">GPU — o processador especialista em imagens</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="comp-card">
+          <div class="comp-icon">🎨</div>
+          <div class="comp-content">
+            <div class="comp-name">GPU — Graphics Processing Unit</div>
+            <div class="comp-desc">Calcula cada pixel da tela em tempo real. Para jogos, vídeos 4K e até <strong>Inteligência Artificial</strong>. Uma GPU pode ter <strong>milhares de núcleos</strong> — especializada em paralelismo.</div>
+            <span class="comp-spec">🎮 RTX 4060 (~R$ 1.800) vs RTX 4090 (~R$ 10.000)</span>
+          </div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-label">Você sabia?</div>
+          <ul>
+            <li>GPUs são usadas para treinar IAs como o ChatGPT.</li>
+            <li>Sem GPU dedicada: jogo em "gráfico baixo" ou com lag.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Placa-mãe -->
+    <div class="slide" style="background: linear-gradient(135deg, #1b5e20, #2e7d32); color: #fff;">
+      <div class="slide-emoji">🔌</div>
+      <div class="slide-label">Slide 7 · Placa-mãe</div>
+      <div class="slide-title">Placa-mãe — o esqueleto do computador</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="comp-card">
+          <div class="comp-icon">🔌</div>
+          <div class="comp-content">
+            <div class="comp-name">Motherboard</div>
+            <div class="comp-desc">Conecta <strong>todas as peças</strong>. CPU, RAM, SSD e GPU se encaixam na placa-mãe para se comunicar entre si. O modelo da placa-mãe define quais processadores são compatíveis — limitando o upgrade futuro.</div>
+            <span class="comp-spec">⚠️ Compatibilidade importa: não dá pra colocar qualquer CPU em qualquer placa-mãe.</span>
+          </div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-label">Reflexão</div>
+          <ul>
+            <li>"Trocar só o processador" pode exigir trocar a placa-mãe também.</li>
+            <li>Por isso, planejar o PC antes de montar economiza dinheiro!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Fonte -->
+    <div class="slide" style="background: linear-gradient(135deg, #e65100, #bf360c); color: #fff;">
+      <div class="slide-emoji">⚡</div>
+      <div class="slide-label">Slide 8 · Fonte de Alimentação</div>
+      <div class="slide-title">Fonte — o sistema elétrico do PC</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="comp-card">
+          <div class="comp-icon">⚡</div>
+          <div class="comp-content">
+            <div class="comp-name">PSU — Power Supply Unit</div>
+            <div class="comp-desc">Converte a energia da tomada (220V) para voltagens que o PC usa (12V, 5V, 3.3V). Fonte fraca = <strong>PC desliga em jogo</strong> pesado. Certificação 80 Plus = mais eficiência, menos calor.</div>
+            <span class="comp-spec">💡 PC gamer típico: 650–850W · PC de escritório: 350–450W</span>
+          </div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-label">Por que a fonte importa?</div>
+          <ul>
+            <li>Fonte barata pode queimar outras peças em caso de pico de energia.</li>
+            <li>GPU de alto desempenho consome até 450W sozinha!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Specs na prática -->
+    <div class="slide" style="background: linear-gradient(135deg, #1a237e, #283593); color: #fff;">
+      <div class="slide-emoji">📊</div>
+      <div class="slide-label">Slide 9 · Specs na Prática</div>
+      <div class="slide-title">Qual PC escolher para cada uso?</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th>Peça</th>
+              <th>🏫 Escola</th>
+              <th>🎮 Gamer</th>
+              <th>🎬 Edição Vídeo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cat">CPU</td><td>i3 / Ryzen 3</td><td>i5 / Ryzen 5</td><td>i9 / Ryzen 9</td></tr>
+            <tr><td class="cat">RAM</td><td>8 GB</td><td>16 GB</td><td>32–64 GB</td></tr>
+            <tr><td class="cat">SSD</td><td>256 GB</td><td>512 GB – 1 TB</td><td>2 TB NVMe</td></tr>
+            <tr><td class="cat">GPU</td><td>Integrada</td><td>RTX 4060+</td><td>RTX 4070+</td></tr>
+            <tr><td class="cat">💰 Custo</td><td>~R$ 2.000</td><td>~R$ 4–6 K</td><td>~R$ 8–15 K</td></tr>
+          </tbody>
+        </table>
+        <div class="ask-box" style="margin-top:14px">
+          <div class="ask-label">Discussão</div>
+          <ul>
+            <li>O que a escola deveria priorizar ao comprar computadores?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Monte seu PC — atividade interativa -->
+    <div class="slide" style="background: linear-gradient(135deg, #0f3460, #533483); color: #fff;">
+      <div class="slide-emoji">🔧</div>
+      <div class="slide-label">Slide 10 · Atividade — Monte seu PC!</div>
+      <div class="slide-title">Escolha o componente certo para cada situação!</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="builder-section">
+
+          <div class="builder-scenario">
+            <h4>🎮 Cenário 1: Jogar Fortnite em gráfico alto sem lag</h4>
+            <p style="font-size:14px; opacity:0.7; margin-bottom:10px;">Qual peça impacta mais nessa situação?</p>
+            <div class="builder-opts">
+              <button class="builder-btn" onclick="builderAnswer(this, 'b1', false)">Mais RAM</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b1', true)">GPU mais potente</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b1', false)">HD maior</button>
+            </div>
+            <div class="builder-feedback" id="b1-feedback"></div>
+          </div>
+
+          <div class="builder-scenario">
+            <h4>🐢 Cenário 2: PC demora 2 minutos pra ligar</h4>
+            <p style="font-size:14px; opacity:0.7; margin-bottom:10px;">Qual upgrade resolve mais rápido?</p>
+            <div class="builder-opts">
+              <button class="builder-btn" onclick="builderAnswer(this, 'b2', false)">Mais RAM</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b2', true)">Trocar HD por SSD</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b2', false)">GPU melhor</button>
+            </div>
+            <div class="builder-feedback" id="b2-feedback"></div>
+          </div>
+
+          <div class="builder-scenario">
+            <h4>🎬 Cenário 3: Editar vídeo em 4K trava com frequência</h4>
+            <p style="font-size:14px; opacity:0.7; margin-bottom:10px;">Qual upgrade resolve?</p>
+            <div class="builder-opts">
+              <button class="builder-btn" onclick="builderAnswer(this, 'b3', true)">Mais RAM (32 GB)</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b3', false)">Fonte maior</button>
+              <button class="builder-btn" onclick="builderAnswer(this, 'b3', false)">Monitor 4K</button>
+            </div>
+            <div class="builder-feedback" id="b3-feedback"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: Verdadeiro ou Falso técnico -->
+    <div class="slide" style="background: linear-gradient(135deg, #263238, #37474f); color: #fff;">
+      <div class="slide-emoji">🤔</div>
+      <div class="slide-label">Slide 11 · Verdadeiro ou Falso — clique para revelar!</div>
+      <div class="slide-title">Verdadeiro ou Falso?</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="flip-grid">
+          <div class="flip-card" onclick="flipCard(this, true)">
+            <div class="fc-text">"RAM e SSD são tipos de memória, mas com funções diferentes"</div>
+            <div class="fc-answer">✅ VERDADEIRO! RAM = temporária (velocidade), SSD = permanente (armazenamento).</div>
+          </div>
+          <div class="flip-card" onclick="flipCard(this, false)">
+            <div class="fc-text">"Mais GHz no processador significa sempre mais rápido"</div>
+            <div class="fc-answer">❌ FALSO — número de núcleos e arquitetura também importam muito.</div>
+          </div>
+          <div class="flip-card" onclick="flipCard(this, true)">
+            <div class="fc-text">"GPUs são usadas para treinar modelos de Inteligência Artificial"</div>
+            <div class="fc-answer">✅ VERDADEIRO! O ChatGPT e outras IAs usam clusters de GPUs para aprender.</div>
+          </div>
+          <div class="flip-card" onclick="flipCard(this, false)">
+            <div class="fc-text">"Qualquer processador funciona em qualquer placa-mãe"</div>
+            <div class="fc-answer">❌ FALSO — CPU e placa-mãe precisam ter sockets compatíveis.</div>
+          </div>
+          <div class="flip-card" onclick="flipCard(this, true)" style="grid-column: 1 / -1;">
+            <div class="fc-text">"Um SSD NVMe pode ser até 40× mais rápido que um HD tradicional"</div>
+            <div class="fc-answer">✅ VERDADEIRO! HD: ~150 MB/s · SSD NVMe: ~6.000 MB/s — diferença enorme.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Quiz intro -->
+    <div class="slide" style="background: linear-gradient(135deg, #004d40, #00695c); color: #fff;">
+      <div class="slide-emoji">🏆</div>
+      <div class="slide-label">Slide 12 · Quiz</div>
+      <div class="slide-title">Hora do Quiz! 🧠</div>
+      <div class="slide-body">
+        <p>Vamos testar o que você aprendeu?</p>
+        <p><strong>5 perguntas</strong> sobre hardware — com dificuldade crescente.</p>
+        <p>Pode responder em grupo ou individual!</p>
+        <p style="margin-top:16px; opacity:0.7"><em>Clique em "Próximo" para começar ➡️</em></p>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: Quiz interativo -->
+    <div class="slide" style="background: linear-gradient(135deg, #1a237e, #3949ab); color: #fff;">
+      <div class="slide-label">Slide 13 · Quiz Interativo</div>
+      <div class="quiz-container">
+        <div class="quiz-header">
+          <div style="font-size:40px; margin-bottom:10px">💻</div>
+          <h2>Quiz: Hardware do Computador</h2>
+          <p>Escolha a resposta certa!</p>
+        </div>
+        <div class="quiz-score-bar">
+          <span>Pergunta <strong id="q-current">1</strong> de <strong>5</strong></span>
+          <span>Pontos: <strong id="q-score">0</strong></span>
+        </div>
+
+        <!-- Q1 -->
+        <div class="question-card active" data-q="0">
+          <div class="q-number">Pergunta 1</div>
+          <div class="q-text">O que é o clock (GHz) de um processador?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> A temperatura máxima que ele aguenta</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">B</span> A velocidade de ciclos por segundo que ele processa</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> A quantidade de memória que ele tem</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> O peso do processador em gramas</button>
+          </div>
+          <div class="feedback-msg ok">✅ Correto! GHz = bilhões de ciclos por segundo. Mais GHz = mais rápido (em geral).</div>
+          <div class="feedback-msg err">❌ Clock (GHz) é a velocidade de processamento — ciclos por segundo.</div>
+          <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card" data-q="1">
+          <div class="q-number">Pergunta 2</div>
+          <div class="q-text">Qual a principal diferença entre RAM e SSD?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> RAM é mais barata que SSD</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> SSD é mais rápido que RAM</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> RAM é temporária; SSD é permanente</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> São a mesma coisa com nomes diferentes</button>
+          </div>
+          <div class="feedback-msg ok">✅ Exato! RAM guarda dados temporariamente enquanto o PC está ligado. SSD guarda permanentemente.</div>
+          <div class="feedback-msg err">❌ A diferença-chave é: RAM = memória de trabalho (temporária), SSD = armazenamento (permanente).</div>
+          <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card" data-q="2">
+          <div class="q-number">Pergunta 3</div>
+          <div class="q-text">Por que jogos pesados exigem uma boa GPU?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Para armazenar os arquivos do jogo mais rápido</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">B</span> Para calcular e renderizar os gráficos em tempo real</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">C</span> Para conectar à internet com menor latência</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Para reproduzir áudio sem travamentos</button>
+          </div>
+          <div class="feedback-msg ok">✅ Isso! A GPU processa cada pixel da tela em tempo real — sem ela, os gráficos travam ou ficam feios.</div>
+          <div class="feedback-msg err">❌ A GPU é responsável por renderizar os gráficos em tempo real. Sem boa GPU = lag visual.</div>
+          <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card" data-q="3">
+          <div class="q-number">Pergunta 4</div>
+          <div class="q-text">O que acontece se a fonte de alimentação for fraca para os componentes instalados?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> O PC fica mais devagar mas funciona normalmente</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Somente o monitor para de funcionar</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> O PC pode desligar sozinho, travar ou danificar componentes</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Nada, a fonte se adapta automaticamente</button>
+          </div>
+          <div class="feedback-msg ok">✅ Correto! Fonte insuficiente = instabilidade, desligamentos e risco de dano às peças.</div>
+          <div class="feedback-msg err">❌ Fonte fraca = PC instável, desligamentos inesperados e risco real de queimar componentes.</div>
+          <button class="next-q-btn" onclick="nextQ()">Próxima pergunta →</button>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-card" data-q="4">
+          <div class="q-number">Pergunta 5</div>
+          <div class="q-text">Um amigo quer montar um PC para edição de vídeo em 4K. Qual upgrade tem maior impacto?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">A</span> Trocar o teclado e mouse por periféricos gamer</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">B</span> Aumentar o HD de 1TB para 2TB</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="opt-letter">C</span> Aumentar a RAM de 8 GB para 32 GB + SSD NVMe</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="opt-letter">D</span> Adicionar mais ventoinhas no gabinete</button>
+          </div>
+          <div class="feedback-msg ok">✅ Perfeito! Edição de vídeo 4K consome muita RAM e precisa de SSD rápido para ler/escrever os arquivos.</div>
+          <div class="feedback-msg err">❌ Para edição 4K, o gargalo quase sempre é RAM insuficiente e armazenamento lento (HD).</div>
+          <button class="next-q-btn" id="last-next-btn" onclick="goTo(current + 1)">Ver resultado 🏆</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SLIDE 14: Conquistas -->
+    <div class="slide" style="background: linear-gradient(135deg, #1b5e20, #2e7d32); color: #fff;">
+      <div class="slide-emoji">🏆</div>
+      <div class="slide-label">Slide 14 · Conquistas</div>
+      <div class="slide-title">Você concluiu a aula! 🎉</div>
+      <div class="slide-body" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="trophy-grid">
+          <div class="trophy-item">🧠 Expert em CPU</div>
+          <div class="trophy-item">📋 Mestre da RAM</div>
+          <div class="trophy-item">🚀 Especialista em SSD</div>
+          <div class="trophy-item">🎨 Conhecedor de GPU</div>
+          <div class="trophy-item">🔌 Arquiteto de Hardware</div>
+          <div class="trophy-item">💡 Hardware Engineer</div>
+        </div>
+        <div class="ask-box" style="margin-top:20px; text-align:center;">
+          <div class="ask-label">Próximo passo</div>
+          <ul>
+            <li>Descubra as specs do seu próprio PC (Configurações → Sistema → Sobre)</li>
+            <li>Compare com a tabela de usos — seu PC é para qual perfil?</li>
+          </ul>
+        </div>
+        <p style="margin-top:20px; opacity:0.7; font-size:14px;">Próxima aula: como funciona a internet e onde ficam os dados na nuvem? ☁️</p>
+      </div>
+    </div>
+
+  </div><!-- end carousel-wrapper -->
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button class="nav-btn" id="btn-prev" onclick="goTo(current - 1)" disabled>← Anterior</button>
+    <span class="slide-counter" id="slide-counter">1 / 14</span>
+    <button class="nav-btn" id="btn-next" onclick="goTo(current + 1)">Próximo →</button>
+  </div>
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+
+    function goTo(n) {
+      if (n < 0 || n >= total) return;
+      slides[current].classList.remove('active');
+      current = n;
+      slides[current].classList.add('active');
+      document.getElementById('btn-prev').disabled = current === 0;
+      document.getElementById('btn-next').disabled = current === total - 1;
+      document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + total;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Builder activity
+    const builderFeedback = {
+      b1: '✅ Correto! Para jogos, a GPU é o componente mais crítico.',
+      b2: '✅ Exato! Trocar HD por SSD é o upgrade mais impactante para velocidade de inicialização.',
+      b3: '✅ Correto! Edição de vídeo 4K exige muita RAM — 32 GB é o mínimo recomendado.'
+    };
+    const builderWrong = {
+      b1: '❌ Para jogos, a GPU tem muito mais impacto. RAM ajuda, mas a GPU é o gargalo visual.',
+      b2: '❌ O principal gargalo para velocidade de boot é o armazenamento. SSD transforma o PC!',
+      b3: '❌ Para edição 4K, o problema é falta de RAM. 32+ GB faz enorme diferença.'
+    };
+
+    function builderAnswer(btn, scenario, correct) {
+      const group = btn.parentElement.querySelectorAll('.builder-btn');
+      group.forEach(b => { b.disabled = true; });
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      document.getElementById(scenario + '-feedback').textContent = correct ? builderFeedback[scenario] : builderWrong[scenario];
+    }
+
+    // Flip cards
+    function flipCard(el, isTrue) {
+      if (el.classList.contains('revealed-true') || el.classList.contains('revealed-false')) return;
+      el.classList.add(isTrue ? 'revealed-true' : 'revealed-false');
+    }
+
+    // Quiz
+    let qScore = 0;
+    let qAnswered = false;
+
+    function answer(btn, correct) {
+      if (qAnswered) return;
+      qAnswered = true;
+      const card = btn.closest('.question-card');
+      card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (correct) {
+        qScore++;
+        document.getElementById('q-score').textContent = qScore;
+        card.querySelector('.feedback-msg.ok').style.display = 'block';
+      } else {
+        card.querySelector('.feedback-msg.err').style.display = 'block';
+      }
+      card.querySelector('.next-q-btn').style.display = 'inline-block';
+    }
+
+    function nextQ() {
+      const cards = document.querySelectorAll('.question-card');
+      let idx = -1;
+      cards.forEach((c, i) => { if (c.classList.contains('active')) idx = i; });
+      if (idx + 1 < cards.length) {
+        cards[idx].classList.remove('active');
+        cards[idx + 1].classList.add('active');
+        document.getElementById('q-current').textContent = idx + 2;
+        qAnswered = false;
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft')  goTo(current - 1);
+    });
+  </script>
+</body>
+</html>
