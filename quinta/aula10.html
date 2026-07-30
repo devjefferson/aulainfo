@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dominando o Word — Documentos que Impressionam 📄⚡</title>
+  <title>Dominando o WordPad — Documentos que Impressionam 📄⚡</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -62,21 +62,22 @@
     .slide-2  { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; }
     .slide-3  { background: linear-gradient(135deg, #006064, #00838f); color: #fff; }
     .slide-4  { background: linear-gradient(135deg, #e65100, #f57c00); color: #fff; }
-    .slide-5  { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
-    .slide-6  { background: linear-gradient(135deg, #1a237e, #303f9f); color: #fff; }
-    .slide-7  { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
-    .slide-8  { background: linear-gradient(135deg, #263238, #37474f); color: #fff; }
-    .slide-9  { background: linear-gradient(135deg, #4a148c, #6a1b9a); color: #fff; }
-    .slide-10 { background: linear-gradient(135deg, #01579b, #0288d1); color: #fff; }
-    .slide-11 { background: linear-gradient(135deg, #b71c1c, #d32f2f); color: #fff; }
-    .slide-12 { background: linear-gradient(135deg, #004d40, #00796b); color: #fff; }
-    .slide-13 { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
-    .slide-14 { background: linear-gradient(135deg, #bf360c, #d84315); color: #fff; }
-    .slide-15 { background: linear-gradient(135deg, #33691e, #558b2f); color: #fff; }
-    .slide-16 { background: linear-gradient(135deg, #006064, #0097a7); color: #fff; }
-    .slide-17 { background: linear-gradient(135deg, #283593, #3949ab); color: #fff; }
-    .slide-18 { background: linear-gradient(135deg, #f57f17, #f9a825); color: #1a1a1a; }
-    .slide-19 { background: linear-gradient(135deg, #0d47a1, #00acc1); color: #fff; }
+    .slide-5  { background: linear-gradient(135deg, #37474f, #546e7a); color: #fff; }
+    .slide-6  { background: linear-gradient(135deg, #ad1457, #d81b60); color: #fff; }
+    .slide-7  { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
+    .slide-8  { background: linear-gradient(135deg, #1a237e, #303f9f); color: #fff; }
+    .slide-9  { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
+    .slide-10 { background: linear-gradient(135deg, #263238, #37474f); color: #fff; }
+    .slide-11 { background: linear-gradient(135deg, #4a148c, #6a1b9a); color: #fff; }
+    .slide-12 { background: linear-gradient(135deg, #01579b, #0288d1); color: #fff; }
+    .slide-13 { background: linear-gradient(135deg, #b71c1c, #d32f2f); color: #fff; }
+    .slide-14 { background: linear-gradient(135deg, #004d40, #00796b); color: #fff; }
+    .slide-15 { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
+    .slide-16 { background: linear-gradient(135deg, #bf360c, #d84315); color: #fff; }
+    .slide-17 { background: linear-gradient(135deg, #33691e, #558b2f); color: #fff; }
+    .slide-18 { background: linear-gradient(135deg, #006064, #0097a7); color: #fff; }
+    .slide-19 { background: linear-gradient(135deg, #f57f17, #f9a825); color: #1a1a1a; }
+    .slide-20 { background: linear-gradient(135deg, #0d47a1, #00acc1); color: #fff; }
 
     .slide-emoji { font-size: 68px; margin-bottom: 18px; line-height: 1; }
     .slide-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
@@ -240,6 +241,38 @@
     }
     .spacing-demo.s10 { line-height: 1.0; }
     .spacing-demo.s15 { line-height: 1.9; }
+
+    /* Lista de comandos clicáveis */
+    .cmd-list { width: 100%; max-width: 540px; margin-top: 14px; }
+    .cmd-item {
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 11px 16px;
+      margin-bottom: 8px;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.22s;
+      user-select: none;
+    }
+    .cmd-item:hover { background: rgba(255,255,255,0.22); }
+    .cmd-item.revealed { background: rgba(56,239,125,0.2); border-color: #38ef7d; cursor: default; }
+    .cmd-num {
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px; flex-shrink: 0;
+    }
+    .cmd-answer { display: none; font-weight: 800; font-family: 'Consolas', monospace; font-size: 14px; }
+    .cmd-item.revealed .cmd-answer { display: inline; }
+    .cmd-item.revealed .cmd-hint { display: none; }
+    .cmd-hint { font-size: 12px; opacity: 0.5; margin-left: auto; white-space: nowrap; }
 
     .mission-list { width: 100%; max-width: 520px; margin-top: 16px; }
     .mission-item {
@@ -597,10 +630,10 @@
 <div class="carousel-wrapper">
 
   <div style="text-align:center; margin-bottom:12px;">
-    <div class="parte-badge">📄 Nível Avançado — Word</div>
+    <div class="parte-badge">📄 Nível Avançado — WordPad</div>
   </div>
   <div class="header-info">
-    <strong>Aula de quinta-feira</strong> · 11–15 anos · 90 min · Documentos Profissionais no Word
+    <strong>Aula de quinta-feira</strong> · 11–15 anos · 90 min · Documentos Profissionais no WordPad
   </div>
 
   <!-- SLIDE 1: Gancho -->
@@ -649,7 +682,7 @@
     <div class="slide-label">Slide 3 · A Regra de Ouro</div>
     <div class="slide-title">Selecionar antes de formatar ✋</div>
     <div class="slide-body">
-      <p>O Word não adivinha. Sem seleção, ele não sabe <em>o que</em> mudar.</p>
+      <p>O WordPad não adivinha. Sem seleção, ele não sabe <em>o que</em> mudar.</p>
       <div class="key-grid">
         <div class="key-card">
           <span class="key-icon">🖱️</span>
@@ -672,6 +705,9 @@
           <span>nada acontece</span>
         </div>
       </div>
+      <p style="margin-top:14px; font-size:14px; opacity:0.85;">
+        O WordPad tem só <strong>duas abas</strong>: Início e Exibir. Não tem onde se perder — tudo o que você vai usar está numa tela.
+      </p>
     </div>
   </div>
 
@@ -699,10 +735,88 @@
     </div>
   </div>
 
-  <!-- SLIDE 5: O título profissional -->
+  <!-- SLIDE 5: Aquecimento Meu Perfil -->
   <div class="slide slide-5">
+    <div class="slide-emoji">⚡</div>
+    <div class="slide-label">Slide 5 · Aquecimento</div>
+    <div class="slide-title">Digite o seu perfil ⚡</div>
+    <div class="slide-body" style="max-width:520px;">
+      <p style="font-size:15px; opacity:0.85; margin-bottom:10px;">Abra o WordPad e digite exatamente isso — <strong>sem formatar nada ainda</strong>:</p>
+      <div class="align-demo" style="font-size:13px; line-height:1.9;">
+        <strong>MEU PERFIL</strong><br/><br/>
+        Nome: ________________<br/>
+        Idade: ____ anos<br/>
+        Série: ____<br/>
+        Rede social que mais uso: ________________<br/>
+        Jogo ou série favorita: ________________<br/>
+        Meu maior talento: ________________<br/>
+        Quando crescer quero trabalhar como: ________________
+      </div>
+      <p style="margin-top:12px; font-size:14px; opacity:0.8;">
+        Guarde esse texto. Ele vai virar o campo de treino do próximo slide.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Comandos de Formatação -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">🎨</div>
+    <div class="slide-label">Slide 6 · Comandos de Formatação</div>
+    <div class="slide-title">Comando do professor, ação sua 🎨</div>
+    <div class="slide-body" style="max-width:560px;">
+      <p style="font-size:14px; opacity:0.8; margin-bottom:6px;">Toque em cada comando para ver como se faz. Lembre: <strong>selecionar primeiro</strong>.</p>
+      <div class="cmd-list">
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">1</div>
+          <div>Só o <strong>nome</strong> em negrito <span class="cmd-answer">→ Ctrl + B</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">2</div>
+          <div>Só a <strong>idade</strong> em vermelho <span class="cmd-answer">→ cor da fonte 🔴</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">3</div>
+          <div>Só a <strong>rede social</strong> em azul <span class="cmd-answer">→ cor da fonte 🔵</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">4</div>
+          <div>Só o <strong>jogo ou série</strong> em itálico <span class="cmd-answer">→ Ctrl + I</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">5</div>
+          <div>Só o <strong>talento</strong> sublinhado <span class="cmd-answer">→ Ctrl + U</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">6</div>
+          <div>A <strong>profissão</strong>: negrito + tamanho 14 <span class="cmd-answer">→ Ctrl + B + tamanho</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">7</div>
+          <div>O título <strong>MEU PERFIL</strong>: centralizado, tamanho 18 <span class="cmd-answer">→ Ctrl + E + tamanho</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+        <div class="cmd-item" onclick="revealCmd(this)">
+          <div class="cmd-num">8</div>
+          <div><strong>Desfaça</strong> as duas últimas ações <span class="cmd-answer">→ Ctrl + Z (2x)</span></div>
+          <span class="cmd-hint">toque</span>
+        </div>
+      </div>
+      <p style="margin-top:12px; font-size:14px; opacity:0.85;">
+        Errou a linha? Ótimo. <strong>Ctrl + Z</strong> resolve — e é assim que se aprende.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: O título profissional -->
+  <div class="slide slide-7">
     <div class="slide-emoji">🏷️</div>
-    <div class="slide-label">Slide 5 · O Título</div>
+    <div class="slide-label">Slide 7 · O Título</div>
     <div class="slide-title">A receita do título profissional 🏷️</div>
     <div class="slide-body">
       <div class="mission-list">
@@ -726,10 +840,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 6: Justificado -->
-  <div class="slide slide-6">
+  <!-- SLIDE 8: Justificado -->
+  <div class="slide slide-8">
     <div class="slide-emoji">📐</div>
-    <div class="slide-label">Slide 6 · O Segredo</div>
+    <div class="slide-label">Slide 8 · O Segredo</div>
     <div class="slide-title">Justificado: por que livro parece livro 📐</div>
     <div class="slide-body" style="max-width:600px;">
       <div class="compare-grid" style="max-width:600px;">
@@ -752,10 +866,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 7: Espaçamento -->
-  <div class="slide slide-7">
+  <!-- SLIDE 9: Espaçamento -->
+  <div class="slide slide-9">
     <div class="slide-emoji">📏</div>
-    <div class="slide-label">Slide 7 · Espaçamento</div>
+    <div class="slide-label">Slide 9 · Espaçamento</div>
     <div class="slide-title">Espaçamento 1,5 — o padrão escolar 📏</div>
     <div class="slide-body" style="max-width:600px;">
       <div class="compare-grid" style="max-width:600px;">
@@ -778,10 +892,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 8: Listas -->
-  <div class="slide slide-8">
+  <!-- SLIDE 10: Listas -->
+  <div class="slide slide-10">
     <div class="slide-emoji">📋</div>
-    <div class="slide-label">Slide 8 · Listas</div>
+    <div class="slide-label">Slide 10 · Listas</div>
     <div class="slide-title">Marcadores ou numerada? 📋</div>
     <div class="slide-body">
       <div class="compare-grid">
@@ -803,10 +917,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 9: Hierarquia visual -->
-  <div class="slide slide-9">
+  <!-- SLIDE 11: Hierarquia visual -->
+  <div class="slide slide-11">
     <div class="slide-emoji">⚖️</div>
-    <div class="slide-label">Slide 9 · Hierarquia Visual</div>
+    <div class="slide-label">Slide 11 · Hierarquia Visual</div>
     <div class="slide-title">Se destacar tudo, nada fica destacado ⚖️</div>
     <div class="slide-body">
       <div class="compare-grid">
@@ -827,56 +941,34 @@
     </div>
   </div>
 
-  <!-- SLIDE 10: Imagem -->
-  <div class="slide slide-10">
-    <div class="slide-emoji">🖼️</div>
-    <div class="slide-label">Slide 10 · Imagem</div>
-    <div class="slide-title">Inserir imagem sem distorcer 🖼️</div>
+  <!-- SLIDE 12: Sem corretor -->
+  <div class="slide slide-12">
+    <div class="slide-emoji">🚫</div>
+    <div class="slide-label">Slide 12 · Sem Rede de Proteção</div>
+    <div class="slide-title">Aqui não existe risco vermelho 🚫</div>
     <div class="slide-body">
-      <div class="shortcut-card">
-        <div class="shortcut-keys">↘️</div>
-        <div class="shortcut-info">
-          <div class="shortcut-name">Sempre pelo canto</div>
-          <div class="shortcut-desc">Inserir → Imagens. Depois arraste a bolinha <strong>de canto</strong>.</div>
-          <div class="shortcut-analogy">Pela lateral, a imagem estica e o trabalho fica amador.</div>
-        </div>
+      <div class="align-demo" style="font-size:14px;">
+        a interneti é muito bom para estuda
       </div>
-      <div class="warning-box">
-        <span class="warning-emoji">⚖️</span>
-        Nem toda imagem da internet pode ser usada em qualquer lugar. Em trabalho escolar tudo bem — mas se fosse uso comercial, existiria dono e licença.
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 11: O corretor mente -->
-  <div class="slide slide-11">
-    <div class="slide-emoji">🔴</div>
-    <div class="slide-label">Slide 11 · O Corretor</div>
-    <div class="slide-title">O corretor não entende sentido 🔴</div>
-    <div class="slide-body">
-      <div class="compare-grid">
-        <div class="compare-card">
-          <span class="compare-icon">🔴</span>
-          <strong>Vermelho</strong>
-          <p>Erro de ortografia — a palavra não existe no dicionário.</p>
-        </div>
-        <div class="compare-card">
-          <span class="compare-icon">🔵</span>
-          <strong>Azul</strong>
-          <p>Erro de gramática ou estilo — concordância, repetição.</p>
-        </div>
-      </div>
+      <p style="margin-top:10px; font-size:15px;">Três erros nessa frase. E o WordPad <strong>não sublinhou nenhum</strong>.</p>
       <div class="warning-box">
         <span class="warning-emoji">🤨</span>
-        Ele aceita "concerto" quando você queria "conserto". As duas existem. Revisar continua sendo trabalho <strong>seu</strong>.
+        O WordPad não tem corretor ortográfico. Ninguém vai te avisar de nada — revisar é <strong>100% seu trabalho</strong>.
+      </div>
+      <div class="ask-box">
+        <div class="ask-label">Como revisar sem corretor</div>
+        <ul>
+          <li>Leia em voz baixa — o ouvido pega o que o olho não pega</li>
+          <li>Troque de documento com o colega ao lado</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 12: Atalhos -->
-  <div class="slide slide-12">
+  <!-- SLIDE 13: Atalhos -->
+  <div class="slide slide-13">
     <div class="slide-emoji">⚡</div>
-    <div class="slide-label">Slide 12 · Atalhos</div>
+    <div class="slide-label">Slide 13 · Atalhos</div>
     <div class="slide-title">Velocidade de profissional ⚡</div>
     <div class="slide-body">
       <table class="summary-table">
@@ -895,10 +987,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 13: Ctrl+Z -->
-  <div class="slide slide-13">
+  <!-- SLIDE 14: Ctrl+Z -->
+  <div class="slide slide-14">
     <div class="slide-emoji">↩️</div>
-    <div class="slide-label">Slide 13 · O Mais Importante</div>
+    <div class="slide-label">Slide 14 · O Mais Importante</div>
     <div class="slide-title">Ctrl + Z: errar é reversível ↩️</div>
     <div class="slide-body">
       <div class="shortcut-card">
@@ -916,49 +1008,47 @@
     </div>
   </div>
 
-  <!-- SLIDE 14: Salvar vs Exportar -->
-  <div class="slide slide-14">
+  <!-- SLIDE 15: Formatos e PDF -->
+  <div class="slide slide-15">
     <div class="slide-emoji">💾</div>
-    <div class="slide-label">Slide 14 · Salvar ≠ Exportar</div>
-    <div class="slide-title">.docx para trabalhar, .pdf para entregar 💾</div>
+    <div class="slide-label">Slide 15 · Formatos e PDF</div>
+    <div class="slide-title">Salvar, e depois imprimir para PDF 💾</div>
     <div class="slide-body">
-      <div class="compare-grid">
-        <div class="compare-card">
-          <span class="compare-icon">📝</span>
-          <strong>.docx</strong>
-          <p>Pode editar. Mas pode "quebrar" em outro computador que não tenha sua fonte.</p>
-        </div>
-        <div class="compare-card">
-          <span class="compare-icon">📕</span>
-          <strong>.pdf</strong>
-          <p>Trava o layout. Abre exatamente igual em qualquer lugar.</p>
+      <table class="summary-table" style="max-width:520px;">
+        <tr><td><span class="s-key">.rtf</span></td><td>Padrão do WordPad — para continuar trabalhando</td></tr>
+        <tr><td><span class="s-key">.docx</span></td><td>Formato do Word — quando pedirem "arquivo do Word"</td></tr>
+        <tr><td><span class="s-key">.txt</span></td><td>⚠️ Só texto puro — <strong>apaga toda a formatação</strong></td></tr>
+      </table>
+      <div class="shortcut-card" style="margin-top:14px;">
+        <div class="shortcut-keys">🖨️</div>
+        <div class="shortcut-info">
+          <div class="shortcut-name">PDF pela impressora</div>
+          <div class="shortcut-desc">Arquivo → Imprimir → <strong>Microsoft Print to PDF</strong></div>
+          <div class="shortcut-analogy">Você não imprime em papel: imprime para dentro de um arquivo.</div>
         </div>
       </div>
-      <p style="margin-top:14px; font-size:15px;">
-        <span class="hl">Ctrl + S</span> salva o .docx · <strong>Arquivo → Salvar como → PDF</strong> gera a entrega
-      </p>
     </div>
   </div>
 
-  <!-- SLIDE 15: Verdadeiro ou Falso -->
-  <div class="slide slide-15">
+  <!-- SLIDE 16: Verdadeiro ou Falso -->
+  <div class="slide slide-16">
     <div class="slide-emoji">🤔</div>
-    <div class="slide-label">Slide 15 · Verdadeiro ou Falso?</div>
+    <div class="slide-label">Slide 16 · Verdadeiro ou Falso?</div>
     <div class="slide-title">Verdadeiro ou Falso? 🤔</div>
     <div class="slide-body">
       <p style="font-size:15px; opacity:0.75; margin-bottom:12px;">Toque nos cards para ver a resposta!</p>
       <div class="flip-grid">
         <div class="flip-card" onclick="flipCard(this, false)">
           <span class="fc-text">"Dá para formatar uma palavra sem selecionar ela antes."</span>
-          <span class="fc-answer">❌ Falso! Sem selecionar, o Word não muda nada.</span>
+          <span class="fc-answer">❌ Falso! Sem selecionar, o WordPad não muda nada.</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, true)">
           <span class="fc-text">"Justificado deixa a borda direita reta."</span>
           <span class="fc-answer">✅ Verdade!</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, false)">
-          <span class="fc-text">"O corretor ortográfico pega todos os erros do texto."</span>
-          <span class="fc-answer">❌ Falso! Ele não entende sentido.</span>
+          <span class="fc-text">"O WordPad avisa quando você escreve uma palavra errada."</span>
+          <span class="fc-answer">❌ Falso! Ele não tem corretor nenhum.</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, true)">
           <span class="fc-text">"PDF abre igual em qualquer computador."</span>
@@ -968,10 +1058,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 16: Match Game -->
-  <div class="slide slide-16">
+  <!-- SLIDE 17: Match Game -->
+  <div class="slide slide-17">
     <div class="slide-emoji">🎯</div>
-    <div class="slide-label">Slide 16 · Conecte os Atalhos</div>
+    <div class="slide-label">Slide 17 · Conecte os Atalhos</div>
     <div class="slide-title">Conecte cada atalho com sua função! 🎯</div>
     <div class="slide-body" style="width:100%; max-width:600px;">
       <div class="match-container">
@@ -995,15 +1085,15 @@
         </div>
         <div class="match-score" id="matchScore"></div>
         <div class="match-result" id="matchResult">⚡ Você já digita como profissional!</div>
-        <button class="match-next-btn" id="matchNextBtn" onclick="goToSlide(17)">Próximo →</button>
+        <button class="match-next-btn" id="matchNextBtn" onclick="goToSlide(18)">Próximo →</button>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 17: Charada -->
-  <div class="slide slide-17">
+  <!-- SLIDE 18: Charada -->
+  <div class="slide slide-18">
     <div class="slide-emoji">🧩</div>
-    <div class="slide-label">Slide 17 · Charada</div>
+    <div class="slide-label">Slide 18 · Charada</div>
     <div class="slide-title">Charada da Formatação 🧩</div>
     <div class="slide-body">
       <div class="charada-box">
@@ -1018,16 +1108,16 @@
         <button class="charada-btn" onclick="checkCharada()">Tentar</button>
       </div>
       <div class="charada-feedback" id="charadaFeedback"></div>
-      <div class="charada-hint" id="charadaHint">Dica: é a resposta do Slide 6 · Ctrl + J 😉</div>
+      <div class="charada-hint" id="charadaHint">Dica: é a resposta do Slide 8 · Ctrl + J 😉</div>
     </div>
   </div>
 
-  <!-- SLIDE 18: Quiz -->
-  <div class="slide slide-18">
+  <!-- SLIDE 19: Quiz -->
+  <div class="slide slide-19">
     <div class="quiz-container" id="quizContainer">
       <div class="quiz-header">
         <div class="quiz-emoji">🧠</div>
-        <h2>Quiz — Dominando o Word</h2>
+        <h2>Quiz — Dominando o WordPad</h2>
         <p>5 perguntas · Você está pronto para o Trabalho Nota 10?</p>
       </div>
 
@@ -1067,12 +1157,12 @@
       <!-- Q3 -->
       <div class="question-card" id="qq3">
         <div class="q-number">Pergunta 3 de 5</div>
-        <div class="q-text">Você vai entregar o trabalho para o professor. Qual formato usar?</div>
+        <div class="q-text">No WordPad, como se gera um PDF?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">A</span> .docx, porque ele pode editar</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq3','qq4')"><span class="opt-letter">B</span> .pdf, porque abre igual em qualquer computador</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">C</span> Print da tela</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">D</span> Tanto faz</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">A</span> Arquivo → Exportar como PDF</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq3','qq4')"><span class="opt-letter">B</span> Imprimir → Microsoft Print to PDF</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">C</span> Salvando em .txt</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">D</span> Não é possível</button>
         </div>
         <div class="feedback-msg" id="fb3"></div>
         <button class="next-q-btn" id="nxt3" onclick="nextQ('qq3','qq4',4)">Próxima →</button>
@@ -1081,12 +1171,12 @@
       <!-- Q4 -->
       <div class="question-card" id="qq4">
         <div class="q-number">Pergunta 4 de 5</div>
-        <div class="q-text">Você redimensionou uma imagem e ela ficou esticada. O que aconteceu?</div>
+        <div class="q-text">Quando é melhor usar lista numerada em vez de marcadores?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">A</span> A imagem tinha pouca qualidade</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq4','qq5')"><span class="opt-letter">B</span> Você arrastou pela lateral, não pelo canto</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">C</span> O Word não aceita imagens grandes</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">D</span> Faltou salvar antes</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">A</span> Sempre — numerada é mais bonita</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq4','qq5')"><span class="opt-letter">B</span> Quando existe ordem ou quantidade, como num passo a passo</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">C</span> Quando a lista tem mais de 10 itens</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">D</span> Nunca — marcadores servem para tudo</button>
         </div>
         <div class="feedback-msg" id="fb4"></div>
         <button class="next-q-btn" id="nxt4" onclick="nextQ('qq4','qq5',5)">Próxima →</button>
@@ -1095,12 +1185,12 @@
       <!-- Q5 -->
       <div class="question-card" id="qq5">
         <div class="q-number">Pergunta 5 de 5</div>
-        <div class="q-text">Por que não se pode confiar 100% no corretor ortográfico?</div>
+        <div class="q-text">Você salvou o trabalho em .txt e a formatação desapareceu. Por quê?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">A</span> Porque ele só funciona com internet</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">B</span> Porque ele não existe no Word</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq5',null)"><span class="opt-letter">C</span> Porque ele não entende o sentido da frase</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">D</span> Porque ele só corrige títulos</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">A</span> O arquivo foi corrompido</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq5',null)"><span class="opt-letter">B</span> O .txt guarda só letras, não guarda formatação</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">C</span> Faltou apertar Ctrl+S duas vezes</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">D</span> O WordPad não salva formatação nunca</button>
         </div>
         <div class="feedback-msg" id="fb5"></div>
         <button class="next-q-btn" id="nxt5" onclick="showResult()">Ver resultado →</button>
@@ -1109,7 +1199,7 @@
       <!-- Result -->
       <div class="quiz-result" id="quizResult">
         <div class="result-emoji" id="resultEmoji">🏆</div>
-        <div class="result-title" id="resultTitle">Mestre do Word!</div>
+        <div class="result-title" id="resultTitle">Mestre do WordPad!</div>
         <div class="result-subtitle" id="resultSubtitle">Você produz documento profissional!</div>
         <div class="result-score" id="resultScore">5</div>
         <div class="result-max">de 5 pontos</div>
@@ -1118,10 +1208,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 19: Resumo Final -->
-  <div class="slide slide-19">
+  <!-- SLIDE 20: Resumo Final -->
+  <div class="slide slide-20">
     <div class="slide-emoji">🏆</div>
-    <div class="slide-label">Slide 19 · Missão Trabalho Nota 10</div>
+    <div class="slide-label">Slide 20 · Missão Trabalho Nota 10</div>
     <div class="slide-title">Checklist da entrega 🏆</div>
     <div class="slide-body">
       <table class="summary-table">
@@ -1129,13 +1219,12 @@
         <tr><td><span class="s-key">2</span></td><td>📐 Corpo justificado, fonte 12</td></tr>
         <tr><td><span class="s-key">3</span></td><td>📏 Espaçamento entre linhas 1,5</td></tr>
         <tr><td><span class="s-key">4</span></td><td>📋 Uma lista com marcadores ou numerada</td></tr>
-        <tr><td><span class="s-key">5</span></td><td>🖼️ Imagem redimensionada pelo canto</td></tr>
-        <tr><td><span class="s-key">6</span></td><td>🔴 Zero sublinhado vermelho no texto final</td></tr>
-        <tr><td><span class="s-key">7</span></td><td>💾 Salvo como <em>Trabalho-Internet-SeuNome.docx</em></td></tr>
-        <tr><td><span class="s-key">8</span></td><td>📕 Exportado em PDF para entregar</td></tr>
+        <tr><td><span class="s-key">5</span></td><td>🔎 Texto revisado à mão — não tem corretor para ajudar</td></tr>
+        <tr><td><span class="s-key">6</span></td><td>💾 Salvo como <em>Trabalho-Internet-SeuNome.rtf</em></td></tr>
+        <tr><td><span class="s-key">7</span></td><td>🖨️ Impresso em PDF via Microsoft Print to PDF</td></tr>
       </table>
       <p style="margin-top:16px; font-size:15px; opacity:0.9;">
-        Você não "usou o Word". Você aprendeu a produzir um documento profissional — algo que muita gente adulta ainda faz errado. 🎉
+        Você não "usou o WordPad". Você aprendeu a produzir um documento profissional — algo que muita gente adulta ainda faz errado. 🎉
       </p>
     </div>
   </div>
@@ -1145,13 +1234,13 @@
 <!-- Nav -->
 <div class="nav" style="margin-top:24px;">
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
-  <span class="progress" id="progressText">1 / 19</span>
+  <span class="progress" id="progressText">1 / 20</span>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
 </div>
 <div class="dots" id="dots"></div>
 
 <script>
-  const TOTAL = 19;
+  const TOTAL = 20;
   let current = 1;
 
   const dotsEl = document.getElementById('dots');
@@ -1184,6 +1273,11 @@
   function revealChip(el, text) {
     if (el.classList.contains('revealed')) return;
     el.textContent = text;
+    el.classList.add('revealed');
+  }
+
+  /* Comandos de formatação */
+  function revealCmd(el) {
     el.classList.add('revealed');
   }
 
@@ -1281,7 +1375,7 @@
     document.getElementById('quizResult').classList.add('show');
     document.getElementById('resultScore').textContent = quizScore;
     const emojis = ['😅','😊','😄','🌟','🏆'];
-    const titles = ['Bora revisar!','Bom começo!','Quase lá!','Muito bem!','Mestre do Word!'];
+    const titles = ['Bora revisar!','Bom começo!','Quase lá!','Muito bem!','Mestre do WordPad!'];
     const subs = [
       'Volte nos slides e tente de novo — vale a pena.',
       'Você está pegando o jeito da formatação!',
