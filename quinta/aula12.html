@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Desafio Google — Detetives Digitais 🕵️</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #050d18;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 20px 16px 40px;
+  }
+
+  .topbar { width: 100%; max-width: 720px; margin-bottom: 14px; }
+  .topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .badge-level { border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+  .badge-level.n1 { background: #388e3c; color: #fff; }
+  .badge-level.n2 { background: #fbc02d; color: #1a1a1a; }
+  .badge-level.n3 { background: #d32f2f; color: #fff; }
+  .badge-level.n4 { background: #0288d1; color: #fff; }
+  .badge-level.fin{ background: #e64a19; color: #fff; }
+  .badge-level.end{ background: #00acc1; color: #fff; }
+  .score-pill { background: rgba(255,255,255,0.12); border-radius: 50px; padding: 5px 16px; font-weight: 800; color: #ffd54f; white-space: nowrap; }
+  .bar { height: 7px; background: rgba(255,255,255,0.12); border-radius: 50px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #38ef7d, #ffd54f); border-radius: 50px; transition: width 0.4s ease; }
+
+  .card {
+    width: 100%; max-width: 720px;
+    background: linear-gradient(150deg, #12233b, #0b1728);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 24px; padding: 36px 34px;
+    color: #fff; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)} }
+  .shake { animation: shake 0.4s ease; }
+
+  .c-emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; text-align: center; }
+  .c-kicker { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; text-align: center; }
+  .c-question { font-size: 24px; font-weight: 800; line-height: 1.35; text-align: center; margin-bottom: 8px; }
+  .c-sub { font-size: 15px; line-height: 1.6; opacity: 0.8; text-align: center; margin-bottom: 22px; }
+  .c-pts { display: block; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 1px; opacity: 0.55; text-transform: uppercase; margin-bottom: 20px; }
+
+  .field { margin-bottom: 14px; }
+  .field-label { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.65; margin-bottom: 6px; }
+  .field input[type="text"], .field textarea {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 13px 16px; font-size: 16px; color: #fff;
+    font-family: inherit; transition: border-color 0.2s, background 0.2s;
+  }
+  .field textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.32); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: #ffd54f; background: rgba(255,255,255,0.11); }
+  .field.ok input, .field.ok textarea { border-color: #38ef7d; background: rgba(56,239,125,0.12); }
+  .field.err input, .field.err textarea { border-color: #ef5350; background: rgba(239,83,80,0.12); }
+  .field-note { font-size: 12px; opacity: 0.5; margin-top: 5px; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 10px; }
+  .choice {
+    flex: 1 1 140px; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 14px 16px; font-size: 16px; font-weight: 700; color: #fff;
+    cursor: pointer; text-align: center; transition: all 0.2s; user-select: none;
+  }
+  .choice:hover { background: rgba(255,255,255,0.14); }
+  .choice.picked { border-color: #ffd54f; background: rgba(255,213,79,0.18); }
+  .field.ok .choice.picked { border-color: #38ef7d; background: rgba(56,239,125,0.2); }
+  .field.err .choice.picked { border-color: #ef5350; background: rgba(239,83,80,0.2); }
+  .choices.locked .choice { cursor: default; }
+
+  .msg { display: none; margin-top: 14px; border-radius: 12px; padding: 13px 18px; font-size: 15px; font-weight: 700; line-height: 1.55; }
+  .msg.show { display: block; animation: fadeIn 0.2s ease; }
+  .msg.err { background: rgba(239,83,80,0.16); border: 1px solid rgba(239,83,80,0.45); color: #ffcdd2; }
+  .msg.hint { background: rgba(255,213,79,0.14); border: 1px solid rgba(255,213,79,0.45); color: #fff3c4; }
+
+  .btn {
+    display: block; width: 100%; margin-top: 20px; border: none;
+    border-radius: 50px; padding: 15px 28px; font-size: 16px; font-weight: 800;
+    cursor: pointer; transition: transform 0.15s, filter 0.2s; font-family: inherit;
+  }
+  .btn:hover { transform: scale(1.02); }
+  .btn-check { background: linear-gradient(135deg, #0288d1, #01579b); color: #fff; }
+  .btn-next  { background: linear-gradient(135deg, #38ef7d, #1a6b3c); color: #fff; }
+  .btn-ghost { background: rgba(255,255,255,0.10); color: #fff; border: 2px solid rgba(255,255,255,0.22); margin-top: 10px; }
+
+  /* Explicação — só aparece depois de acertar */
+  .explain { display: none; margin-top: 22px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.12); animation: fadeIn 0.35s ease; }
+  .explain.show { display: block; }
+  .explain-tag { display: inline-block; background: rgba(56,239,125,0.2); border: 1px solid #38ef7d; color: #38ef7d; border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+  .explain p { font-size: 15.5px; line-height: 1.7; margin-bottom: 10px; opacity: 0.92; }
+  .explain strong { color: #ffd54f; }
+
+  .hl { display: inline-block; background: rgba(255,255,255,0.16); border-radius: 8px; padding: 1px 10px; font-weight: 700; }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .duo-card { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.18); border-radius: 16px; padding: 16px 14px; text-align: center; }
+  .duo-card .duo-icon { font-size: 34px; display: block; margin-bottom: 8px; }
+  .duo-card strong { display: block; font-size: 17px; font-weight: 900; margin-bottom: 6px; color: #ffd54f; }
+  .duo-card p { font-size: 13.5px; line-height: 1.5; opacity: 0.88; margin: 0; }
+
+  .callout { background: rgba(255,213,79,0.12); border: 1px solid rgba(255,213,79,0.42); border-radius: 14px; padding: 14px 18px; margin: 14px 0; font-size: 15px; line-height: 1.6; color: #fff3c4; }
+  .callout .co-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  .statbox { background: rgba(255,255,255,0.09); border-radius: 16px; padding: 16px 20px; text-align: center; margin: 14px 0; }
+  .statbox .stat-num { display: block; font-size: 30px; font-weight: 900; color: #ffd54f; margin-bottom: 4px; }
+  .statbox .stat-desc { font-size: 13.5px; line-height: 1.55; opacity: 0.88; }
+
+  .domlist { margin: 14px 0; }
+  .domrow { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.07); border-radius: 10px; padding: 9px 14px; margin-bottom: 7px; font-size: 13.5px; line-height: 1.45; border-left: 5px solid rgba(255,255,255,0.3); }
+  .domrow.good { border-left-color: #38ef7d; }
+  .domrow.mid { border-left-color: #ffd54f; }
+  .domrow.bad { border-left-color: #ef5350; }
+  .domtag { font-family: Consolas, monospace; font-weight: 900; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 3px 9px; flex-shrink: 0; font-size: 12.5px; }
+
+  .datebox { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .datecard { border-radius: 14px; padding: 15px 14px; font-size: 13.5px; line-height: 1.55; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); }
+  .datecard .d-when { font-size: 10.5px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.65; margin-bottom: 7px; }
+  .datecard .d-quote { font-style: italic; margin-bottom: 9px; }
+  .datecard .d-verdict { font-weight: 900; font-size: 14px; }
+  .datecard.then { border-color: #38ef7d; }
+  .datecard.now { border-color: #ef5350; }
+
+  .tl { margin: 14px 0; }
+  .tl-row { margin-bottom: 12px; }
+  .tl-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 5px; }
+  .tl-track { background: rgba(255,255,255,0.1); border-radius: 50px; height: 24px; overflow: hidden; }
+  .tl-fill { height: 100%; border-radius: 50px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 11.5px; font-weight: 900; color: #04231c; }
+  .tl-fill.shark { width: 100%; background: linear-gradient(90deg, #4dd0e1, #26c6da); }
+  .tl-fill.tree { width: 84%; background: linear-gradient(90deg, #aed581, #7cb342); }
+
+  .alt-row { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 11px 15px; margin-bottom: 7px; }
+  .alt-icon { font-size: 27px; flex-shrink: 0; }
+  .alt-info { flex: 1; font-size: 13px; line-height: 1.4; opacity: 0.85; }
+  .alt-info strong { display: block; font-size: 14.5px; font-weight: 900; color: #fff; }
+  .alt-temp { font-size: 20px; font-weight: 900; color: #ffd54f; white-space: nowrap; }
+
+  .serp { background: #fff; border-radius: 14px; padding: 14px 16px; margin: 14px 0; color: #202124; text-align: left; }
+  .serp-bar { display: flex; align-items: center; gap: 8px; border: 1px solid #dadce0; border-radius: 50px; padding: 8px 14px; font-size: 13.5px; color: #5f6368; margin-bottom: 14px; }
+  .serp-item { margin-bottom: 13px; }
+  .serp-ad-tag { display: inline-block; background: #202124; color: #fff; font-size: 9.5px; font-weight: 900; letter-spacing: 1px; border-radius: 4px; padding: 2px 7px; margin-bottom: 3px; text-transform: uppercase; }
+  .serp-url { font-size: 12px; color: #5f6368; }
+  .serp-title { font-size: 15px; color: #1a0dab; font-weight: 600; line-height: 1.3; margin: 2px 0; }
+  .serp-desc { font-size: 12px; color: #4d5156; line-height: 1.4; }
+  .serp-verdict { margin-top: 5px; font-size: 12px; font-weight: 800; border-radius: 7px; padding: 5px 9px; }
+  .serp-verdict.bad { background: #fdecea; color: #b71c1c; }
+  .serp-verdict.mid { background: #fff8e1; color: #8d6e00; }
+  .serp-verdict.ok  { background: #e6f4ea; color: #1b5e20; }
+
+  .rules { margin: 18px 0; }
+  .rule { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 11px 16px; margin-bottom: 8px; font-size: 14.5px; line-height: 1.55; text-align: left; }
+  .rule-n { background: rgba(255,255,255,0.18); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+
+  .ptable { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .ptable td { padding: 8px 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+  .ptable tr:last-child td { border-bottom: none; }
+  .ptable .p-lv { font-weight: 900; white-space: nowrap; }
+  .ptable .p-pt { text-align: right; font-weight: 900; color: #ffd54f; white-space: nowrap; }
+
+  .ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 16px 0; }
+  .ach { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; font-size: 13px; line-height: 1.35; text-align: left; }
+  .ach .ach-i { font-size: 24px; flex-shrink: 0; }
+  .ach strong { display: block; font-size: 13.5px; font-weight: 900; }
+  .ach span { font-size: 11.5px; opacity: 0.8; }
+
+  .mantra { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; align-items: center; margin: 18px 0; }
+  .mantra-step { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 9px 18px; font-size: 15px; font-weight: 900; }
+  .mantra-arrow { opacity: 0.6; }
+
+  .final-score { font-size: 62px; font-weight: 900; color: #ffd54f; text-align: center; line-height: 1; }
+  .final-max { text-align: center; font-size: 14px; opacity: 0.6; margin-bottom: 20px; }
+
+  .teacher-note { margin-top: 18px; font-size: 12.5px; opacity: 0.5; text-align: center; line-height: 1.6; }
+
+  @media (max-width: 640px) {
+    .card { padding: 26px 20px; }
+    .c-question { font-size: 20px; }
+    .duo, .datebox, .ach-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="badge-level end" id="levelBadge">Detetives Digitais</span>
+    <span id="stepLabel">Início</span>
+    <span class="score-pill"><span id="scoreVal">0</span> / 41 pts</span>
+  </div>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<div id="stage"></div>
+
+<script>
+/* ---------- utilidades ---------- */
+const norm = s => (s || '')
+  .toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-z0-9 ]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const LEVELS = {
+  n1:  { badge: 'n1',  label: '🟢 Nível 1 · Aquecimento' },
+  n2:  { badge: 'n2',  label: '🟡 Nível 2 · Pesquisadores' },
+  n3:  { badge: 'n3',  label: '🔴 Nível 3 · Detetives' },
+  n4:  { badge: 'n4',  label: '🧠 Nível 4 · Prove' },
+  fin: { badge: 'fin', label: '🏆 Desafio Final' }
+};
+
+const SOURCE_FIELD = {
+  key: 'fonte', label: 'Fonte (nome do site + link)', type: 'text',
+  placeholder: 'ex.: IBGE — ibge.gov.br/...', minLen: 5,
+  note: 'Sem fonte não avança. Copie o endereço da página onde você viu.'
+};
+
+/* ---------- as 17 perguntas + desafio final ---------- */
+const QUESTIONS = [
+  /* ============ NÍVEL 1 ============ */
+  {
+    level: 'n1', pts: 1, emoji: '🌎', kicker: 'Pergunta 1 · Planeta',
+    q: 'Qual é o maior planeta do Sistema Solar?',
+    fields: [{ key: 'r', label: 'Resposta', type: 'text', accept: ['jupiter'], placeholder: 'Digite o nome do planeta' }],
+    hint: 'É um gigante gasoso. O nome vem do rei dos deuses romanos.',
+    explain: '<p>Cabem mais de <strong>1.300 Terras</strong> dentro de Júpiter. Ele sozinho tem mais massa que todos os outros planetas do Sistema Solar somados.</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🐆', kicker: 'Pergunta 2 · Animal',
+    q: 'Qual é o animal terrestre mais rápido do mundo?',
+    fields: [{ key: 'r', label: 'Resposta', type: 'text', accept: ['guepardo', 'chita', 'cheetah'], placeholder: 'Digite o nome do animal' }],
+    hint: 'Vive na África, é da família dos felinos e tem manchas pretas.',
+    explain: '<p>Guepardo — cerca de <strong>110 km/h</strong> em arrancada curta.</p><div class="callout"><span class="co-icon">🔍</span>Se você pensou em <strong>falcão-peregrino</strong>, não estava errado sobre velocidade — ele passa de 300 km/h. Mas a pergunta dizia <strong>terrestre</strong>. Uma palavra na pergunta muda a resposta inteira.</div>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🌙', kicker: 'Pergunta 3 · Lua',
+    q: 'Quantos dias, aproximadamente, a Lua leva para dar uma volta ao redor da Terra?',
+    fields: [{ key: 'r', label: 'Resposta', type: 'text', accept: ['27', '29'], placeholder: 'Digite o número de dias' }],
+    hint: 'O Google mostra dois números diferentes. Qualquer um dos dois é aceito aqui.',
+    explain: '<p>Esta pergunta tinha <strong>duas respostas certas</strong> — e as duas valem ponto:</p>' +
+      '<div class="duo">' +
+      '<div class="duo-card"><span class="duo-icon">⭐</span><strong>27,3 dias</strong><p>Uma volta completa em relação às <strong>estrelas</strong>. É a órbita de verdade.</p></div>' +
+      '<div class="duo-card"><span class="duo-icon">🌕</span><strong>29,5 dias</strong><p>De lua cheia até a próxima lua cheia. É o que a gente <strong>vê</strong> daqui de baixo.</p></div>' +
+      '</div>' +
+      '<div class="callout"><span class="co-icon">🧠</span>Nem sempre existe UMA resposta certa. Às vezes a resposta depende de <strong>como você mede</strong>. Guarde isso — vai voltar mais pra frente.</div>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🗼', kicker: 'Pergunta 4 · Brasil',
+    q: 'Qual é a capital do Brasil?',
+    fields: [{ key: 'r', label: 'Resposta', type: 'text', accept: ['brasilia'], placeholder: 'Digite o nome da cidade' }],
+    hint: 'Não é a maior cidade, nem a mais famosa lá fora. Foi construída do zero.',
+    explain: '<p>Brasília, desde <strong>1960</strong>. Antes dela foram Salvador e depois o Rio de Janeiro.</p><p>Muita gente chuta São Paulo ou Rio. A pergunta é: você <strong>conferiu</strong> ou só achava que sabia?</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🌊', kicker: 'Pergunta 5 · Oceano',
+    q: 'Qual é o maior oceano do planeta?',
+    fields: [{ key: 'r', label: 'Resposta', type: 'text', accept: ['pacifico'], placeholder: 'Digite o nome do oceano' }],
+    hint: 'Fica entre a Ásia e a América. O nome tem a ver com "calmo".',
+    explain: '<p>O Pacífico é <strong>maior que toda a terra firme do planeta somada</strong>. Ele cobre cerca de um terço da superfície da Terra.</p><p style="opacity:0.7">🟢 Fim do aquecimento. A partir daqui, a fonte passa a valer ponto.</p>'
+  },
+
+  /* ============ NÍVEL 2 ============ */
+  {
+    level: 'n2', pts: 2, emoji: '🚀', kicker: 'Pergunta 6 · Espaço',
+    q: 'Em que ano o ser humano pisou pela primeira vez na Lua?',
+    sub: 'Agora não basta acertar. Você precisa dizer <strong>onde viu</strong>.',
+    fields: [
+      { key: 'r', label: 'Resposta', type: 'text', accept: ['1969'], placeholder: 'Digite o ano' },
+      SOURCE_FIELD
+    ],
+    hint: 'Década de 60, missão Apollo 11. Procure no site da NASA.',
+    explain: '<p><strong>20 de julho de 1969</strong>, missão Apollo 11. Fonte mais forte possível: o site da própria NASA.</p>' +
+      '<div class="callout"><span class="co-icon">📎</span>Resposta sem fonte é <strong>chute com cara de certeza</strong>. A pergunta que vale a aula inteira: <em>"tá, mas você viu isso ONDE?"</em></div>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🦖', kicker: 'Pergunta 7 · Dinossauros',
+    q: 'Em que período viveu o Tiranossauro Rex?',
+    fields: [
+      { key: 'r', label: 'Resposta', type: 'text', accept: ['cretaceo'], placeholder: 'Digite o nome do período' },
+      SOURCE_FIELD
+    ],
+    hint: 'Não é Jurássico — isso é nome de filme. É o período seguinte.',
+    explain: '<p>Final do <strong>Cretáceo</strong>, entre 68 e 66 milhões de anos atrás. Ele viveu mais perto de nós no tempo do que do Estegossauro.</p>' +
+      '<div class="callout"><span class="co-icon">🎬</span>Se sua primeira ideia foi "Jurássico", de onde veio isso? Do <strong>filme</strong>. Repetimos coisas o tempo todo sem lembrar onde aprendemos.</div>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🗺️', kicker: 'Pergunta 8 · Brasil',
+    q: 'Qual é o maior estado brasileiro em território?',
+    fields: [
+      { key: 'r', label: 'Resposta', type: 'text', accept: ['amazonas'], placeholder: 'Digite o nome do estado' },
+      SOURCE_FIELD
+    ],
+    hint: 'Fica no Norte. É maior que muitos países da Europa juntos.',
+    explain: '<p>Amazonas — sozinho, é maior que França, Espanha, Alemanha e Itália somadas.</p><p>Fonte oficial aqui é o <strong>IBGE</strong>. E olha o endereço: <span class="hl">ibge.gov.br</span>. O final do link já conta uma história:</p>' +
+      '<div class="domlist">' +
+      '<div class="domrow good"><span class="domtag">.gov.br</span><span>Órgão do governo. IBGE, Ministério da Saúde. Dado oficial.</span></div>' +
+      '<div class="domrow good"><span class="domtag">.edu.br</span><span>Universidade. Gente que estuda o assunto a vida toda.</span></div>' +
+      '<div class="domrow mid"><span class="domtag">.org</span><span>Instituição sem fins lucrativos. Boa — mas veja quem é.</span></div>' +
+      '<div class="domrow mid"><span class="domtag">.com</span><span>Empresa ou site de notícia. Pode ser ótimo, ou pode querer te vender algo.</span></div>' +
+      '<div class="domrow bad"><span class="domtag">blog · fórum</span><span>Opinião de alguém. Serve de pista, não de prova.</span></div>' +
+      '</div>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🐋', kicker: 'Pergunta 9 · Animal',
+    q: 'Qual é o maior animal conhecido que já existiu?',
+    fields: [
+      { key: 'r', label: 'Resposta', type: 'text', accept: ['baleia'], placeholder: 'Digite o nome do animal' },
+      SOURCE_FIELD
+    ],
+    hint: 'Não é dinossauro. Está vivo hoje e mora no mar.',
+    explain: '<p>A <strong>baleia-azul</strong> chega a 30 metros e 150 toneladas. Maior que qualquer dinossauro já encontrado — e ela está viva agora, no mesmo planeta que você.</p><p>Só a língua dela pesa mais que um elefante. 🐘</p>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🌋', kicker: 'Pergunta 10 · Vulcão',
+    q: 'Qual é o maior vulcão do Sistema Solar?',
+    fields: [
+      { key: 'r', label: 'Resposta', type: 'text', accept: ['olympus', 'olimpo'], placeholder: 'Digite o nome do vulcão' },
+      SOURCE_FIELD
+    ],
+    hint: 'Não fica na Terra. Fica no planeta vermelho.',
+    explain: '<p><strong>Olympus Mons</strong>, em Marte. Tem cerca de <strong>22 km de altura</strong> — quase 3 vezes o Everest — e a base é do tamanho do estado de São Paulo.</p><p style="opacity:0.7">🟡 Fim do Nível 2. Daqui pra frente não existe mais "a resposta" esperando por você.</p>'
+  },
+
+  /* ============ NÍVEL 3 ============ */
+  {
+    level: 'n3', pts: 3, emoji: '🔎', kicker: 'Pergunta 11 · Duas fontes',
+    q: 'Qual é a velocidade da luz?',
+    sub: 'Ache <strong>dois sites diferentes</strong> que respondam isso. Depois compare os números.',
+    fields: [
+      { key: 's1', label: 'Site 1 (link)', type: 'text', placeholder: 'cole o endereço do primeiro site', minLen: 5 },
+      { key: 's2', label: 'Site 2 (link)', type: 'text', placeholder: 'cole o endereço do segundo site', minLen: 5 },
+      { key: 'igual', label: 'As respostas são iguais ou muito próximas?', type: 'choice', options: ['Sim', 'Não'], correct: 'Sim' }
+    ],
+    hint: 'Compare os números. Eles vão bater — a velocidade da luz é a mesma no mundo inteiro.',
+    explain: '<div class="statbox"><span class="stat-num">299.792.458 m/s</span><span class="stat-desc">≈ 300.000 km/s · Dá sete voltas na Terra em 1 segundo 🌍</span></div>' +
+      '<p>Bateram, né? Quando duas fontes independentes dizem a mesma coisa, o sinal fica <strong>verde</strong>.</p>' +
+      '<div class="callout"><span class="co-icon">🚨</span>Mas olha bem os seus dois sites: o texto é <strong>igualzinho</strong> nos dois? Então um copiou o outro — e você tem a mesma fonte duas vezes. <strong>Copiar não é confirmar.</strong></div>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '📅', kicker: 'Pergunta 12 · Informação antiga',
+    q: 'Pesquise "Windows 10". Ache uma página que fale dele.',
+    sub: 'Procure a data no topo da matéria, no rodapé, ou em "atualizado em".',
+    fields: [
+      { key: 'data', label: 'Quando essa página foi publicada ou atualizada?', type: 'text', placeholder: 'ex.: 12/03/2021', minLen: 4 },
+      { key: 'link', label: 'Link da página', type: 'text', placeholder: 'cole o endereço', minLen: 5 },
+      { key: 'pq', label: 'Por que a data importa numa pesquisa?', type: 'textarea', placeholder: 'Escreva com suas palavras — pelo menos uma frase completa.', minLen: 40 }
+    ],
+    hint: 'Pense: uma informação verdadeira em 2021 continua verdadeira hoje?',
+    explain: '<div class="statbox"><span class="stat-num">14/10/2025</span><span class="stat-desc">O dia em que a Microsoft <strong>encerrou o suporte</strong> ao Windows 10.<br>Vocês tiveram aula sobre ele em 02/07. 😉</span></div>' +
+      '<p>Olha a mesma frase, na mesma página. Só mudou o ano de quem está lendo:</p>' +
+      '<div class="datebox">' +
+      '<div class="datecard then"><div class="d-when">Publicado em 2021</div><div class="d-quote">"O Windows 10 é o sistema mais atual e recebe atualizações de segurança."</div><div class="d-verdict">✅ Verdade, na época</div></div>' +
+      '<div class="datecard now"><div class="d-when">Lido hoje, em 2026</div><div class="d-quote">"O Windows 10 é o sistema mais atual e recebe atualizações de segurança."</div><div class="d-verdict">❌ Errado, hoje</div></div>' +
+      '</div>' +
+      '<div class="callout"><span class="co-icon">⏳</span><strong>Desatualizado não é mentira.</strong> Ninguém mentiu ali — a informação envelheceu. A internet não apaga o passado, ela <strong>empilha</strong>.</div>' +
+      '<p>Página sem data nenhuma? 🟡 Sinal amarelo. Você não faz ideia de quando aquilo foi escrito.</p>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '👤', kicker: 'Pergunta 13 · Quem escreveu?',
+    q: 'Escolha um assunto que a dupla gosta e ache uma página com os três selos.',
+    sub: 'Jogo, cantor, time, animal, série — o que vocês quiserem. Mas a página precisa ter <strong>autor</strong>, <strong>data</strong> e <strong>nome do site</strong>.',
+    fields: [
+      { key: 'assunto', label: 'Assunto escolhido', type: 'text', placeholder: 'sobre o que vocês pesquisaram', minLen: 3 },
+      { key: 'autor', label: 'Autor (nome de uma pessoa)', type: 'text', placeholder: 'quem assinou o texto', minLen: 3 },
+      { key: 'data', label: 'Data de publicação', type: 'text', placeholder: 'ex.: 04/08/2026', minLen: 4 },
+      { key: 'site', label: 'Nome do site', type: 'text', placeholder: 'onde está publicado', minLen: 3 }
+    ],
+    hint: 'Procure no começo ou no fim da matéria. Sites de notícia costumam assinar; blogs às vezes não.',
+    explain: '<p>Demorou pra achar os três juntos? <strong>Isso já é a resposta.</strong></p>' +
+      '<div class="callout"><span class="co-icon">🎯</span>Se ninguém <strong>assina</strong>, ninguém se <strong>responsabiliza</strong>. Não prova que a página está errada — mas acende o alerta.</div>' +
+      '<p>Autor com nome > "equipe de redação" > sem autor nenhum.<br>Site institucional > site de notícia > blog > post anônimo.</p>'
+  },
+
+  /* ============ NÍVEL 4 ============ */
+  {
+    level: 'n4', pts: 3, emoji: '🧠', kicker: 'Pergunta 14 · Verdadeiro ou Falso',
+    q: '"O ser humano usa apenas 10% do cérebro."',
+    sub: 'Não quero que você me diga se é verdade. Quero que você <strong>PROVE</strong>.',
+    fields: [
+      { key: 'vf', label: 'Sua resposta', type: 'choice', options: ['Verdadeiro', 'Falso'], correct: 'Falso' },
+      { key: 'fonte', label: 'Fonte que explica a resposta', type: 'text', placeholder: 'nome do site + link', minLen: 5, note: 'Marcar V ou F sem fonte não vale ponto.' }
+    ],
+    hint: 'Procure por "mito dos 10% do cérebro". Exames de imagem já responderam isso.',
+    explain: '<p><strong>FALSO.</strong> Exames de ressonância mostram atividade em praticamente <strong>todas</strong> as áreas do cérebro ao longo de um dia comum.</p>' +
+      '<div class="callout"><span class="co-icon">🤔</span>Um argumento que mata o mito: se 90% do cérebro não servisse pra nada, por que um AVC numa área pequena causa tanto estrago?</div>' +
+      '<p>Esse mito é antigo e foi reforçado por <strong>filmes</strong>. Repetição não transforma mentira em verdade — só a deixa familiar.</p>'
+  },
+  {
+    level: 'n4', pts: 3, emoji: '🦈', kicker: 'Pergunta 15 · Verdadeiro ou Falso',
+    q: '"Tubarões são mais antigos que as árvores."',
+    fields: [
+      { key: 'vf', label: 'Sua resposta', type: 'choice', options: ['Verdadeiro', 'Falso'], correct: 'Verdadeiro' },
+      { key: 'fonte', label: 'Fonte que comprove', type: 'text', placeholder: 'nome do site + link', minLen: 5 }
+    ],
+    hint: 'Parece mentira. Procure "quando surgiram os tubarões" e "primeiras árvores da Terra" e compare as datas.',
+    explain: '<p><strong>VERDADEIRO.</strong> E é a melhor pergunta da lista justamente porque parece absurda.</p>' +
+      '<div class="tl">' +
+      '<div class="tl-row"><div class="tl-label"><span>🦈 Tubarões</span><span>~450–420 milhões de anos</span></div><div class="tl-track"><div class="tl-fill shark">chegou primeiro</div></div></div>' +
+      '<div class="tl-row"><div class="tl-label"><span>🌳 Primeiras árvores</span><span>~385 milhões de anos</span></div><div class="tl-track"><div class="tl-fill tree">depois</div></div></div>' +
+      '</div>' +
+      '<div class="callout"><span class="co-icon">💡</span>A lição mais importante do nível: <strong>"parece absurdo" não é argumento.</strong> Só a fonte decide.</div>'
+  },
+  {
+    level: 'n4', pts: 3, emoji: '⚡', kicker: 'Pergunta 16 · Verdadeiro ou Falso',
+    q: '"Um raio nunca cai duas vezes no mesmo lugar."',
+    fields: [
+      { key: 'vf', label: 'Sua resposta', type: 'choice', options: ['Verdadeiro', 'Falso'], correct: 'Falso' },
+      { key: 'fonte', label: 'Fonte que explique', type: 'text', placeholder: 'nome do site + link', minLen: 5 }
+    ],
+    hint: 'Pesquise quantos raios atingem o Empire State Building por ano.',
+    explain: '<p><strong>FALSO.</strong> O <strong>Empire State Building</strong> é atingido dezenas de vezes por ano.</p>' +
+      '<p>O raio procura o ponto mais alto e mais condutor. E adivinha: depois que ele cai, esse ponto <strong>continua lá</strong>.</p>' +
+      '<div class="callout"><span class="co-icon">🗣️</span>Isso é um <strong>ditado</strong>, não um fato. Frase famosa não é frase verdadeira.</div>'
+  },
+  {
+    level: 'n4', pts: 3, emoji: '🧊', kicker: 'Pergunta 17 · Verdadeiro ou Falso',
+    q: '"A água ferve sempre a 100 °C."',
+    fields: [
+      { key: 'vf', label: 'Sua resposta', type: 'choice', options: ['Verdadeiro', 'Falso'], correct: 'Falso' },
+      { key: 'pq', label: 'Por que a resposta pode mudar?', type: 'textarea', placeholder: 'Escreva com suas palavras — pelo menos uma frase completa.', minLen: 40 }
+    ],
+    hint: 'Pense em quem mora no alto de uma montanha. Procure "temperatura de ebulição e altitude".',
+    explain: '<p><strong>FALSO — depende.</strong> 100 °C só vale ao nível do mar.</p>' +
+      '<div class="alt-row"><span class="alt-icon">🏖️</span><span class="alt-info"><strong>Nível do mar</strong>Santos, Recife, Rio</span><span class="alt-temp">100 °C</span></div>' +
+      '<div class="alt-row"><span class="alt-icon">🏙️</span><span class="alt-info"><strong>Brasília — 1.100 m</strong>O macarrão já demora mais</span><span class="alt-temp">~96 °C</span></div>' +
+      '<div class="alt-row"><span class="alt-icon">🏔️</span><span class="alt-info"><strong>Topo do Everest — 8.800 m</strong>Ferve, mas não cozinha direito</span><span class="alt-temp">~70 °C</span></div>' +
+      '<p style="margin-top:12px">Quanto mais alto, <strong>menos pressão do ar</strong> — e a água ferve mais fácil. 🍝</p>' +
+      '<div class="callout"><span class="co-icon">😳</span>Três das quatro frases deste nível estavam <strong>erradas</strong>. E todo mundo repetia. Onde foi que a gente aprendeu isso? Ninguém checou. Só repetiu.</div>'
+  },
+
+  /* ============ DESAFIO FINAL ============ */
+  {
+    level: 'fin', pts: 5, emoji: '🚨', kicker: 'Desafio Final · A Pegadinha',
+    q: '"O Google sempre mostra primeiro o resultado mais verdadeiro."',
+    sub: 'Isso é verdade? Pesquisem e <strong>expliquem</strong>. Dica de detetive: olhe bem o topo da página de resultados. 👀',
+    fields: [
+      { key: 'txt', label: 'Por que não devemos confiar no primeiro resultado do Google?', type: 'textarea', placeholder: 'Escrevam pelo menos dois motivos, com suas palavras.', minLen: 90 }
+    ],
+    hint: 'Faça uma busca comercial — "tênis de corrida", "celular barato". O que aparece antes de tudo?',
+    explain: '<p>Olha uma página de busca de verdade. O que o Google escolheu — e o que <strong>pagou</strong> pra estar ali?</p>' +
+      '<div class="serp">' +
+      '<div class="serp-bar">🔍 tênis de corrida</div>' +
+      '<div class="serp-item"><span class="serp-ad-tag">Patrocinado</span><div class="serp-url">superlojaesportes.com.br</div><div class="serp-title">O MELHOR tênis de corrida do Brasil — 70% OFF hoje!</div><div class="serp-desc">Frete grátis. Últimas unidades. Compre agora.</div><div class="serp-verdict bad">💰 Anúncio. Está em 1º porque pagou, não porque é o melhor.</div></div>' +
+      '<div class="serp-item"><span class="serp-ad-tag">Patrocinado</span><div class="serp-url">megatenis.com</div><div class="serp-title">Tênis de corrida em 12x sem juros</div><div class="serp-desc">Promoção relâmpago da semana.</div><div class="serp-verdict bad">💰 Anúncio também. Dois pagos antes do primeiro resultado real.</div></div>' +
+      '<div class="serp-item"><div class="serp-url">blogdocorredor.com.br › 2019 › melhores-tenis</div><div class="serp-title">Os 10 melhores tênis de corrida</div><div class="serp-desc">Publicado em março de 2019 · por Equipe do Blog</div><div class="serp-verdict mid">🟡 Resultado real, mas de 2019 e sem autor com nome. Envelheceu.</div></div>' +
+      '<div class="serp-item"><div class="serp-url">revistaesportiva.com.br › testes</div><div class="serp-title">Teste comparativo: 8 tênis medidos em laboratório</div><div class="serp-desc">Atualizado em agosto de 2026 · por Marina Alves</div><div class="serp-verdict ok">✅ Tem autor, tem data recente e explica como testou. Essa serve.</div></div>' +
+      '</div>' +
+      '<p><strong>Os 5 motivos:</strong></p>' +
+      '<div class="rules">' +
+      '<div class="rule"><span class="rule-n">1</span><span>Pode ser <strong>anúncio</strong> — aparece "Patrocinado".</span></div>' +
+      '<div class="rule"><span class="rule-n">2</span><span>Pode não ser a <strong>melhor fonte</strong> — só a mais popular.</span></div>' +
+      '<div class="rule"><span class="rule-n">3</span><span>Pode estar <strong>desatualizado</strong>.</span></div>' +
+      '<div class="rule"><span class="rule-n">4</span><span>Pode conter <strong>erro</strong>. Ninguém revisou.</span></div>' +
+      '<div class="rule"><span class="rule-n">5</span><span>Por isso: <strong>sempre comparar</strong> antes de concluir.</span></div>' +
+      '</div>' +
+      '<p>O Google ordena por <span class="hl">relevância e popularidade</span>. Não por <span class="hl">verdade</span>.</p>' +
+      '<p style="opacity:0.75">Existe até uma técnica pra isso, chamada <strong>SEO</strong>: escrever a página do jeito que o Google gosta. Dá pra ficar em 1º lugar sendo bom em SEO — sem estar certo.</p>'
+  }
+];
+
+const TOTAL_PTS = QUESTIONS.reduce((a, q) => a + q.pts, 0);
+
+/* ---------- estado ---------- */
+let idx = -1;          /* -1 = capa */
+let score = 0;
+let attempts = 0;
+const stage = document.getElementById('stage');
+
+/* ---------- topo ---------- */
+function paintTop(badgeClass, badgeText, stepText, progress) {
+  const b = document.getElementById('levelBadge');
+  b.className = 'badge-level ' + badgeClass;
+  b.textContent = badgeText;
+  document.getElementById('stepLabel').textContent = stepText;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('barFill').style.width = progress + '%';
+}
+
+/* ---------- capa ---------- */
+function renderCover() {
+  paintTop('end', '🕵️ Detetives Digitais', 'Início', 0);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🕵️</div>' +
+      '<div class="c-kicker">Aula de quinta-feira · 11–15 anos · em duplas</div>' +
+      '<div class="c-question">Desafio Google — Detetives Digitais</div>' +
+      '<div class="c-sub">O Google responde em 2 segundos.<br>Mas responde <strong>certo</strong>?</div>' +
+      '<div class="rules">' +
+        '<div class="rule"><span class="rule-n">1</span><span>❌ Não vale perguntar para outra dupla.</span></div>' +
+        '<div class="rule"><span class="rule-n">2</span><span>✅ Pode usar o Google à vontade.</span></div>' +
+        '<div class="rule"><span class="rule-n">3</span><span>❌ Não vale pegar a primeira resposta sem conferir.</span></div>' +
+        '<div class="rule"><span class="rule-n">4</span><span>📎 A partir do Nível 2, <strong>sem fonte não avança</strong>.</span></div>' +
+        '<div class="rule"><span class="rule-n">5</span><span>🔒 <strong>Só passa para o próximo card acertando.</strong> Errou? Pesquisa de novo.</span></div>' +
+        '<div class="rule"><span class="rule-n">6</span><span>⏱️ Terminar primeiro não ganha. Ganha quem consegue provar.</span></div>' +
+      '</div>' +
+      '<table class="ptable">' +
+        '<tr><td class="p-lv">🟢 Nível 1</td><td>Aquecimento — 5 cards</td><td class="p-pt">1 pt</td></tr>' +
+        '<tr><td class="p-lv">🟡 Nível 2</td><td>Pesquisadores — com fonte</td><td class="p-pt">2 pts</td></tr>' +
+        '<tr><td class="p-lv">🔴 Nível 3</td><td>Detetives — comparar e datar</td><td class="p-pt">3 pts</td></tr>' +
+        '<tr><td class="p-lv">🧠 Nível 4</td><td>Verdadeiro ou Falso — com prova</td><td class="p-pt">3 pts</td></tr>' +
+        '<tr><td class="p-lv">🏆 Final</td><td>A pegadinha</td><td class="p-pt">5 pts</td></tr>' +
+      '</table>' +
+      '<button class="btn btn-next" onclick="start()">Começar a investigação 🔎</button>' +
+      '<div class="teacher-note">Professor: o bônus de +2 por explicar <em>como</em> a dupla descobriu a resposta é anotado à parte, no quadro.</div>' +
+    '</div>';
+}
+
+function start() { idx = 0; attempts = 0; renderQuestion(); }
+
+/* ---------- card de pergunta ---------- */
+function renderQuestion() {
+  const q = QUESTIONS[idx];
+  const lv = LEVELS[q.level];
+  paintTop(lv.badge, lv.label, 'Card ' + (idx + 1) + ' de ' + QUESTIONS.length, Math.round(idx / QUESTIONS.length * 100));
+
+  let html =
+    '<div class="card" id="card">' +
+      '<div class="c-emoji">' + q.emoji + '</div>' +
+      '<div class="c-kicker">' + q.kicker + '</div>' +
+      '<div class="c-question">' + q.q + '</div>' +
+      (q.sub ? '<div class="c-sub">' + q.sub + '</div>' : '') +
+      '<span class="c-pts">Vale ' + q.pts + (q.pts > 1 ? ' pontos' : ' ponto') + '</span>' +
+      '<div id="fields">';
+
+  q.fields.forEach((f, i) => {
+    html += '<div class="field" id="f' + i + '">';
+    html += '<label class="field-label">' + f.label + '</label>';
+    if (f.type === 'choice') {
+      html += '<div class="choices" id="ch' + i + '">';
+      f.options.forEach(opt => {
+        html += '<div class="choice" data-val="' + opt + '" onclick="pick(' + i + ', this)">' + opt + '</div>';
+      });
+      html += '</div>';
+    } else if (f.type === 'textarea') {
+      html += '<textarea id="i' + i + '" placeholder="' + (f.placeholder || '') + '"></textarea>';
+    } else {
+      html += '<input type="text" id="i' + i + '" placeholder="' + (f.placeholder || '') + '" autocomplete="off" />';
+    }
+    if (f.note) html += '<div class="field-note">' + f.note + '</div>';
+    html += '</div>';
+  });
+
+  html +=
+      '</div>' +
+      '<div class="msg" id="msg"></div>' +
+      '<button class="btn btn-check" id="btnCheck" onclick="check()">Conferir resposta</button>' +
+      '<div class="explain" id="explain">' +
+        '<span class="explain-tag">✅ Resposta certa · +' + q.pts + ' pts</span>' +
+        q.explain +
+        '<button class="btn btn-next" onclick="nextCard()">' + (idx === QUESTIONS.length - 1 ? 'Ver resultado final 🏆' : 'Próximo card →') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  stage.innerHTML = html;
+
+  const first = document.getElementById('i0');
+  if (first) first.focus();
+  document.querySelectorAll('#fields input').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  });
+}
+
+/* ---------- escolha (V/F, Sim/Não) ---------- */
+const picked = {};
+function pick(i, el) {
+  const box = document.getElementById('ch' + i);
+  if (box.classList.contains('locked')) return;
+  box.querySelectorAll('.choice').forEach(c => c.classList.remove('picked'));
+  el.classList.add('picked');
+  picked[i] = el.dataset.val;
+}
+
+/* ---------- validação ---------- */
+function check() {
+  const q = QUESTIONS[idx];
+  let allOk = true;
+  const problems = [];
+
+  q.fields.forEach((f, i) => {
+    const wrap = document.getElementById('f' + i);
+    wrap.classList.remove('ok', 'err');
+    let ok = false;
+
+    if (f.type === 'choice') {
+      const val = picked[i];
+      if (!val) { problems.push('Falta marcar: ' + f.label.toLowerCase() + '.'); }
+      else if (val === f.correct) { ok = true; }
+      else { problems.push('A opção marcada não está certa. Pesquise antes de tentar de novo.'); }
+    } else {
+      const val = (document.getElementById('i' + i).value || '').trim();
+      if (f.accept) {
+        const n = norm(val);
+        if (!n) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else if (f.accept.some(a => n.includes(a))) { ok = true; }
+        else { problems.push('Essa resposta não confere. Pesquise e tente de novo.'); }
+      } else {
+        const min = f.minLen || 3;
+        if (val.length >= min) { ok = true; }
+        else if (!val) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else { problems.push('Escreva um pouco mais em: ' + f.label.toLowerCase() + '.'); }
+      }
+    }
+
+    wrap.classList.add(ok ? 'ok' : 'err');
+    if (!ok) allOk = false;
+  });
+
+  const msg = document.getElementById('msg');
+
+  if (!allOk) {
+    attempts++;
+    const card = document.getElementById('card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+
+    if (attempts >= 3 && q.hint) {
+      msg.className = 'msg hint show';
+      msg.innerHTML = '💡 <strong>Dica:</strong> ' + q.hint;
+    } else {
+      msg.className = 'msg err show';
+      msg.innerHTML = '🔒 ' + problems.slice(0, 2).join(' ') + ' <span style="font-weight:400">Você não avança sem acertar.</span>';
+    }
+    return;
+  }
+
+  /* acertou */
+  score += q.pts;
+  document.getElementById('scoreVal').textContent = score;
+  msg.className = 'msg';
+  document.getElementById('btnCheck').style.display = 'none';
+  document.querySelectorAll('#fields input, #fields textarea').forEach(el => el.disabled = true);
+  document.querySelectorAll('.choices').forEach(c => c.classList.add('locked'));
+  document.getElementById('explain').classList.add('show');
+  document.getElementById('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function nextCard() {
+  idx++;
+  attempts = 0;
+  for (const k in picked) delete picked[k];
+  if (idx >= QUESTIONS.length) { renderEnd(); return; }
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- fechamento ---------- */
+function renderEnd() {
+  paintTop('end', '🏆 Fim da investigação', 'Concluído', 100);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🕵️</div>' +
+      '<div class="c-kicker">Investigação encerrada</div>' +
+      '<div class="final-score">' + score + '</div>' +
+      '<div class="final-max">de ' + TOTAL_PTS + ' pontos · 18 cards resolvidos</div>' +
+      '<div class="c-question" style="font-size:20px">Vocês chegaram até o fim provando cada resposta. 🏆</div>' +
+      '<div class="ach-grid">' +
+        '<div class="ach"><span class="ach-i">📎</span><div><strong>Citador de Fontes</strong><span>Nunca entrega resposta sozinha</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🔁</span><div><strong>Comparador</strong><span>Confere em dois lugares</span></div></div>' +
+        '<div class="ach"><span class="ach-i">📅</span><div><strong>Caçador de Datas</strong><span>Sabe quando a página foi feita</span></div></div>' +
+        '<div class="ach"><span class="ach-i">👤</span><div><strong>Quem Escreveu?</strong><span>Procura o autor antes de acreditar</span></div></div>' +
+        '<div class="ach"><span class="ach-i">💰</span><div><strong>Detector de Anúncio</strong><span>Reconhece o "Patrocinado"</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🧠</span><div><strong>Desmontador de Mito</strong><span>Não repete o que não checou</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🦈</span><div><strong>Mente Aberta</strong><span>"Parece absurdo" não é argumento</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🔍</span><div><strong>Cético Profissional</strong><span>Desconfia do primeiro link</span></div></div>' +
+      '</div>' +
+      '<div class="mantra">' +
+        '<span class="mantra-step">Pesquisar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Comparar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Conferir</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Concluir</span>' +
+      '</div>' +
+      '<p style="text-align:center; font-size:17px; font-weight:800; line-height:1.6; margin-top:6px;">"Ser bom na internet não é saber encontrar uma resposta.<br>É saber descobrir se a resposta é <span class="hl">confiável</span>."</p>' +
+      '<button class="btn btn-ghost" onclick="restart()">Recomeçar 🔄</button>' +
+      '<div class="teacher-note">Professor: antes de anunciar o placar, pergunte — "o que vocês aprenderam hoje sobre pesquisar na internet?"</div>' +
+    '</div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() { idx = -1; score = 0; attempts = 0; renderCover(); window.scrollTo({ top: 0 }); }
+
+renderCover();
+</script>
+</body>
+</html>
