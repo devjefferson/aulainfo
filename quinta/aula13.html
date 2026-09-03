@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Raio-X da Web — Como um Site é Feito por Dentro 🔍</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #060d16;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  code, .mono { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; }
+
+  .header-info { color: rgba(255,255,255,0.55); font-size: 13px; margin-bottom: 16px; text-align: center; }
+  .header-info strong { color: rgba(255,255,255,0.9); }
+
+  .parte-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #29b6f6, #80d8ff);
+    color: #06101f; font-size: 11px; font-weight: 900; letter-spacing: 2px;
+    border-radius: 20px; padding: 3px 12px; margin-bottom: 8px; text-transform: uppercase;
+  }
+
+  .carousel-wrapper { width: 100%; max-width: 760px; }
+
+  .slide {
+    display: none; border-radius: 24px; padding: 44px 40px; min-height: 470px;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  .slide-1  { background: linear-gradient(135deg, #b71c1c, #e53935); color: #fff; }
+  .slide-2  { background: linear-gradient(135deg, #0d47a1, #1976d2); color: #fff; }
+  .slide-3  { background: linear-gradient(135deg, #1a237e, #303f9f); color: #fff; }
+  .slide-4  { background: linear-gradient(135deg, #004d40, #00796b); color: #fff; }
+  .slide-5  { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; }
+  .slide-6  { background: linear-gradient(135deg, #e65100, #f57c00); color: #fff; }
+  .slide-7  { background: linear-gradient(135deg, #263238, #455a64); color: #fff; }
+  .slide-8  { background: linear-gradient(135deg, #006064, #00838f); color: #fff; }
+  .slide-9  { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
+  .slide-10 { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
+  .slide-11 { background: linear-gradient(135deg, #01579b, #0288d1); color: #fff; }
+  .slide-12 { background: linear-gradient(135deg, #f57f17, #fbc02d); color: #1a1a1a; }
+  .slide-13 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
+  .slide-14 { background: linear-gradient(135deg, #212121, #424242); color: #fff; }
+  .slide-15 { background: linear-gradient(135deg, #4527a0, #673ab7); color: #fff; }
+  .slide-16 { background: linear-gradient(135deg, #00695c, #26a69a); color: #fff; }
+  .slide-17 { background: linear-gradient(135deg, #37474f, #607d8b); color: #fff; }
+  .slide-18 { background: linear-gradient(135deg, #bf360c, #e64a19); color: #fff; }
+  .slide-19 { background: linear-gradient(135deg, #0d47a1, #00acc1); color: #fff; }
+  .slide-20 { background: linear-gradient(135deg, #ad1457, #d81b60); color: #fff; }
+  .slide-21 { background: linear-gradient(135deg, #1b5e20, #00acc1); color: #fff; }
+  .slide-22 { background: linear-gradient(135deg, #0f2027, #203a43); color: #fff; }
+
+  .slide-emoji { font-size: 54px; margin-bottom: 6px; }
+  .slide-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; }
+  .slide-title { font-size: 27px; font-weight: 900; line-height: 1.25; margin-bottom: 18px; }
+  .slide-body { font-size: 17px; line-height: 1.6; max-width: 660px; width: 100%; }
+  .slide-body p { margin-bottom: 10px; }
+
+  .hl { background: rgba(255,255,255,0.25); border-radius: 5px; padding: 1px 6px; font-weight: 800; }
+  .slide-12 .hl { background: rgba(0,0,0,0.16); }
+
+  /* ---------- boxes ---------- */
+  .warning-box {
+    background: rgba(0,0,0,0.22); border-left: 5px solid rgba(255,255,255,0.6);
+    border-radius: 12px; padding: 14px 18px; margin-top: 16px; text-align: left;
+    font-size: 15px; font-weight: 600; line-height: 1.5;
+  }
+  .warning-emoji { font-size: 20px; margin-right: 8px; }
+
+  .stat-box { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 18px; margin-top: 16px; }
+  .stat-num { display: block; font-size: 30px; font-weight: 900; }
+  .stat-desc { display: block; font-size: 14px; opacity: 0.85; margin-top: 6px; line-height: 1.45; }
+
+  /* ---------- browser mock ---------- */
+  .browser {
+    background: #1e2430; border-radius: 12px; overflow: hidden;
+    text-align: left; margin: 0 auto 14px; max-width: 560px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+  }
+  .browser-bar { background: #2b3340; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
+  .bdot { width: 10px; height: 10px; border-radius: 50%; }
+  .bdot.r { background: #ff5f57; } .bdot.y { background: #febc2e; } .bdot.g { background: #28c840; }
+  .browser-url {
+    flex: 1; margin-left: 10px; background: #171c25; color: #9fb3c8;
+    font-size: 12px; padding: 4px 10px; border-radius: 20px;
+  }
+  .browser-page { background: #fff; color: #222; padding: 0; }
+
+  .mockrow { padding: 10px 14px; font-size: 13px; font-weight: 700; }
+  .mock-header { background: #263238; color: #fff; }
+  .mock-nav { background: #37474f; color: #cfd8dc; font-size: 11px; letter-spacing: 1px; }
+  .mock-main { background: #eceff1; color: #37474f; padding: 18px 14px; }
+  .mock-aside { background: #cfd8dc; color: #37474f; font-size: 11px; }
+  .mock-footer { background: #455a64; color: #eceff1; font-size: 11px; }
+  .mock-split { display: flex; }
+  .mock-split .mock-main { flex: 2; }
+  .mock-split .mock-aside { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .mocktag { font-family: 'Consolas', monospace; opacity: 0.85; font-weight: 800; }
+
+  /* ---------- code block ---------- */
+  .codeblock {
+    background: #10161f; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+    padding: 16px 18px; text-align: left; font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 14px; line-height: 1.75; color: #cfd8dc; overflow-x: auto; margin: 6px 0 12px;
+  }
+  .tg { color: #7ec8ff; }      /* tag */
+  .at { color: #ffd479; }      /* attribute */
+  .vl { color: #a5e887; }      /* value */
+  .tx { color: #eceff1; }      /* text */
+  .cm { color: #6f8296; font-style: italic; }
+  .indent1 { padding-left: 20px; display: inline-block; }
+  .indent2 { padding-left: 40px; display: inline-block; }
+  .indent3 { padding-left: 60px; display: inline-block; }
+
+  /* ---------- compare grid ---------- */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .compare-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .compare-card {
+    background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px; padding: 16px 12px; text-align: center;
+  }
+  .compare-icon { font-size: 32px; display: block; margin-bottom: 6px; }
+  .compare-card strong { font-size: 16px; display: block; }
+  .compare-card p { font-size: 13px; opacity: 0.88; line-height: 1.45; margin-top: 6px; }
+
+  /* ---------- key grid (reveal cards) ---------- */
+  .key-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+  .key-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .key-card {
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 12px; padding: 12px 10px; font-size: 13px; line-height: 1.4;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+  }
+  .key-icon { font-size: 26px; }
+  .key-card strong { font-size: 14px; }
+  .part-card { cursor: pointer; transition: transform 0.15s, background 0.2s; }
+  .part-card:hover { transform: translateY(-2px); background: rgba(0,0,0,0.3); }
+  .part-hint { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.5; }
+  .part-answer { display: none; font-size: 12.5px; opacity: 0.95; }
+  .part-card.revealed .part-hint { display: none; }
+  .part-card.revealed .part-answer { display: block; }
+  .part-card.revealed { background: rgba(255,255,255,0.16); }
+
+  /* ---------- reveal chips ---------- */
+  .review-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px; }
+  .review-chip {
+    background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 9px 15px; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+  }
+  .review-chip:hover { transform: translateY(-2px); background: rgba(0,0,0,0.34); }
+  .review-chip.revealed { background: rgba(255,255,255,0.2); font-weight: 700; cursor: default; }
+
+  /* ---------- mission / cmd list ---------- */
+  .cmd-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .cmd-item {
+    display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 10px;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px; padding: 10px 12px; font-size: 14px; text-align: left;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .cmd-item:hover { background: rgba(0,0,0,0.32); }
+  .cmd-num {
+    background: rgba(255,255,255,0.22); border-radius: 8px; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;
+  }
+  .cmd-hint { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.5; }
+  .cmd-answer { display: none; grid-column: 2 / -1; font-size: 13px; opacity: 0.95; font-weight: 700; }
+  .cmd-item.revealed .cmd-hint { display: none; }
+  .cmd-item.revealed .cmd-answer { display: block; }
+  .cmd-item.revealed { background: rgba(255,255,255,0.15); }
+
+  .mission-list { display: flex; flex-direction: column; gap: 9px; margin-top: 8px; text-align: left; }
+  .mission-item { display: flex; align-items: center; gap: 11px; font-size: 15px; line-height: 1.45; }
+  .mission-num {
+    flex-shrink: 0; background: rgba(255,255,255,0.22); border-radius: 8px;
+    width: 27px; height: 27px; display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px;
+  }
+
+  /* ---------- table ---------- */
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+  .summary-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.14); vertical-align: middle; }
+  .s-key { font-weight: 900; }
+  .s-pts { text-align: right; font-weight: 800; white-space: nowrap; font-size: 13px; }
+
+  /* ---------- keys ---------- */
+  .kbd {
+    display: inline-block; background: rgba(255,255,255,0.9); color: #16202b;
+    border-radius: 6px; border-bottom: 3px solid rgba(0,0,0,0.35);
+    padding: 3px 9px; font-family: 'Consolas', monospace; font-size: 13px; font-weight: 800;
+    margin: 0 2px;
+  }
+
+  /* ---------- devtools panel mock ---------- */
+  .dt {
+    background: #1c1c1c; border-radius: 12px; overflow: hidden; text-align: left;
+    max-width: 580px; margin: 0 auto 12px; border: 1px solid rgba(255,255,255,0.14);
+  }
+  .dt-tabs { display: flex; background: #2a2a2a; font-size: 12px; }
+  .dt-tab { padding: 8px 12px; color: #9e9e9e; border-bottom: 2px solid transparent; }
+  .dt-tab.on { color: #fff; background: #1c1c1c; border-bottom-color: #4fc3f7; font-weight: 700; }
+  .dt-body { padding: 12px 14px; font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.7; color: #d0d0d0; }
+  .dt-sel { background: #0d5c8f; border-radius: 3px; }
+
+  /* ---------- match game ---------- */
+  .match-container { margin-top: 8px; }
+  .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .match-col-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; font-weight: 800; }
+  .match-item {
+    background: rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.16); border-radius: 10px;
+    padding: 9px 10px; font-size: 13.5px; margin-bottom: 8px; cursor: pointer;
+    transition: all 0.18s; text-align: left;
+  }
+  .match-item:hover { background: rgba(0,0,0,0.34); }
+  .match-item.selected { border-color: #ffd54f; background: rgba(255,213,79,0.2); }
+  .match-item.matched { border-color: #66bb6a; background: rgba(102,187,106,0.28); cursor: default; opacity: 0.75; }
+  .match-item.wrong-flash { border-color: #ef5350; background: rgba(239,83,80,0.28); }
+  .match-score { margin-top: 10px; font-size: 14px; font-weight: 700; }
+  .match-result { display: none; margin-top: 10px; font-size: 15px; font-weight: 800; }
+  .match-result.show { display: block; }
+
+  /* ---------- quiz ---------- */
+  .quiz-container { width: 100%; max-width: 620px; margin: 0 auto; }
+  .quiz-header { font-size: 13px; opacity: 0.75; margin-bottom: 10px; }
+  .quiz-score-bar { font-size: 13px; font-weight: 800; margin-bottom: 12px; }
+  .question-card { display: none; text-align: left; }
+  .question-card.active { display: block; }
+  .q-number { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; font-weight: 800; }
+  .q-text { font-size: 19px; font-weight: 800; margin: 8px 0 14px; line-height: 1.35; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: inherit;
+    border-radius: 11px; padding: 11px 14px; font-size: 14.5px; text-align: left;
+    cursor: pointer; font-family: inherit; transition: all 0.18s; line-height: 1.4;
+  }
+  .option-btn:hover:enabled { background: rgba(255,255,255,0.2); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct { background: rgba(102,187,106,0.4); border-color: #66bb6a; font-weight: 800; }
+  .option-btn.wrong { background: rgba(239,83,80,0.4); border-color: #ef5350; }
+  .opt-letter { font-weight: 900; opacity: 0.7; margin-right: 8px; }
+  .feedback-msg { display: none; margin-top: 12px; font-size: 14px; line-height: 1.5; border-radius: 11px; padding: 12px 14px; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: rgba(102,187,106,0.25); border-left: 4px solid #66bb6a; }
+  .feedback-msg.err { background: rgba(239,83,80,0.25); border-left: 4px solid #ef5350; }
+  .next-q-btn, .restart-btn, .match-next-btn {
+    display: none; margin-top: 14px; background: rgba(255,255,255,0.92); color: #12222e;
+    border: none; border-radius: 22px; padding: 10px 22px; font-size: 14px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+  }
+  .next-q-btn.show, .restart-btn, .match-next-btn.show { display: inline-block; }
+  .quiz-result { display: none; text-align: center; }
+  .quiz-result.show { display: block; }
+  .result-emoji { font-size: 56px; }
+  .result-score { font-size: 42px; font-weight: 900; }
+  .result-max { font-size: 18px; opacity: 0.7; }
+  .result-title { font-size: 22px; font-weight: 900; margin-top: 6px; }
+  .result-subtitle { font-size: 15px; opacity: 0.88; margin-top: 8px; line-height: 1.5; }
+
+  /* ---------- mantra ---------- */
+  .mantra { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .mantra-step { background: rgba(0,0,0,0.24); border-radius: 12px; padding: 10px 14px; font-size: 14px; font-weight: 800; }
+  .mantra-arrow { font-size: 18px; opacity: 0.6; }
+
+  /* ---------- nav ---------- */
+  .nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 24px; }
+  .nav-btn {
+    background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 22px; padding: 9px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .nav-btn:hover:enabled { background: rgba(255,255,255,0.22); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .progress { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700; min-width: 62px; text-align: center; }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; max-width: 640px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.24); cursor: pointer; }
+  .dot.active { background: #4fc3f7; transform: scale(1.3); }
+
+  @media (max-width: 620px) {
+    .slide { padding: 30px 20px; }
+    .slide-title { font-size: 22px; }
+    .compare-grid, .compare-grid.three, .key-grid, .key-grid.three, .match-cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="carousel-wrapper">
+
+  <div style="text-align:center; margin-bottom:12px;">
+    <div class="parte-badge">🔍 Operação Raio-X da Web</div>
+  </div>
+  <div class="header-info">
+    <strong>Aula de quinta-feira</strong> · 11–15 anos · 60 min · 10 missões · 12 pontos
+  </div>
+
+  <!-- SLIDE 1 -->
+  <div class="slide slide-1 active">
+    <div class="slide-emoji">🚨</div>
+    <div class="slide-label">Slide 1 · O Gancho</div>
+    <div class="slide-title">Eu acabei de mudar a manchete do G1. Em 10 segundos. 🚨</div>
+    <div class="slide-body">
+      <div class="browser">
+        <div class="browser-bar">
+          <span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span>
+          <span class="browser-url">🔒 g1.globo.com</span>
+        </div>
+        <div class="browser-page">
+          <div class="mockrow mock-header">G1 · O portal de notícias</div>
+          <div class="mockrow mock-main" style="font-size:16px; font-weight:900; color:#b71c1c;">
+            "AULAS DE INFORMÁTICA CANCELADAS PARA SEMPRE"
+          </div>
+        </div>
+      </div>
+      <p style="font-size:18px; font-weight:700;">Vocês acreditariam nesse print no WhatsApp? 📱</p>
+      <div class="warning-box">
+        <span class="warning-emoji">🧠</span>
+        Eu <strong>não</strong> invadi o G1. Mexi só na minha tela.<br>
+        Apertei <span class="kbd">F5</span> e a manchete real voltou.<br>
+        <span style="font-weight:400;">Hoje vocês vão aprender a fazer isso — e a nunca mais cair nisso.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide slide-2">
+    <div class="slide-emoji">🤔</div>
+    <div class="slide-label">Slide 2 · Aquecimento</div>
+    <div class="slide-title">Três perguntas antes de começar 🤔</div>
+    <div class="slide-body">
+      <p style="opacity:0.85;">Responda de cabeça. Depois toque para conferir.</p>
+      <div class="review-chips">
+        <div class="review-chip" onclick="revealChip(this, '🧱 Montado na hora! O navegador recebe instruções e constrói')">Site é uma imagem?</div>
+        <div class="review-chip" onclick="revealChip(this, '🖥️ Num servidor — um computador ligado 24h em algum lugar')">Onde o site mora?</div>
+        <div class="review-chip" onclick="revealChip(this, '👕 Porque o CSS tem regras diferentes por tamanho de tela')">Por que muda no celular?</div>
+      </div>
+      <p style="margin-top:20px; font-size:16px; font-weight:700;">
+        Hoje a gente para de <span class="hl">usar</span> a internet<br>e começa a <span class="hl">entender</span> como ela é feita.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide slide-3">
+    <div class="slide-emoji">🧱</div>
+    <div class="slide-label">Slide 3 · O Conceito</div>
+    <div class="slide-title">Um site não é uma foto. É montado na sua frente. 🧱</div>
+    <div class="slide-body">
+      <div class="compare-grid">
+        <div class="compare-card">
+          <span class="compare-icon">🖼️</span>
+          <strong>Se fosse foto…</strong>
+          <p>Você não poderia copiar o texto. Nem clicar num link. Nem aumentar a letra.</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">🧱</span>
+          <strong>Como é de verdade</strong>
+          <p>O navegador baixa um <strong>texto com instruções</strong> e monta a página peça por peça.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">⚡</span>
+        Cada vez que você abre um site, o navegador <strong>reconstrói ele do zero</strong>.<br>
+        <span style="font-weight:400;">Em menos de 1 segundo. Toda vez.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 -->
+  <div class="slide slide-4">
+    <div class="slide-emoji">📦</div>
+    <div class="slide-label">Slide 4 · A Grande Ideia</div>
+    <div class="slide-title">Todo site do mundo é caixa dentro de caixa 📦</div>
+    <div class="slide-body">
+      <div class="browser">
+        <div class="browser-bar">
+          <span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span>
+          <span class="browser-url">qualquer-site.com</span>
+        </div>
+        <div class="browser-page">
+          <div class="mockrow mock-header">TOPO — logo, título <span class="mocktag">&lt;header&gt;</span></div>
+          <div class="mockrow mock-nav">MENU — início · sobre · contato <span class="mocktag">&lt;nav&gt;</span></div>
+          <div class="mock-split">
+            <div class="mock-main">CONTEÚDO PRINCIPAL <span class="mocktag">&lt;main&gt;</span></div>
+            <div class="mock-aside">LATERAL<br><span class="mocktag">&lt;aside&gt;</span></div>
+          </div>
+          <div class="mockrow mock-footer">RODAPÉ — contato, redes <span class="mocktag">&lt;footer&gt;</span></div>
+        </div>
+      </div>
+      <p style="font-size:16px; font-weight:700;">Instagram, G1, Wikipédia, o site da escola.<br>Muda o conteúdo. <span class="hl">A estrutura é quase a mesma.</span></p>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 -->
+  <div class="slide slide-5">
+    <div class="slide-emoji">🦴</div>
+    <div class="slide-label">Slide 5 · Os 3 Arquivos</div>
+    <div class="slide-title">Esqueleto, roupa e músculo 🦴👕💪</div>
+    <div class="slide-body">
+      <div class="compare-grid three">
+        <div class="compare-card">
+          <span class="compare-icon">🦴</span>
+          <strong>HTML</strong>
+          <p><strong>O esqueleto.</strong><br>Diz <em>o que</em> tem: título, texto, imagem, botão.</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">👕</span>
+          <strong>CSS</strong>
+          <p><strong>A roupa.</strong><br>Diz <em>como</em> aparece: cor, tamanho, posição.</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">💪</span>
+          <strong>JavaScript</strong>
+          <p><strong>O músculo.</strong><br>Diz <em>o que acontece</em> quando você clica.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🧠</span>
+        Corpo sem roupa é esquisito — mas anda.<br>
+        Corpo sem esqueleto é uma <strong>poça</strong>. 🫠<br>
+        <span style="font-weight:400;">Por isso o HTML vem primeiro. Sempre.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">🏷️</div>
+    <div class="slide-label">Slide 6 · Anatomia</div>
+    <div class="slide-title">Como uma "caixa" é escrita 🏷️</div>
+    <div class="slide-body">
+      <div class="codeblock">
+<span class="tg">&lt;h1</span> <span class="at">class</span>=<span class="vl">"titulo"</span><span class="tg">&gt;</span><span class="tx">Bem-vindo!</span><span class="tg">&lt;/h1&gt;</span>
+      </div>
+      <div class="key-grid">
+        <div class="key-card"><span class="key-icon">🔓</span><strong>Tag de abertura</strong><span><code>&lt;h1&gt;</code> — começa a caixa</span></div>
+        <div class="key-card"><span class="key-icon">🔒</span><strong>Tag de fechamento</strong><span><code>&lt;/h1&gt;</code> — a barra fecha</span></div>
+        <div class="key-card"><span class="key-icon">🏷️</span><strong>Atributo</strong><span><code>class="titulo"</code> — a etiqueta na caixa</span></div>
+        <div class="key-card"><span class="key-icon">📝</span><strong>Conteúdo</strong><span>"Bem-vindo!" — o que aparece</span></div>
+      </div>
+      <p style="margin-top:14px; font-size:15px; opacity:0.9;">Tudo junto = <strong>1 elemento</strong>. Uma página tem centenas deles.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 -->
+  <div class="slide slide-7">
+    <div class="slide-emoji">🌳</div>
+    <div class="slide-label">Slide 7 · A Árvore</div>
+    <div class="slide-title">A página inteira, do jeito que ela nasce 🌳</div>
+    <div class="slide-body">
+      <div class="codeblock">
+<span class="tg">&lt;html&gt;</span>
+<span class="indent1"><span class="tg">&lt;head&gt;</span> <span class="cm">&larr; o que NÃO se vê</span></span>
+<span class="indent2"><span class="tg">&lt;title&gt;</span><span class="tx">Minha página</span><span class="tg">&lt;/title&gt;</span></span>
+<span class="indent1"><span class="tg">&lt;/head&gt;</span></span>
+<span class="indent1"><span class="tg">&lt;body&gt;</span> <span class="cm">&larr; TUDO o que se vê</span></span>
+<span class="indent2"><span class="tg">&lt;header&gt;</span><span class="tx">Topo</span><span class="tg">&lt;/header&gt;</span></span>
+<span class="indent2"><span class="tg">&lt;main&gt;</span></span>
+<span class="indent3"><span class="tg">&lt;h1&gt;</span><span class="tx">Oi!</span><span class="tg">&lt;/h1&gt;</span></span>
+<span class="indent2"><span class="tg">&lt;/main&gt;</span></span>
+<span class="indent1"><span class="tg">&lt;/body&gt;</span></span>
+<span class="tg">&lt;/html&gt;</span>
+      </div>
+      <p style="font-size:15px;">Repare no <strong>degrau</strong> de cada linha.<br>Cada degrau = <span class="hl">está dentro de</span> quem está acima.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 8 · Tags de Estrutura</div>
+    <div class="slide-title">As 5 caixas que sustentam qualquer site 🧩</div>
+    <div class="slide-body">
+      <p style="font-size:15px; opacity:0.85;">Toque em cada uma para ver o que faz.</p>
+      <div class="key-grid three">
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">🎩</span><strong>&lt;header&gt;</strong><span class="part-hint">toque</span><span class="part-answer">O topo. Logo, nome do site, busca.</span></div>
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">🧭</span><strong>&lt;nav&gt;</strong><span class="part-hint">toque</span><span class="part-answer">O menu. Os links que te levam pelo site.</span></div>
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">📄</span><strong>&lt;main&gt;</strong><span class="part-hint">toque</span><span class="part-answer">O conteúdo principal. Só existe UM por página.</span></div>
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">📎</span><strong>&lt;aside&gt;</strong><span class="part-hint">toque</span><span class="part-answer">A lateral. Coisa extra, relacionada mas secundária.</span></div>
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">👟</span><strong>&lt;footer&gt;</strong><span class="part-hint">toque</span><span class="part-answer">O rodapé. Contato, redes sociais, copyright.</span></div>
+        <div class="key-card part-card" onclick="revealPart(this)"><span class="key-icon">📦</span><strong>&lt;section&gt;</strong><span class="part-hint">toque</span><span class="part-answer">Um bloco de assunto dentro do main.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 -->
+  <div class="slide slide-9">
+    <div class="slide-emoji">✍️</div>
+    <div class="slide-label">Slide 9 · Tags de Conteúdo</div>
+    <div class="slide-title">As tags que você vai ver em TODA página ✍️</div>
+    <div class="slide-body">
+      <table class="summary-table">
+        <tr><td><span class="s-key mono">&lt;h1&gt;…&lt;h6&gt;</span></td><td>Títulos, do maior ao menor</td><td class="s-pts">só 1 h1</td></tr>
+        <tr><td><span class="s-key mono">&lt;p&gt;</span></td><td>Parágrafo de texto</td><td class="s-pts">o mais comum</td></tr>
+        <tr><td><span class="s-key mono">&lt;img&gt;</span></td><td>Imagem</td><td class="s-pts">não fecha</td></tr>
+        <tr><td><span class="s-key mono">&lt;a&gt;</span></td><td>Link — leva pra outro lugar</td><td class="s-pts">âncora</td></tr>
+        <tr><td><span class="s-key mono">&lt;button&gt;</span></td><td>Botão — faz algo acontecer</td><td class="s-pts">clicável</td></tr>
+        <tr><td><span class="s-key mono">&lt;ul&gt; &lt;li&gt;</span></td><td>Lista e cada item da lista</td><td class="s-pts">dupla</td></tr>
+        <tr><td><span class="s-key mono">&lt;div&gt;</span></td><td>Caixa genérica, só pra agrupar</td><td class="s-pts">sem sentido</td></tr>
+      </table>
+      <div class="warning-box">
+        <span class="warning-emoji">🤨</span>
+        <code>&lt;div&gt;</code> é a tag mais usada da internet — e a mais preguiçosa.<br>
+        <span style="font-weight:400;">Ela não diz o que a caixa é. Só que existe uma caixa.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 -->
+  <div class="slide slide-10">
+    <div class="slide-emoji">🔗</div>
+    <div class="slide-label">Slide 10 · Jogo</div>
+    <div class="slide-title">Conecte a tag com o que ela faz 🔗</div>
+    <div class="slide-body">
+      <div class="match-container">
+        <div class="match-cols">
+          <div>
+            <div class="match-col-title">A tag</div>
+            <div class="match-item mono" data-match="a" onclick="selectMatch(this)">&lt;h1&gt;</div>
+            <div class="match-item mono" data-match="b" onclick="selectMatch(this)">&lt;img&gt;</div>
+            <div class="match-item mono" data-match="c" onclick="selectMatch(this)">&lt;nav&gt;</div>
+            <div class="match-item mono" data-match="d" onclick="selectMatch(this)">&lt;a&gt;</div>
+            <div class="match-item mono" data-match="e" onclick="selectMatch(this)">&lt;footer&gt;</div>
+            <div class="match-item mono" data-match="f" onclick="selectMatch(this)">&lt;p&gt;</div>
+          </div>
+          <div>
+            <div class="match-col-title">O que faz</div>
+            <div class="match-item" data-match="c" onclick="selectMatch(this)">🧭 O menu do site</div>
+            <div class="match-item" data-match="f" onclick="selectMatch(this)">📝 Um parágrafo</div>
+            <div class="match-item" data-match="a" onclick="selectMatch(this)">👑 O título mais importante</div>
+            <div class="match-item" data-match="e" onclick="selectMatch(this)">👟 O rodapé</div>
+            <div class="match-item" data-match="b" onclick="selectMatch(this)">🖼️ Mostra uma imagem</div>
+            <div class="match-item" data-match="d" onclick="selectMatch(this)">🔗 Leva pra outra página</div>
+          </div>
+        </div>
+        <div class="match-score" id="matchScore">0 de 6 conectados</div>
+        <div class="match-result" id="matchResult">🎉 Tudo conectado! Vocês já leem HTML.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11 -->
+  <div class="slide slide-11">
+    <div class="slide-emoji">👕</div>
+    <div class="slide-label">Slide 11 · O CSS</div>
+    <div class="slide-title">E se o site perdesse a roupa? 👕</div>
+    <div class="slide-body">
+      <div class="compare-grid">
+        <div class="compare-card">
+          <span class="compare-icon">🩲</span>
+          <strong>Sem CSS</strong>
+          <p>Fundo branco. Times New Roman. Tudo empilhado. Links azuis sublinhados.<br><strong>Mas funciona.</strong></p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">✨</span>
+          <strong>Com CSS</strong>
+          <p>Cores, fontes, colunas, sombras, animação, versão de celular.<br><strong>O visual todo.</strong></p>
+        </div>
+      </div>
+      <div class="codeblock" style="margin-top:12px;">
+<span class="at">h1</span> <span class="tx">{</span>
+<span class="indent1"><span class="at">color</span><span class="tx">:</span> <span class="vl">red</span><span class="tx">;</span>          <span class="cm">/* cor da letra */</span></span>
+<span class="indent1"><span class="at">font-size</span><span class="tx">:</span> <span class="vl">40px</span><span class="tx">;</span>     <span class="cm">/* tamanho */</span></span>
+<span class="tx">}</span>
+      </div>
+      <p style="font-size:15px;">Lê-se: <em>"todo h1 dessa página fica vermelho, tamanho 40"</em>.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 12 -->
+  <div class="slide slide-12">
+    <div class="slide-emoji">💪</div>
+    <div class="slide-label">Slide 12 · O JavaScript</div>
+    <div class="slide-title">O músculo: o que acontece quando você clica 💪</div>
+    <div class="slide-body">
+      <div class="key-grid">
+        <div class="key-card" style="background:rgba(0,0,0,0.12);"><span class="key-icon">❤️</span><strong>Curtir</strong><span>O coração enche sem recarregar a página</span></div>
+        <div class="key-card" style="background:rgba(0,0,0,0.12);"><span class="key-icon">♾️</span><strong>Rolar infinito</strong><span>Novos posts chegam sozinhos</span></div>
+        <div class="key-card" style="background:rgba(0,0,0,0.12);"><span class="key-icon">🔎</span><strong>Sugestão de busca</strong><span>Aparece enquanto você digita</span></div>
+        <div class="key-card" style="background:rgba(0,0,0,0.12);"><span class="key-icon">🎠</span><strong>Este carrossel</strong><span>O botão "Próximo" aqui é JavaScript</span></div>
+      </div>
+      <div class="warning-box" style="border-left-color:rgba(0,0,0,0.4);">
+        <span class="warning-emoji">🧠</span>
+        HTML e CSS <strong>descrevem</strong>.<br>
+        JavaScript <strong>age</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13 -->
+  <div class="slide slide-13">
+    <div class="slide-emoji">🩻</div>
+    <div class="slide-label">Slide 13 · O DevTools</div>
+    <div class="slide-title">Seu navegador tem um raio-X escondido 🩻</div>
+    <div class="slide-body">
+      <p style="font-size:18px;">Chama-se <strong>DevTools</strong> (Ferramentas do Desenvolvedor).<br>Já vem instalado. Chrome, Edge, Firefox, Brave, Opera.</p>
+      <p style="font-size:15px; opacity:0.85; margin-top:6px;">Três formas de abrir — todas funcionam:</p>
+      <div class="compare-grid three">
+        <div class="compare-card">
+          <span class="compare-icon">⌨️</span>
+          <strong><span class="kbd">F12</span></strong>
+          <p>A mais rápida</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">🎹</span>
+          <strong><span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">I</span></strong>
+          <p>Quando o F12 não pega</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">🖱️</span>
+          <strong>Clique direito<br>→ Inspecionar</strong>
+          <p>Já abre no lugar certo</p>
+        </div>
+      </div>
+      <p style="margin-top:12px; font-size:14px; opacity:0.85;">🍎 No Mac: <span class="kbd">Cmd</span>+<span class="kbd">Option</span>+<span class="kbd">I</span></p>
+    </div>
+  </div>
+
+  <!-- SLIDE 14 -->
+  <div class="slide slide-14">
+    <div class="slide-emoji">🗂️</div>
+    <div class="slide-label">Slide 14 · As Abas</div>
+    <div class="slide-title">5 abas. Hoje interessam essas. 🗂️</div>
+    <div class="slide-body">
+      <div class="dt">
+        <div class="dt-tabs">
+          <div class="dt-tab on">Elements</div>
+          <div class="dt-tab">Console</div>
+          <div class="dt-tab">Network</div>
+          <div class="dt-tab">Sources</div>
+          <div class="dt-tab">Application</div>
+        </div>
+        <div class="dt-body">
+          <span class="tg">&lt;body&gt;</span><br>
+          <span class="indent1 dt-sel"><span class="tg">&lt;h1</span> <span class="at">class</span>=<span class="vl">"titulo"</span><span class="tg">&gt;</span>Bem-vindo!<span class="tg">&lt;/h1&gt;</span></span><br>
+          <span class="indent1"><span class="tg">&lt;p&gt;</span>Esse é o meu site.<span class="tg">&lt;/p&gt;</span></span><br>
+          <span class="tg">&lt;/body&gt;</span>
+        </div>
+      </div>
+      <div class="cmd-list">
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">🦴</span><span><strong>Elements</strong> — o esqueleto</span><span class="cmd-hint">toque</span><span class="cmd-answer">Todo o HTML da página, em árvore. Dá pra editar ao vivo.</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">👕</span><span><strong>Styles</strong> — a roupa</span><span class="cmd-hint">toque</span><span class="cmd-answer">Fica do lado do Elements. Mostra o CSS do elemento selecionado.</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">🎤</span><span><strong>Console</strong> — o microfone</span><span class="cmd-hint">toque</span><span class="cmd-answer">Onde erros aparecem — e onde você pode dar ordens à página.</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">📦</span><span><strong>Network</strong> — a entrega</span><span class="cmd-hint">toque</span><span class="cmd-answer">Lista TODOS os arquivos que a página baixou. Às vezes mais de 100!</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">📱</span><span><strong>Device toolbar</strong> — o celular</span><span class="cmd-hint">toque</span><span class="cmd-answer">Ctrl+Shift+M. Vê o site em tela de celular sem sair do PC.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15 -->
+  <div class="slide slide-15">
+    <div class="slide-emoji">🎯</div>
+    <div class="slide-label">Slide 15 · A Ferramenta Nº1</div>
+    <div class="slide-title">A setinha que aponta pro código 🎯</div>
+    <div class="slide-body">
+      <div class="stat-box">
+        <span class="stat-num">⬚↖ &nbsp; <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">C</span></span>
+        <span class="stat-desc">O ícone de <strong>seta dentro de um quadrado</strong>, no canto do DevTools</span>
+      </div>
+      <div class="mission-list">
+        <div class="mission-item"><span class="mission-num">1</span><span>Você clica na setinha</span></div>
+        <div class="mission-item"><span class="mission-num">2</span><span>Passa o mouse por cima da página — cada caixa <strong>acende</strong></span></div>
+        <div class="mission-item"><span class="mission-num">3</span><span>Clica num pedaço qualquer</span></div>
+        <div class="mission-item"><span class="mission-num">4</span><span>O DevTools <strong>pula direto</strong> pro código daquele pedaço 🎯</span></div>
+      </div>
+      <p style="margin-top:14px; font-size:16px; font-weight:700;">É o caminho mais curto entre <span class="hl">"o que eu vejo"</span> e <span class="hl">"como foi feito"</span>.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 16 -->
+  <div class="slide slide-16">
+    <div class="slide-emoji">✏️</div>
+    <div class="slide-label">Slide 16 · Editar Ao Vivo</div>
+    <div class="slide-title">Trocar texto e cor na frente da turma ✏️</div>
+    <div class="slide-body">
+      <div class="compare-grid">
+        <div class="compare-card">
+          <span class="compare-icon">🦴</span>
+          <strong>Mudar o texto</strong>
+          <p>Na aba <strong>Elements</strong>, <strong>duplo clique</strong> no texto, digita outro, aperta <span class="kbd">Enter</span>.</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">🎨</span>
+          <strong>Mudar a cor</strong>
+          <p>Na aba <strong>Styles</strong>, clica no quadradinho colorido do <code>color</code> e escolhe.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">☑️</span>
+        Cada linha do CSS tem uma <strong>caixinha de seleção</strong>.<br>
+        Desmarque uma e veja a página mudar na hora.<br>
+        <span style="font-weight:400;">É a melhor forma de descobrir o que cada linha faz.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17 -->
+  <div class="slide slide-17">
+    <div class="slide-emoji">📱</div>
+    <div class="slide-label">Slide 17 · Modo Celular</div>
+    <div class="slide-title">O mesmo site, dois corpos diferentes 📱💻</div>
+    <div class="slide-body">
+      <div class="stat-box">
+        <span class="stat-num"><span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">M</span></span>
+        <span class="stat-desc">Liga e desliga o modo celular dentro do DevTools</span>
+      </div>
+      <p style="font-size:16px; margin-top:14px;">A página <strong>se reorganiza</strong>: o menu virou hambúrguer 🍔, as colunas empilharam, a letra cresceu.</p>
+      <div class="warning-box">
+        <span class="warning-emoji">🧠</span>
+        O HTML é <strong>o mesmo</strong>. O que muda é o CSS.<br>
+        <span style="font-weight:400;">Isso tem nome: <strong>site responsivo</strong> — ele responde ao tamanho da tela.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18 -->
+  <div class="slide slide-18">
+    <div class="slide-emoji">🔄</div>
+    <div class="slide-label">Slide 18 · A Pergunta de Ouro</div>
+    <div class="slide-title">Apertei F5 e tudo voltou. Por quê? 🔄</div>
+    <div class="slide-body">
+      <div class="compare-grid">
+        <div class="compare-card">
+          <span class="compare-icon">🖥️</span>
+          <strong>O site de verdade</strong>
+          <p>Mora num <strong>servidor</strong>, longe daqui. Você nunca tocou nele.</p>
+        </div>
+        <div class="compare-card">
+          <span class="compare-icon">📄</span>
+          <strong>O que você mexeu</strong>
+          <p>Uma <strong>cópia emprestada</strong>, só na sua tela, só no seu PC.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">✅</span>
+        Mexer no DevTools <strong>não é invadir site</strong>.<br>
+        É rabiscar sua própria fotocópia.<br>
+        <span style="font-weight:400;">Ninguém no mundo vê o que você mudou. E <span class="kbd">F5</span> apaga tudo.</span>
+      </div>
+      <p style="margin-top:12px; font-size:15px; opacity:0.9;">💰 "Dá pra mudar o saldo do banco?" — dá pra mudar <strong>o número na sua tela</strong>. O dinheiro continua exatamente onde estava.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 19 -->
+  <div class="slide slide-19">
+    <div class="slide-emoji">🎮</div>
+    <div class="slide-label">Slide 19 · As Missões</div>
+    <div class="slide-title">10 missões do Raio-X — 1 ponto cada 🎮</div>
+    <div class="slide-body">
+      <p style="font-size:14px; opacity:0.85;">Em duplas, em qualquer site. Toque para ver a dica.</p>
+      <div class="cmd-list">
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">1</span><span>Abrir o DevTools de 3 formas</span><span class="cmd-hint">dica</span><span class="cmd-answer">F12 · Ctrl+Shift+I · clique direito → Inspecionar</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">2</span><span>Achar o &lt;h1&gt; da página</span><span class="cmd-hint">dica</span><span class="cmd-answer">Use a setinha (Ctrl+Shift+C) e clique no maior título da tela</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">3</span><span>Contar quantas &lt;img&gt; a página tem</span><span class="cmd-hint">dica</span><span class="cmd-answer">Clique na aba Elements e aperte Ctrl+F. Busque: img</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">4</span><span>Mudar um texto ao vivo</span><span class="cmd-hint">dica</span><span class="cmd-answer">Duplo clique no texto dentro do Elements, digite e dê Enter</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">5</span><span>Trocar a cor de um título ou botão</span><span class="cmd-hint">dica</span><span class="cmd-answer">Aba Styles → clique no quadradinho de cor da linha "color"</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">6</span><span>Achar header, nav, main e footer</span><span class="cmd-hint">dica</span><span class="cmd-answer">Role o Elements de cima pra baixo. Eles estão dentro do body</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">7</span><span>Ver a página em tela de celular</span><span class="cmd-hint">dica</span><span class="cmd-answer">Ctrl+Shift+M — e escolha um modelo na lista de cima</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">8</span><span>Apertar F5 e explicar o que aconteceu</span><span class="cmd-hint">dica</span><span class="cmd-answer">Voltou tudo. Porque você só mexeu na sua cópia, não no servidor</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">9</span><span>No Console: <code>document.title = "Meu site"</code></span><span class="cmd-hint">dica</span><span class="cmd-answer">Olhe o NOME DA ABA do navegador mudar. Você deu uma ordem em JS!</span></div>
+        <div class="cmd-item" onclick="revealCmd(this)"><span class="cmd-num">10</span><span>Na aba Network: quantos arquivos a página baixou?</span><span class="cmd-hint">dica</span><span class="cmd-answer">Abra Network e aperte F5. O total aparece na barra de baixo</span></div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🏆</span>
+        Bônus <strong>+2</strong>: achar no Elements um elemento escondido (<code>display: none</code>) e ligá-lo de volta. 🕵️
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 20 -->
+  <div class="slide slide-20">
+    <div class="slide-emoji">⚠️</div>
+    <div class="slide-label">Slide 20 · A Parte Séria</div>
+    <div class="slide-title">Print de site não é prova. Nunca foi. ⚠️</div>
+    <div class="slide-body">
+      <div class="mission-list">
+        <div class="mission-item"><span class="mission-num">✅</span><span>Mexer no DevTools <strong>não</strong> invade nada. Nem é crime.</span></div>
+        <div class="mission-item"><span class="mission-num">🔄</span><span><span class="kbd">F5</span> apaga tudo. Ninguém mais vê.</span></div>
+        <div class="mission-item"><span class="mission-num">📸</span><span><strong>Mas o print dessa mentira engana qualquer um.</strong></span></div>
+        <div class="mission-item"><span class="mission-num">🚨</span><span>Espalhar print falso de propósito <strong>é falsificação</strong>. Aí é sério.</span></div>
+        <div class="mission-item"><span class="mission-num">🧠</span><span>Recebeu print de notícia? <strong>Abra o site você mesmo.</strong></span></div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🎣</span>
+        <strong>Golpe pra vocês conhecerem hoje:</strong> se alguém no chat de um jogo mandar você "colar esse código no Console pra ganhar V-Bucks / skin / seguidor" — <strong>é roubo de conta</strong>. Tem nome: <em>self-XSS</em>.<br>
+        <span style="font-weight:400;">Console é pra você dar ordens. Não pra estranho dar ordens no seu lugar.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 21 -->
+  <div class="slide slide-21">
+    <div class="slide-emoji">🧠</div>
+    <div class="slide-label">Slide 21 · Resumo</div>
+    <div class="slide-title">O que ficou da aula de hoje 🧠</div>
+    <div class="slide-body">
+      <table class="summary-table">
+        <tr><td><span class="s-key">📦 Estrutura</span></td><td>Todo site é caixa dentro de caixa</td></tr>
+        <tr><td><span class="s-key">🦴 HTML</span></td><td>O esqueleto — o que tem na página</td></tr>
+        <tr><td><span class="s-key">👕 CSS</span></td><td>A roupa — como aparece</td></tr>
+        <tr><td><span class="s-key">💪 JavaScript</span></td><td>O músculo — o que acontece</td></tr>
+        <tr><td><span class="s-key">🩻 DevTools</span></td><td>F12 — o raio-X que já vem no navegador</td></tr>
+        <tr><td><span class="s-key">🎯 Setinha</span></td><td>Ctrl+Shift+C — do que eu vejo pro código</td></tr>
+        <tr><td><span class="s-key">🔄 F5</span></td><td>Apaga tudo — era só a sua cópia</td></tr>
+        <tr><td><span class="s-key">📸 Print</span></td><td>Não é prova</td></tr>
+      </table>
+      <div class="mantra">
+        <span class="mantra-step">Inspecionar</span>
+        <span class="mantra-arrow">→</span>
+        <span class="mantra-step">Entender</span>
+        <span class="mantra-arrow">→</span>
+        <span class="mantra-step">Desconfiar</span>
+      </div>
+      <p style="margin-top:16px; font-size:16px; font-weight:700;">Vocês já sabem <span class="hl">ler</span> HTML.<br>Na próxima: e se a gente aprender a <span class="hl">escrever</span>? ✍️</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 22 · QUIZ -->
+  <div class="slide slide-22">
+    <div class="slide-emoji">🎓</div>
+    <div class="slide-label">Slide 22 · Quiz Final</div>
+    <div class="slide-title">Prova do Radiologista da Web 🎓</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quizContainer">
+        <div class="quiz-header">Pergunta <span id="qCurrent">1</span> de 10</div>
+        <div class="quiz-score-bar">✅ Acertos: <span id="qScore">0</span></div>
+
+        <div class="question-card active" id="qq1">
+          <div class="q-number">Pergunta 1</div>
+          <div class="q-text">Para que serve o HTML?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq1')"><span class="opt-letter">A</span> Deixar o site bonito e colorido</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq1')"><span class="opt-letter">B</span> Dizer o que tem na página — a estrutura</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq1')"><span class="opt-letter">C</span> Fazer o botão funcionar quando clica</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq1')"><span class="opt-letter">D</span> Guardar o site na internet</button>
+          </div>
+          <div class="feedback-msg" id="fb1"></div>
+          <button class="next-q-btn" id="nxt1" onclick="nextQ('qq1','qq2',2)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq2">
+          <div class="q-number">Pergunta 2</div>
+          <div class="q-text">Qual tag guarda o <strong>topo</strong> do site — logo e nome?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq2')"><span class="opt-letter">A</span> &lt;main&gt;</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq2')"><span class="opt-letter">B</span> &lt;footer&gt;</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq2')"><span class="opt-letter">C</span> &lt;header&gt;</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq2')"><span class="opt-letter">D</span> &lt;title&gt;</button>
+          </div>
+          <div class="feedback-msg" id="fb2"></div>
+          <button class="next-q-btn" id="nxt2" onclick="nextQ('qq2','qq3',3)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq3">
+          <div class="q-number">Pergunta 3</div>
+          <div class="q-text">Se o CSS de um site desaparecer, o que acontece?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq3')"><span class="opt-letter">A</span> A página fica totalmente em branco</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq3')"><span class="opt-letter">B</span> Fica feia e desalinhada, mas o conteúdo continua lá</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq3')"><span class="opt-letter">C</span> O site sai do ar</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq3')"><span class="opt-letter">D</span> Os links param de funcionar</button>
+          </div>
+          <div class="feedback-msg" id="fb3"></div>
+          <button class="next-q-btn" id="nxt3" onclick="nextQ('qq3','qq4',4)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq4">
+          <div class="q-number">Pergunta 4</div>
+          <div class="q-text">Qual tecla abre o DevTools mais rápido?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq4')"><span class="opt-letter">A</span> F1</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq4')"><span class="opt-letter">B</span> F5</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq4')"><span class="opt-letter">C</span> F12</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq4')"><span class="opt-letter">D</span> Esc</button>
+          </div>
+          <div class="feedback-msg" id="fb4"></div>
+          <button class="next-q-btn" id="nxt4" onclick="nextQ('qq4','qq5',5)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq5">
+          <div class="q-number">Pergunta 5</div>
+          <div class="q-text">Qual aba do DevTools mostra o <strong>HTML</strong> da página?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq5')"><span class="opt-letter">A</span> Console</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq5')"><span class="opt-letter">B</span> Elements</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq5')"><span class="opt-letter">C</span> Network</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq5')"><span class="opt-letter">D</span> Sources</button>
+          </div>
+          <div class="feedback-msg" id="fb5"></div>
+          <button class="next-q-btn" id="nxt5" onclick="nextQ('qq5','qq6',6)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq6">
+          <div class="q-number">Pergunta 6</div>
+          <div class="q-text">Mudei o título do G1 no DevTools e apertei F5. O que acontece?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq6')"><span class="opt-letter">A</span> Minha mudança fica salva pra todo mundo</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq6')"><span class="opt-letter">B</span> Volta ao normal — só mudou na minha tela</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq6')"><span class="opt-letter">C</span> O G1 sai do ar</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq6')"><span class="opt-letter">D</span> Recebo um aviso de invasão</button>
+          </div>
+          <div class="feedback-msg" id="fb6"></div>
+          <button class="next-q-btn" id="nxt6" onclick="nextQ('qq6','qq7',7)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq7">
+          <div class="q-number">Pergunta 7</div>
+          <div class="q-text">Quantas tags <code>&lt;h1&gt;</code> uma página deve ter, no ideal?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'correct','qq7')"><span class="opt-letter">A</span> Uma só — o título principal</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq7')"><span class="opt-letter">B</span> Uma por parágrafo</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq7')"><span class="opt-letter">C</span> Seis, sempre</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq7')"><span class="opt-letter">D</span> Nenhuma, h1 é proibido</button>
+          </div>
+          <div class="feedback-msg" id="fb7"></div>
+          <button class="next-q-btn" id="nxt7" onclick="nextQ('qq7','qq8',8)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq8">
+          <div class="q-number">Pergunta 8</div>
+          <div class="q-text">O que faz o atalho <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">M</span>?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq8')"><span class="opt-letter">A</span> Salva a página no computador</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq8')"><span class="opt-letter">B</span> Liga o modo celular dentro do DevTools</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq8')"><span class="opt-letter">C</span> Deixa a letra maior</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq8')"><span class="opt-letter">D</span> Abre o modo anônimo</button>
+          </div>
+          <div class="feedback-msg" id="fb8"></div>
+          <button class="next-q-btn" id="nxt8" onclick="nextQ('qq8','qq9',9)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq9">
+          <div class="q-number">Pergunta 9</div>
+          <div class="q-text">Um amigo manda um print de notícia bombástica. Qual a atitude certa?</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq9')"><span class="opt-letter">A</span> Repassar rápido, antes que apaguem</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq9')"><span class="opt-letter">B</span> Acreditar, porque tem a cara do site</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq9')"><span class="opt-letter">C</span> Abrir o site você mesmo e procurar a notícia</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq9')"><span class="opt-letter">D</span> Perguntar num grupo se alguém acha que é verdade</button>
+          </div>
+          <div class="feedback-msg" id="fb9"></div>
+          <button class="next-q-btn" id="nxt9" onclick="nextQ('qq9','qq10',10)">Próxima →</button>
+        </div>
+
+        <div class="question-card" id="qq10">
+          <div class="q-number">Pergunta 10</div>
+          <div class="q-text">Um estranho no chat manda "cola esse código no Console e ganha skin grátis". Você:</div>
+          <div class="options">
+            <button class="option-btn" onclick="answer(this,'wrong','qq10')"><span class="opt-letter">A</span> Cola — Console não faz nada demais</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq10')"><span class="opt-letter">B</span> Cola, mas só metade do código</button>
+            <button class="option-btn" onclick="answer(this,'correct','qq10')"><span class="opt-letter">C</span> Não cola — é golpe pra roubar sua conta</button>
+            <button class="option-btn" onclick="answer(this,'wrong','qq10')"><span class="opt-letter">D</span> Cola e depois aperta F5 pra desfazer</button>
+          </div>
+          <div class="feedback-msg" id="fb10"></div>
+          <button class="next-q-btn" id="nxt10" onclick="showResult()">Ver resultado →</button>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+          <div class="result-emoji" id="resultEmoji">🎉</div>
+          <div><span class="result-score" id="resultScore">0</span><span class="result-max">/10</span></div>
+          <div class="result-title" id="resultTitle"></div>
+          <div class="result-subtitle" id="resultSubtitle"></div>
+          <button class="restart-btn" onclick="restartQuiz()">Jogar de novo 🔄</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav" style="margin-top:24px;">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
+  <div class="progress" id="progressText">1 / 22</div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
+</div>
+<div class="dots" id="dots"></div>
+
+<script>
+  const TOTAL = 22;
+  let current = 1;
+
+  const dotsEl = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.onclick = () => goToSlide(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goToSlide(n) {
+    document.querySelector('.slide.active').classList.remove('active');
+    current = n;
+    document.querySelector('.slide-' + current).classList.add('active');
+    document.getElementById('progressText').textContent = current + ' / ' + TOTAL;
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === TOTAL;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+  }
+
+  function changeSlide(dir) { goToSlide(Math.max(1, Math.min(TOTAL, current + dir))); }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+
+  function revealChip(el, text) {
+    if (el.classList.contains('revealed')) return;
+    el.textContent = text;
+    el.classList.add('revealed');
+  }
+
+  function revealPart(el) { el.classList.add('revealed'); }
+  function revealCmd(el) { el.classList.add('revealed'); }
+
+  /* ---------- match game ---------- */
+  let matchSelected = null;
+  let matchCount = 0;
+  const MATCH_TOTAL = 6;
+
+  function selectMatch(el) {
+    if (el.classList.contains('matched')) return;
+    if (matchSelected === null) {
+      matchSelected = el;
+      el.classList.add('selected');
+      return;
+    }
+    if (matchSelected === el) { el.classList.remove('selected'); matchSelected = null; return; }
+    if (matchSelected.dataset.match === el.dataset.match) {
+      matchSelected.classList.add('matched');
+      el.classList.add('matched');
+      matchSelected.classList.remove('selected');
+      matchCount++;
+      matchSelected = null;
+      document.getElementById('matchScore').textContent = matchCount + ' de ' + MATCH_TOTAL + ' conectados';
+      if (matchCount === MATCH_TOTAL) document.getElementById('matchResult').classList.add('show');
+    } else {
+      el.classList.add('wrong-flash');
+      matchSelected.classList.add('wrong-flash');
+      const a = matchSelected, b = el;
+      setTimeout(() => { a.classList.remove('selected','wrong-flash'); b.classList.remove('wrong-flash'); }, 500);
+      matchSelected = null;
+    }
+  }
+
+  /* ---------- quiz ---------- */
+  const QUIZ_TOTAL = 10;
+  let quizScore = 0;
+
+  const FEEDBACK = {
+    1: 'HTML é o esqueleto. Ele diz o QUE tem na página. Bonito é trabalho do CSS.',
+    2: 'header = topo. footer = rodapé. main = conteúdo. Fácil de decorar pelo nome.',
+    3: 'Sem CSS o site fica com cara de 1996 — mas o texto, os links e as imagens continuam funcionando.',
+    4: 'F12 é a mais rápida. Ctrl+Shift+I e clique direito → Inspecionar fazem o mesmo.',
+    5: 'Elements mostra o esqueleto. Do lado dele fica o Styles, com a roupa.',
+    6: 'Você mexeu na sua cópia. O site verdadeiro está no servidor e nunca soube de nada.',
+    7: 'Um h1 por página — é o título principal. Os subtítulos usam h2, h3 e assim por diante.',
+    8: 'Ctrl+Shift+M liga o modo celular. O HTML é o mesmo; o CSS se reorganiza.',
+    9: 'Print é fácil de falsificar — vocês viram no começo da aula. Abrir o site é a única prova.',
+    10: 'Isso é self-XSS. O código rouba sua sessão e entrega sua conta. Nenhum jogo dá item por código no Console.'
+  };
+
+  function answer(btn, result, qId) {
+    const card = document.getElementById(qId);
+    const btns = card.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+    const num = qId.replace('qq','');
+    const fb = document.getElementById('fb' + num);
+    const nxt = document.getElementById('nxt' + num);
+    if (result === 'correct') {
+      btn.classList.add('correct');
+      quizScore++;
+      document.getElementById('qScore').textContent = quizScore;
+      fb.textContent = '✅ Correto! ' + FEEDBACK[num];
+      fb.className = 'feedback-msg ok show';
+    } else {
+      btn.classList.add('wrong');
+      btns.forEach(b => { if (b.onclick.toString().includes("'correct'")) b.classList.add('correct'); });
+      fb.textContent = '❌ Não foi dessa vez. ' + FEEDBACK[num];
+      fb.className = 'feedback-msg err show';
+    }
+    nxt.classList.add('show');
+  }
+
+  function nextQ(cur, nxt, num) {
+    document.getElementById(cur).classList.remove('active');
+    document.getElementById(nxt).classList.add('active');
+    document.getElementById('qCurrent').textContent = num;
+  }
+
+  function showResult() {
+    document.getElementById('qq10').classList.remove('active');
+    document.getElementById('quizResult').classList.add('show');
+    document.getElementById('resultScore').textContent = quizScore;
+    let idx;
+    if (quizScore <= 3) idx = 0;
+    else if (quizScore <= 5) idx = 1;
+    else if (quizScore <= 7) idx = 2;
+    else if (quizScore <= 9) idx = 3;
+    else idx = 4;
+    const emojis = ['😅','🔍','🧐','🌟','🩻'];
+    const titles = ['Bora reabrir o raio-X!','Aprendiz de inspetor','Bom olho!','Quase perfeito!','Radiologista da Web!'];
+    const subs = [
+      'Volte nos slides 5 e 13 — esqueleto/roupa/músculo e as 3 formas de abrir o DevTools.',
+      'Você já sabe o que é HTML. Falta firmar as abas do DevTools.',
+      'Faltou pouco. Revise o slide 18: por que o F5 apaga tudo.',
+      'Você inspeciona, entende e desconfia. Só escorregou em uma.',
+      'Estrutura, DevTools e print falso: nada disso te pega mais. 🎉'
+    ];
+    document.getElementById('resultEmoji').textContent = emojis[idx];
+    document.getElementById('resultTitle').textContent = titles[idx];
+    document.getElementById('resultSubtitle').textContent = subs[idx];
+  }
+
+  function restartQuiz() {
+    quizScore = 0;
+    document.getElementById('qScore').textContent = 0;
+    document.getElementById('qCurrent').textContent = 1;
+    document.getElementById('quizResult').classList.remove('show');
+    for (let i = 2; i <= QUIZ_TOTAL; i++) document.getElementById('qq' + i).classList.remove('active');
+    document.getElementById('qq1').classList.add('active');
+    document.querySelectorAll('#quizContainer .option-btn').forEach(b => { b.disabled = false; b.classList.remove('correct','wrong'); });
+    document.querySelectorAll('#quizContainer .feedback-msg').forEach(f => { f.className = 'feedback-msg'; f.textContent = ''; });
+    document.querySelectorAll('#quizContainer .next-q-btn').forEach(b => b.classList.remove('show'));
+  }
+</script>
+</body>
+</html>
