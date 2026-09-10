@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arena da Revisão — Quiz, Conecta e Charadas 🏟️</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b0715;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  code, .mono { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; }
+
+  .header-info { color: rgba(255,255,255,0.55); font-size: 13px; margin-bottom: 16px; text-align: center; }
+  .header-info strong { color: rgba(255,255,255,0.9); }
+
+  .parte-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #a78bfa, #f472b6);
+    color: #1a0b2e; font-size: 11px; font-weight: 900; letter-spacing: 2px;
+    border-radius: 20px; padding: 3px 12px; margin-bottom: 8px; text-transform: uppercase;
+  }
+
+  .carousel-wrapper { width: 100%; max-width: 760px; }
+
+  .slide {
+    display: none; border-radius: 24px; padding: 44px 40px; min-height: 470px;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  .slide-1  { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; }
+  .slide-2  { background: linear-gradient(135deg, #1a237e, #303f9f); color: #fff; }
+  .slide-3  { background: linear-gradient(135deg, #0d47a1, #1976d2); color: #fff; }
+  .slide-4  { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
+  .slide-5  { background: linear-gradient(135deg, #212121, #424242); color: #fff; }
+  .slide-6  { background: linear-gradient(135deg, #006064, #00838f); color: #fff; }
+  .slide-7  { background: linear-gradient(135deg, #ad1457, #d81b60); color: #fff; }
+  .slide-8  { background: linear-gradient(135deg, #263238, #455a64); color: #fff; }
+  .slide-9  { background: linear-gradient(135deg, #004d40, #00796b); color: #fff; }
+  .slide-10 { background: linear-gradient(135deg, #6a1b9a, #ab47bc); color: #fff; }
+  .slide-11 { background: linear-gradient(135deg, #1b1b2f, #3f3f5a); color: #fff; }
+  .slide-12 { background: linear-gradient(135deg, #e65100, #f57c00); color: #fff; }
+  .slide-13 { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
+  .slide-14 { background: linear-gradient(135deg, #0f2027, #203a43); color: #fff; }
+  .slide-15 { background: linear-gradient(135deg, #01579b, #0288d1); color: #fff; }
+  .slide-16 { background: linear-gradient(135deg, #f57f17, #fbc02d); color: #1a1a1a; }
+  .slide-17 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
+
+  .slide-emoji { font-size: 54px; margin-bottom: 6px; }
+  .slide-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; }
+  .slide-title { font-size: 27px; font-weight: 900; line-height: 1.25; margin-bottom: 18px; }
+  .slide-body { font-size: 17px; line-height: 1.6; max-width: 660px; width: 100%; }
+  .slide-body p { margin-bottom: 10px; }
+
+  .hl { background: rgba(255,255,255,0.25); border-radius: 5px; padding: 1px 6px; font-weight: 800; }
+  .slide-16 .hl { background: rgba(0,0,0,0.16); }
+
+  /* ---------- boxes ---------- */
+  .warning-box {
+    background: rgba(0,0,0,0.22); border-left: 5px solid rgba(255,255,255,0.6);
+    border-radius: 12px; padding: 14px 18px; margin-top: 16px; text-align: left;
+    font-size: 15px; font-weight: 600; line-height: 1.5;
+  }
+  .warning-emoji { font-size: 20px; margin-right: 8px; }
+
+  .stat-box { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 18px; margin-top: 16px; }
+  .stat-num { display: block; font-size: 30px; font-weight: 900; }
+  .stat-desc { display: block; font-size: 14px; opacity: 0.85; margin-top: 6px; line-height: 1.45; }
+
+  /* ---------- área map ---------- */
+  .key-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+  .key-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .key-card {
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 12px; padding: 12px 10px; font-size: 13px; line-height: 1.4;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+  }
+  .key-icon { font-size: 26px; }
+  .key-card strong { font-size: 14px; }
+
+  /* ---------- charadas ---------- */
+  .riddle-list { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .riddle {
+    background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 14px; padding: 14px 16px; text-align: left; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .riddle:hover { background: rgba(0,0,0,0.34); transform: translateY(-2px); }
+  .riddle-q { font-size: 15.5px; font-weight: 700; line-height: 1.45; }
+  .riddle-q::before { content: '🧩 '; }
+  .riddle-hint { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-top: 8px; font-weight: 800; }
+  .riddle-a { display: none; margin-top: 10px; font-size: 15px; line-height: 1.45; }
+  .riddle-a strong { font-size: 17px; }
+  .riddle.revealed { background: rgba(255,255,255,0.16); cursor: default; }
+  .riddle.revealed .riddle-hint { display: none; }
+  .riddle.revealed .riddle-a { display: block; }
+  .riddle-score { margin-top: 12px; font-size: 13.5px; font-weight: 800; opacity: 0.85; }
+
+  /* ---------- match game ---------- */
+  .match-container { margin-top: 8px; }
+  .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .match-col-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; font-weight: 800; }
+  .match-item {
+    background: rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.16); border-radius: 10px;
+    padding: 9px 10px; font-size: 13.5px; margin-bottom: 8px; cursor: pointer;
+    transition: all 0.18s; text-align: left;
+  }
+  .match-item:hover { background: rgba(0,0,0,0.34); }
+  .match-item.selected { border-color: #ffd54f; background: rgba(255,213,79,0.2); }
+  .match-item.matched { border-color: #66bb6a; background: rgba(102,187,106,0.28); cursor: default; opacity: 0.75; }
+  .match-item.wrong-flash { border-color: #ef5350; background: rgba(239,83,80,0.28); }
+  .match-score { margin-top: 10px; font-size: 14px; font-weight: 700; }
+  .match-result { display: none; margin-top: 10px; font-size: 15px; font-weight: 800; }
+  .match-result.show { display: block; }
+
+  /* ---------- quiz ---------- */
+  .quiz-container { width: 100%; max-width: 620px; margin: 0 auto; }
+  .quiz-score-bar { font-size: 13px; font-weight: 800; margin-bottom: 12px; opacity: 0.85; }
+  .question-card { display: none; text-align: left; }
+  .question-card.active { display: block; }
+  .q-number { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; font-weight: 800; }
+  .q-text { font-size: 19px; font-weight: 800; margin: 8px 0 14px; line-height: 1.35; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: inherit;
+    border-radius: 11px; padding: 11px 14px; font-size: 14.5px; text-align: left;
+    cursor: pointer; font-family: inherit; transition: all 0.18s; line-height: 1.4; width: 100%;
+  }
+  .option-btn:hover:enabled { background: rgba(255,255,255,0.2); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct { background: rgba(102,187,106,0.4); border-color: #66bb6a; font-weight: 800; }
+  .option-btn.wrong { background: rgba(239,83,80,0.4); border-color: #ef5350; }
+  .opt-letter { font-weight: 900; opacity: 0.7; margin-right: 8px; }
+  .feedback-msg { display: none; margin-top: 12px; font-size: 14px; line-height: 1.5; border-radius: 11px; padding: 12px 14px; }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.ok { background: rgba(102,187,106,0.25); border-left: 4px solid #66bb6a; }
+  .feedback-msg.err { background: rgba(239,83,80,0.25); border-left: 4px solid #ef5350; }
+  .next-q-btn, .restart-btn {
+    display: none; margin-top: 14px; background: rgba(255,255,255,0.92); color: #12222e;
+    border: none; border-radius: 22px; padding: 10px 22px; font-size: 14px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+  }
+  .next-q-btn.show, .restart-btn { display: inline-block; }
+  .round-result { display: none; text-align: center; }
+  .round-result.show { display: block; }
+  .result-emoji { font-size: 48px; }
+  .result-score { font-size: 38px; font-weight: 900; }
+  .result-max { font-size: 17px; opacity: 0.7; }
+  .result-title { font-size: 20px; font-weight: 900; margin-top: 6px; }
+  .result-subtitle { font-size: 15px; opacity: 0.88; margin-top: 8px; line-height: 1.5; }
+
+  /* ---------- placar ---------- */
+  .scoreboard { width: 100%; max-width: 560px; margin: 0 auto; }
+  .score-row {
+    display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 12px;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px; padding: 11px 14px; margin-bottom: 8px; text-align: left; font-size: 14.5px;
+  }
+  .score-icon { font-size: 20px; }
+  .score-val { font-weight: 900; white-space: nowrap; }
+  .grand-total {
+    background: rgba(255,255,255,0.16); border-radius: 16px; padding: 16px; margin-top: 12px;
+  }
+  .grand-num { font-size: 40px; font-weight: 900; }
+  .grand-label { font-size: 13px; opacity: 0.85; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
+  .medal-title { font-size: 20px; font-weight: 900; margin-top: 10px; }
+
+  /* ---------- keys ---------- */
+  .kbd {
+    display: inline-block; background: rgba(255,255,255,0.9); color: #16202b;
+    border-radius: 6px; border-bottom: 3px solid rgba(0,0,0,0.35);
+    padding: 3px 9px; font-family: 'Consolas', monospace; font-size: 13px; font-weight: 800;
+    margin: 0 2px;
+  }
+
+  /* ---------- regras de ouro ---------- */
+  .rules-list { display: flex; flex-direction: column; gap: 9px; margin-top: 8px; text-align: left; }
+  .rule-item { display: flex; align-items: center; gap: 11px; font-size: 15px; line-height: 1.45; }
+  .rule-num {
+    flex-shrink: 0; background: rgba(255,255,255,0.22); border-radius: 8px;
+    width: 27px; height: 27px; display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px;
+  }
+
+  /* ---------- nav ---------- */
+  .nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 24px; }
+  .nav-btn {
+    background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 22px; padding: 9px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .nav-btn:hover:enabled { background: rgba(255,255,255,0.22); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .progress { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700; min-width: 62px; text-align: center; }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; max-width: 640px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.24); cursor: pointer; }
+  .dot.active { background: #a78bfa; transform: scale(1.3); }
+
+  .live-score {
+    position: fixed; top: 14px; right: 16px; z-index: 20;
+    background: rgba(167,139,250,0.18); border: 1px solid rgba(167,139,250,0.45);
+    color: #fff; font-size: 13px; font-weight: 800; padding: 7px 14px; border-radius: 20px;
+    backdrop-filter: blur(6px);
+  }
+
+  @media (max-width: 620px) {
+    .slide { padding: 30px 20px; }
+    .slide-title { font-size: 22px; }
+    .key-grid, .key-grid.three, .match-cols { grid-template-columns: 1fr; }
+    .live-score { position: static; display: inline-block; margin-bottom: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="live-score">🏆 Placar: <span id="liveScore">0</span> / 41</div>
+
+<div class="carousel-wrapper">
+
+  <div style="text-align:center; margin-bottom:12px;">
+    <div class="parte-badge">🏟️ Arena da Revisão</div>
+  </div>
+  <div class="header-info">
+    <strong>Aula de quinta-feira</strong> · 11–15 anos · 60 min · 5 quizzes · 4 conectas · 12 charadas
+  </div>
+
+  <!-- SLIDE 1 -->
+  <div class="slide slide-1 active">
+    <div class="slide-emoji">🏟️</div>
+    <div class="slide-label">Slide 1 · As Regras</div>
+    <div class="slide-title">Hoje ninguém assiste aula. Todo mundo joga. 🏟️</div>
+    <div class="slide-body">
+      <p>São <strong>13 aulas</strong> de informática dentro de uma arena só.</p>
+      <div class="key-grid three">
+        <div class="key-card">
+          <span class="key-icon">🎯</span>
+          <strong>5 Quizzes</strong>
+          <span>25 perguntas. Cada acerto = 1 ponto.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🔗</span>
+          <strong>4 Conectas</strong>
+          <span>Ligue os pares. Cada rodada completa = 1 ponto.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🧩</span>
+          <strong>12 Charadas</strong>
+          <span>Fale a resposta ANTES de clicar. Acertou = 1 ponto.</span>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">⚠️</span>
+        Regra de ouro da charada: <strong>ninguém clica antes de arriscar em voz alta</strong>.<br>
+        <span style="font-weight:400;">Clicar primeiro é trapaça — e trapaça não ensina nada.</span>
+      </div>
+      <p style="margin-top:12px; font-size:15px; opacity:0.9;">🏆 Placar máximo: <strong>41 pontos</strong>. O canto da tela mostra o seu ao vivo.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide slide-2">
+    <div class="slide-emoji">🗺️</div>
+    <div class="slide-label">Slide 2 · O Mapa</div>
+    <div class="slide-title">13 aulas. 5 territórios. 🗺️</div>
+    <div class="slide-body">
+      <div class="key-grid">
+        <div class="key-card">
+          <span class="key-icon">🔩</span>
+          <strong>Máquina</strong>
+          <span>Processador, RAM, SSD, GPU, placa-mãe, fonte.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🪟</span>
+          <strong>Sistema</strong>
+          <span>Windows, pastas, .zip, OneDrive, janelas.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🌐</span>
+          <strong>Rede</strong>
+          <span>Internet, Web, servidor, nuvem, algoritmo.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🕵️</span>
+          <strong>Verdade</strong>
+          <span>Fake news, deepfake, pesquisa, fontes, IA.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">⌨️</span>
+          <strong>Produção</strong>
+          <span>Atalhos, WordPad, formatação, entrega.</span>
+        </div>
+        <div class="key-card">
+          <span class="key-icon">🔍</span>
+          <strong>Raio-X</strong>
+          <span>HTML, CSS, JavaScript, DevTools.</span>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🧠</span>
+        Nenhum território funciona sozinho.<br>
+        <span style="font-weight:400;">A máquina roda o sistema, o sistema abre o navegador, o navegador monta o site, e você decide no que acreditar.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — QUIZ 1 -->
+  <div class="slide slide-3">
+    <div class="slide-emoji">🔩</div>
+    <div class="slide-label">Slide 3 · Quiz 1 de 5</div>
+    <div class="slide-title">Rodada da Máquina 🔩</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quiz1"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — CONECTA 1 -->
+  <div class="slide slide-4">
+    <div class="slide-emoji">🔗</div>
+    <div class="slide-label">Slide 4 · Conecta 1 de 4</div>
+    <div class="slide-title">Ligue a peça ao que ela faz 🔗</div>
+    <div class="slide-body">
+      <div class="match-container" id="match1"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — CHARADAS 1 -->
+  <div class="slide slide-5">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 5 · Charadas 1 de 4</div>
+    <div class="slide-title">Charadas do Hardware 🧩</div>
+    <div class="slide-body">
+      <div class="riddle-list" id="riddle1"></div>
+      <div class="riddle-score" id="riddle1score">0 de 3 reveladas</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — QUIZ 2 -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">🪟</div>
+    <div class="slide-label">Slide 6 · Quiz 2 de 5</div>
+    <div class="slide-title">Rodada do Sistema 🪟</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quiz2"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — CONECTA 2 -->
+  <div class="slide slide-7">
+    <div class="slide-emoji">⌨️</div>
+    <div class="slide-label">Slide 7 · Conecta 2 de 4</div>
+    <div class="slide-title">Ligue o atalho à ação ⌨️</div>
+    <div class="slide-body">
+      <div class="match-container" id="match2"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — CHARADAS 2 -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 8 · Charadas 2 de 4</div>
+    <div class="slide-title">Charadas do Windows e do Teclado 🧩</div>
+    <div class="slide-body">
+      <div class="riddle-list" id="riddle2"></div>
+      <div class="riddle-score" id="riddle2score">0 de 3 reveladas</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — QUIZ 3 -->
+  <div class="slide slide-9">
+    <div class="slide-emoji">🌐</div>
+    <div class="slide-label">Slide 9 · Quiz 3 de 5</div>
+    <div class="slide-title">Rodada da Rede 🌐</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quiz3"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 — CONECTA 3 -->
+  <div class="slide slide-10">
+    <div class="slide-emoji">🔗</div>
+    <div class="slide-label">Slide 10 · Conecta 3 de 4</div>
+    <div class="slide-title">Ligue o conceito da internet 🔗</div>
+    <div class="slide-body">
+      <div class="match-container" id="match3"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11 — CHARADAS 3 -->
+  <div class="slide slide-11">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 11 · Charadas 3 de 4</div>
+    <div class="slide-title">Charadas da Internet 🧩</div>
+    <div class="slide-body">
+      <div class="riddle-list" id="riddle3"></div>
+      <div class="riddle-score" id="riddle3score">0 de 3 reveladas</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12 — QUIZ 4 -->
+  <div class="slide slide-12">
+    <div class="slide-emoji">🕵️</div>
+    <div class="slide-label">Slide 12 · Quiz 4 de 5</div>
+    <div class="slide-title">Rodada da Verdade 🕵️</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quiz4"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13 — CONECTA 4 -->
+  <div class="slide slide-13">
+    <div class="slide-emoji">🔍</div>
+    <div class="slide-label">Slide 13 · Conecta 4 de 4</div>
+    <div class="slide-title">Ligue o pedaço do site 🔍</div>
+    <div class="slide-body">
+      <div class="match-container" id="match4"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14 — CHARADAS 4 -->
+  <div class="slide slide-14">
+    <div class="slide-emoji">🧩</div>
+    <div class="slide-label">Slide 14 · Charadas 4 de 4</div>
+    <div class="slide-title">Charadas do Site por Dentro 🧩</div>
+    <div class="slide-body">
+      <div class="riddle-list" id="riddle4"></div>
+      <div class="riddle-score" id="riddle4score">0 de 3 reveladas</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15 — QUIZ 5 -->
+  <div class="slide slide-15">
+    <div class="slide-emoji">📄</div>
+    <div class="slide-label">Slide 15 · Quiz 5 de 5</div>
+    <div class="slide-title">Rodada Final — Produção e Raio-X 📄</div>
+    <div class="slide-body">
+      <div class="quiz-container" id="quiz5"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16 — PLACAR -->
+  <div class="slide slide-16">
+    <div class="slide-emoji">🏆</div>
+    <div class="slide-label">Slide 16 · O Placar</div>
+    <div class="slide-title">Fecha o placar da Arena 🏆</div>
+    <div class="slide-body">
+      <div class="scoreboard">
+        <div class="score-row"><span class="score-icon">🔩</span> <span>Quiz 1 · Máquina</span> <span class="score-val" id="sbq1">0 / 5</span></div>
+        <div class="score-row"><span class="score-icon">🪟</span> <span>Quiz 2 · Sistema</span> <span class="score-val" id="sbq2">0 / 5</span></div>
+        <div class="score-row"><span class="score-icon">🌐</span> <span>Quiz 3 · Rede</span> <span class="score-val" id="sbq3">0 / 5</span></div>
+        <div class="score-row"><span class="score-icon">🕵️</span> <span>Quiz 4 · Verdade</span> <span class="score-val" id="sbq4">0 / 5</span></div>
+        <div class="score-row"><span class="score-icon">📄</span> <span>Quiz 5 · Produção e Raio-X</span> <span class="score-val" id="sbq5">0 / 5</span></div>
+        <div class="score-row"><span class="score-icon">🔗</span> <span>Conectas completos</span> <span class="score-val" id="sbmatch">0 / 4</span></div>
+        <div class="score-row"><span class="score-icon">🧩</span> <span>Charadas resolvidas</span> <span class="score-val" id="sbriddle">0 / 12</span></div>
+        <div class="grand-total">
+          <div class="grand-label">Total da Arena</div>
+          <div><span class="grand-num" id="grandNum">0</span><span class="result-max"> / 41</span></div>
+          <div class="medal-title" id="medalTitle">Aperte "Atualizar placar"</div>
+          <div class="result-subtitle" id="medalSub"></div>
+        </div>
+        <button class="restart-btn" onclick="updateScoreboard()">Atualizar placar 🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17 -->
+  <div class="slide slide-17">
+    <div class="slide-emoji">✅</div>
+    <div class="slide-label">Slide 17 · Para Levar</div>
+    <div class="slide-title">O que fica depois da Arena ✅</div>
+    <div class="slide-body">
+      <div class="rules-list">
+        <div class="rule-item"><span class="rule-num">1</span> <span>Computador travando não é "vírus" por padrão — é <strong>peça errada para a tarefa</strong>.</span></div>
+        <div class="rule-item"><span class="rule-num">2</span> <span>Arquivo que não está em <strong>dois lugares</strong> ainda não está salvo.</span></div>
+        <div class="rule-item"><span class="rule-num">3</span> <span>Print não é prova. <strong>Abra o site você mesmo.</strong></span></div>
+        <div class="rule-item"><span class="rule-num">4</span> <span>A IA não sabe: ela <strong>prevê</strong>. Confira sempre que a resposta importar.</span></div>
+        <div class="rule-item"><span class="rule-num">5</span> <span>Mão no teclado, não no mouse: <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> conserta quase tudo.</span></div>
+        <div class="rule-item"><span class="rule-num">6</span> <span>Todo site é <strong>caixa dentro de caixa</strong> — e <span class="kbd">F12</span> mostra as caixas.</span></div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🎯</span>
+        Desafio da semana: escolha <strong>uma</strong> charada que você errou hoje e explique ela para alguém de casa.<br>
+        <span style="font-weight:400;">Quem consegue explicar, aprendeu de verdade.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav" style="margin-top:24px;">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
+  <div class="progress" id="progressText">1 / 17</div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
+</div>
+<div class="dots" id="dots"></div>
+
+<script>
+  /* ============ navigation ============ */
+  const TOTAL = 17;
+  let current = 1;
+
+  const dotsEl = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.onclick = () => goToSlide(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goToSlide(n) {
+    document.querySelector('.slide.active').classList.remove('active');
+    current = n;
+    document.querySelector('.slide-' + current).classList.add('active');
+    document.getElementById('progressText').textContent = current + ' / ' + TOTAL;
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === TOTAL;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+    if (current === 16) updateScoreboard();
+  }
+
+  function changeSlide(dir) { goToSlide(Math.max(1, Math.min(TOTAL, current + dir))); }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+
+  /* ============ live score ============ */
+  const MAX_POINTS = 41;
+
+  function totalPoints() {
+    let t = 0;
+    Object.keys(QUIZZES).forEach(id => t += quizState[id].score);
+    Object.keys(MATCHES).forEach(id => { if (matchState[id].done === MATCHES[id].pairs.length) t += 1; });
+    Object.keys(RIDDLES).forEach(id => t += riddleState[id]);
+    return t;
+  }
+
+  function refreshLive() {
+    document.getElementById('liveScore').textContent = totalPoints();
+  }
+
+  /* ============ quiz data ============ */
+  const QUIZZES = {
+    quiz1: [
+      {
+        q: 'Qual peça é o "cérebro" que executa as contas e as tarefas?',
+        opts: ['A memória RAM', 'O processador (CPU)', 'A fonte de energia', 'O SSD'],
+        correct: 1,
+        fb: 'Processador = quem pensa. RAM = onde ele espalha as coisas para pensar.'
+      },
+      {
+        q: 'Você abre 30 abas e o PC fica lento e travando. Falta o quê?',
+        opts: ['Memória RAM', 'Placa-mãe', 'Teclado', 'Monitor maior'],
+        correct: 0,
+        fb: 'RAM é a mesa de trabalho. Mesa pequena com muita coisa em cima = tudo cai.'
+      },
+      {
+        q: 'Qual a diferença principal entre HD e SSD?',
+        opts: ['O SSD guarda mais, sempre', 'O HD é mais moderno', 'O SSD é muito mais rápido e não tem peças girando', 'São a mesma coisa com nomes diferentes'],
+        correct: 2,
+        fb: 'HD = armário antigo com disco girando. SSD = gaveta turbo, sem peça em movimento.'
+      },
+      {
+        q: 'Você desliga o computador. Onde seus arquivos continuam guardados?',
+        opts: ['Na memória RAM', 'No processador', 'No armazenamento (HD ou SSD)', 'Na placa de vídeo'],
+        correct: 2,
+        fb: 'RAM esquece tudo ao desligar. Quem lembra é o HD/SSD.'
+      },
+      {
+        q: 'Qual peça serve de "esqueleto" e conecta todas as outras?',
+        opts: ['A placa-mãe', 'A GPU', 'A fonte', 'O gabinete'],
+        correct: 0,
+        fb: 'A placa-mãe não pensa nem guarda — mas sem ela nenhuma peça conversa com as outras.'
+      }
+    ],
+    quiz2: [
+      {
+        q: 'O Windows é o quê, exatamente?',
+        opts: ['Um navegador de internet', 'Um site da Microsoft', 'O sistema operacional — o "gerente" da máquina', 'Um antivírus'],
+        correct: 2,
+        fb: 'Windows = sistema. Chrome = navegador. Google = site de busca. Três coisas diferentes.'
+      },
+      {
+        q: 'Jeito mais rápido de abrir um programa que você sabe o nome?',
+        opts: ['Procurar o ícone na Área de Trabalho', 'Apertar a tecla Windows e digitar o nome', 'Abrir o Explorador e caçar na pasta', 'Reiniciar o PC'],
+        correct: 1,
+        fb: 'Tecla Windows + as primeiras letras. Some o tempo que você gasta caçando ícone.'
+      },
+      {
+        q: 'Para que serve compactar arquivos em .zip?',
+        opts: ['Apagar arquivos com segurança', 'Juntar vários arquivos em um só, ocupando menos espaço', 'Transformar o arquivo em PDF', 'Esconder o arquivo do professor'],
+        correct: 1,
+        fb: 'Um .zip é uma mala: vários arquivos viajam juntos e mais leves.'
+      },
+      {
+        q: 'O que o OneDrive faz com a pasta dele?',
+        opts: ['Deixa o PC mais rápido', 'Sincroniza os arquivos na nuvem — eles ficam em dois lugares', 'Compacta tudo automaticamente', 'Bloqueia arquivos grandes'],
+        correct: 1,
+        fb: 'Arquivo que só existe num lugar é arquivo em risco. Na nuvem, ele tem cópia.'
+      },
+      {
+        q: 'Você aperta a tecla Windows + seta para a esquerda. O que acontece?',
+        opts: ['A janela encaixa na metade esquerda da tela', 'A janela fecha', 'O PC desliga', 'Volta para a página anterior'],
+        correct: 0,
+        fb: 'Snap Assist. Duas janelas lado a lado = pesquisar e escrever ao mesmo tempo.'
+      }
+    ],
+    quiz3: [
+      {
+        q: 'Internet e Web são a mesma coisa?',
+        opts: ['Sim, dois nomes para a mesma coisa', 'Não — a Web (os sites) é só um dos serviços que rodam na internet', 'Não — a internet só existe no celular', 'Sim, mas a Web é mais rápida'],
+        correct: 1,
+        fb: 'Internet é a estrada. A Web é um dos veículos. E-mail e jogos online também andam nela.'
+      },
+      {
+        q: 'Quando você digita um endereço, de onde vem a página?',
+        opts: ['Ela já estava dentro do seu PC', 'De um servidor, um computador ligado em outro lugar do mundo', 'Do satélite direto para a tela', 'Do seu roteador'],
+        correct: 1,
+        fb: 'Seu navegador pede, o servidor responde, e a página é montada na sua tela.'
+      },
+      {
+        q: 'O que é a famosa "nuvem"?',
+        opts: ['Um espaço no céu com dados', 'Uma memória extra do seu celular', 'Galpões cheios de computadores de empresas, ligados na internet', 'Um tipo de vírus'],
+        correct: 2,
+        fb: 'A nuvem não voa. Ela é o computador de outra pessoa — num data center com ar-condicionado.'
+      },
+      {
+        q: 'O que é a sua pegada digital?',
+        opts: ['O rastro de dados que você deixa em tudo que faz online', 'O peso dos arquivos no seu PC', 'A velocidade da sua internet', 'A sua senha principal'],
+        correct: 0,
+        fb: 'Curtida, busca, tempo de vídeo assistido: tudo isso é pegada. E ela não se apaga fácil.'
+      },
+      {
+        q: 'Como o algoritmo do TikTok "adivinha" o que você gosta?',
+        opts: ['Ele lê seus pensamentos', 'Ele escuta seu microfone o tempo todo', 'Ele mede o que você assiste, curte e repete — e prevê o próximo', 'Ele sorteia vídeos'],
+        correct: 2,
+        fb: 'Você treinou o algoritmo de graça. Cada segundo assistido foi uma aula que você deu para ele.'
+      }
+    ],
+    quiz4: [
+      {
+        q: 'Chega uma notícia bombástica no grupo da família. Primeira atitude?',
+        opts: ['Repassar antes que apaguem', 'Ver quem publicou e procurar a mesma notícia em outras fontes', 'Acreditar, porque veio de um parente', 'Perguntar no grupo se alguém acha que é verdade'],
+        correct: 1,
+        fb: 'Quem publicou? Quando? Tem em outro lugar? Três perguntas antes de qualquer encaminhar.'
+      },
+      {
+        q: 'O que é um deepfake?',
+        opts: ['Um vídeo ou áudio falso criado por inteligência artificial', 'Um site que copia outro site', 'Um vírus de celular', 'Uma notícia antiga reaparecendo'],
+        correct: 0,
+        fb: 'Rosto e voz já podem ser inventados. Por isso "eu vi o vídeo" não é mais prova.'
+      },
+      {
+        q: 'Quando uma IA generativa responde sua pergunta, ela...',
+        opts: ['Consulta um livro oficial de verdades', 'Prevê a próxima palavra mais provável — e pode errar com confiança', 'Nunca erra, porque é matemática', 'Copia da Wikipédia sempre'],
+        correct: 1,
+        fb: 'Ela não sabe: ela prevê. Resposta bonita e errada é totalmente possível.'
+      },
+      {
+        q: 'Você precisa pesquisar um tema de escola. Melhor estratégia?',
+        opts: ['Clicar no primeiro link e copiar', 'Digitar a pergunta inteira e ler só o resumo do topo', 'Usar palavras-chave e comparar duas ou três fontes diferentes', 'Procurar só em vídeos'],
+        correct: 2,
+        fb: 'Nunca leia só um site. Duas fontes que concordam valem mais que uma que grita.'
+      },
+      {
+        q: 'Colocar a busca entre aspas — "eleições em 2026" — faz o quê?',
+        opts: ['Procura a frase exata, naquela ordem', 'Deixa a busca mais lenta', 'Procura só notícias', 'Não muda nada'],
+        correct: 0,
+        fb: 'Aspas para frase exata. Simples e quase ninguém usa.'
+      }
+    ],
+    quiz5: [
+      {
+        q: 'No seu documento, o HTML de um site equivale a quê?',
+        opts: ['À roupa da página', 'Ao esqueleto: diz o QUE existe na página', 'Aos movimentos e cliques', 'À velocidade do site'],
+        correct: 1,
+        fb: 'HTML = esqueleto. CSS = roupa. JavaScript = músculo.'
+      },
+      {
+        q: 'Você aperta F12 no navegador. O que abre?',
+        opts: ['O modo tela cheia', 'As Ferramentas do Desenvolvedor (DevTools)', 'O histórico', 'O modo anônimo'],
+        correct: 1,
+        fb: 'F12 é o raio-X. Na aba Elements aparece o esqueleto da página.'
+      },
+      {
+        q: 'Você muda a manchete de um site no DevTools e aperta F5. E então?',
+        opts: ['A mudança fica salva para todo mundo', 'Volta ao normal — você mexeu só na sua cópia da tela', 'O site sai do ar', 'Você recebe um aviso de invasão'],
+        correct: 1,
+        fb: 'O site de verdade mora no servidor. Você rabiscou sua fotocópia.'
+      },
+      {
+        q: 'No WordPad, alinhar o texto como "justificado" faz o quê?',
+        opts: ['Deixa o texto encostado nas duas margens, como num livro', 'Centraliza tudo', 'Aumenta a letra', 'Coloca numeração nas páginas'],
+        correct: 0,
+        fb: 'Justificado é o que dá cara de trabalho profissional. Com espaçamento 1,5 fica melhor ainda.'
+      },
+      {
+        q: 'Você formatou tudo errado e quer voltar. Qual atalho?',
+        opts: ['Ctrl + S', 'Ctrl + A', 'Ctrl + Z', 'Ctrl + F'],
+        correct: 2,
+        fb: 'Ctrl + Z é a máquina do tempo. Errar é reversível — desde que você não feche sem salvar.'
+      }
+    ]
+  };
+
+  const QUIZ_META = {
+    quiz1: { sb: 'sbq1' }, quiz2: { sb: 'sbq2' }, quiz3: { sb: 'sbq3' },
+    quiz4: { sb: 'sbq4' }, quiz5: { sb: 'sbq5' }
+  };
+
+  const quizState = {};
+
+  function buildQuiz(id) {
+    const questions = QUIZZES[id];
+    quizState[id] = { score: 0, index: 0 };
+    const box = document.getElementById(id);
+    const letters = ['A', 'B', 'C', 'D'];
+
+    const bar = document.createElement('div');
+    bar.className = 'quiz-score-bar';
+    bar.innerHTML = 'Pergunta <span id="' + id + 'cur">1</span> de ' + questions.length +
+                    ' · Acertos: <span id="' + id + 'sc">0</span>';
+    box.appendChild(bar);
+
+    questions.forEach((item, i) => {
+      const card = document.createElement('div');
+      card.className = 'question-card' + (i === 0 ? ' active' : '');
+      card.id = id + 'q' + i;
+
+      const num = document.createElement('div');
+      num.className = 'q-number';
+      num.textContent = 'Pergunta ' + (i + 1);
+      card.appendChild(num);
+
+      const text = document.createElement('div');
+      text.className = 'q-text';
+      text.textContent = item.q;
+      card.appendChild(text);
+
+      const opts = document.createElement('div');
+      opts.className = 'options';
+      item.opts.forEach((label, j) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = '<span class="opt-letter">' + letters[j] + '</span>';
+        btn.appendChild(document.createTextNode(label));
+        btn.onclick = () => answer(id, i, j, btn);
+        opts.appendChild(btn);
+      });
+      card.appendChild(opts);
+
+      const fb = document.createElement('div');
+      fb.className = 'feedback-msg';
+      fb.id = id + 'fb' + i;
+      card.appendChild(fb);
+
+      const next = document.createElement('button');
+      next.className = 'next-q-btn';
+      next.id = id + 'nx' + i;
+      next.textContent = i === questions.length - 1 ? 'Ver resultado da rodada →' : 'Próxima →';
+      next.onclick = () => (i === questions.length - 1) ? showRound(id) : nextQ(id, i);
+      card.appendChild(next);
+
+      box.appendChild(card);
+    });
+
+    const res = document.createElement('div');
+    res.className = 'round-result';
+    res.id = id + 'res';
+    res.innerHTML =
+      '<div class="result-emoji" id="' + id + 'emo">🎉</div>' +
+      '<div><span class="result-score" id="' + id + 'fin">0</span><span class="result-max">/' + questions.length + '</span></div>' +
+      '<div class="result-title" id="' + id + 'tit"></div>' +
+      '<div class="result-subtitle" id="' + id + 'sub"></div>';
+    const again = document.createElement('button');
+    again.className = 'restart-btn';
+    again.textContent = 'Jogar a rodada de novo 🔄';
+    again.onclick = () => restartQuiz(id);
+    res.appendChild(again);
+    box.appendChild(res);
+  }
+
+  function answer(id, qi, oi, btn) {
+    const item = QUIZZES[id][qi];
+    const card = document.getElementById(id + 'q' + qi);
+    const btns = card.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+    const fb = document.getElementById(id + 'fb' + qi);
+
+    if (oi === item.correct) {
+      btn.classList.add('correct');
+      quizState[id].score++;
+      document.getElementById(id + 'sc').textContent = quizState[id].score;
+      fb.textContent = '✅ Correto! ' + item.fb;
+      fb.className = 'feedback-msg ok show';
+    } else {
+      btn.classList.add('wrong');
+      btns[item.correct].classList.add('correct');
+      fb.textContent = '❌ Não foi dessa vez. ' + item.fb;
+      fb.className = 'feedback-msg err show';
+    }
+    document.getElementById(id + 'nx' + qi).classList.add('show');
+    refreshLive();
+  }
+
+  function nextQ(id, qi) {
+    document.getElementById(id + 'q' + qi).classList.remove('active');
+    document.getElementById(id + 'q' + (qi + 1)).classList.add('active');
+    document.getElementById(id + 'cur').textContent = qi + 2;
+  }
+
+  function showRound(id) {
+    const questions = QUIZZES[id];
+    document.getElementById(id + 'q' + (questions.length - 1)).classList.remove('active');
+    document.getElementById(id + 'res').classList.add('show');
+    const s = quizState[id].score;
+    document.getElementById(id + 'fin').textContent = s;
+
+    let emo, tit, sub;
+    if (s <= 1) { emo = '😅'; tit = 'Rodada difícil'; sub = 'Volte na aula desse território antes do próximo quiz — vale mais que decorar.'; }
+    else if (s === 2) { emo = '🙂'; tit = 'Metade do caminho'; sub = 'A base está aí. Faltou firmar os detalhes.'; }
+    else if (s === 3) { emo = '💪'; tit = 'Boa rodada'; sub = 'Você acerta o principal. Reveja as duas que escaparam.'; }
+    else if (s === 4) { emo = '🌟'; tit = 'Quase perfeito'; sub = 'Só uma escapou. Leia o feedback dela e não erra mais.'; }
+    else { emo = '🏆'; tit = 'Rodada perfeita!'; sub = 'Nada aqui te pega. Próximo território.'; }
+
+    document.getElementById(id + 'emo').textContent = emo;
+    document.getElementById(id + 'tit').textContent = tit;
+    document.getElementById(id + 'sub').textContent = sub;
+    refreshLive();
+  }
+
+  function restartQuiz(id) {
+    const questions = QUIZZES[id];
+    quizState[id].score = 0;
+    document.getElementById(id + 'sc').textContent = 0;
+    document.getElementById(id + 'cur').textContent = 1;
+    document.getElementById(id + 'res').classList.remove('show');
+    questions.forEach((_, i) => {
+      const card = document.getElementById(id + 'q' + i);
+      card.classList.toggle('active', i === 0);
+      card.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
+      const fb = document.getElementById(id + 'fb' + i);
+      fb.className = 'feedback-msg';
+      fb.textContent = '';
+      document.getElementById(id + 'nx' + i).classList.remove('show');
+    });
+    refreshLive();
+  }
+
+  /* ============ match data ============ */
+  const MATCHES = {
+    match1: {
+      leftTitle: 'A peça',
+      rightTitle: 'O que ela faz',
+      done: '🎉 Todas as peças no lugar! Vocês montariam um PC.',
+      pairs: [
+        { left: '🧠 Processador', right: 'Executa as tarefas — o cérebro' },
+        { left: '⚡ Memória RAM', right: 'Mesa de trabalho: rápida, mas esquece ao desligar' },
+        { left: '💾 SSD', right: 'Guarda os arquivos, mesmo desligado' },
+        { left: '🎮 GPU', right: 'Especialista em imagem, vídeo e jogos' },
+        { left: '🔌 Placa-mãe', right: 'Liga todas as peças umas nas outras' },
+        { left: '🔋 Fonte', right: 'Distribui a energia elétrica para tudo' }
+      ]
+    },
+    match2: {
+      leftTitle: 'O atalho',
+      rightTitle: 'A ação',
+      done: '🎉 Teclado dominado. Mouse com inveja.',
+      pairs: [
+        { left: 'Ctrl + A', right: 'Selecionar tudo de uma vez' },
+        { left: 'Ctrl + X', right: 'Recortar — leva embora e cola em outro lugar' },
+        { left: 'Ctrl + Z', right: 'Desfazer o último erro' },
+        { left: 'Ctrl + F', right: 'Procurar uma palavra na página' },
+        { left: 'Ctrl + S', right: 'Salvar o arquivo' },
+        { left: 'Alt + Tab', right: 'Trocar de janela aberta' }
+      ]
+    },
+    match3: {
+      leftTitle: 'O conceito',
+      rightTitle: 'A definição',
+      done: '🎉 A rede inteira conectada. Literalmente.',
+      pairs: [
+        { left: '🖥️ Servidor', right: 'Computador ligado que guarda e entrega o site' },
+        { left: '🧭 Navegador', right: 'Programa que pede a página e a monta na tela' },
+        { left: '☁️ Nuvem', right: 'Galpões de computadores de outras empresas' },
+        { left: '👣 Pegada digital', right: 'O rastro de dados que você deixa online' },
+        { left: '🎯 Algoritmo', right: 'Prevê o que te segura mais tempo na tela' },
+        { left: '🎣 Phishing', right: 'Golpe que engana a pessoa, não a máquina' }
+      ]
+    },
+    match4: {
+      leftTitle: 'O pedaço',
+      rightTitle: 'O papel dele',
+      done: '🎉 Raio-X completo. Vocês leem site por dentro.',
+      pairs: [
+        { left: 'HTML', right: '🦴 O esqueleto: o que existe na página' },
+        { left: 'CSS', right: '👕 A roupa: cor, tamanho, posição' },
+        { left: 'JavaScript', right: '💪 O músculo: o que reage ao clique' },
+        { left: '&lt;h1&gt;', right: '👑 O título mais importante da página' },
+        { left: '&lt;a&gt;', right: '🔗 Leva você para outra página' },
+        { left: 'F12', right: '🔍 Abre as Ferramentas do Desenvolvedor' }
+      ]
+    }
+  };
+
+  const matchState = {};
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildMatch(id) {
+    const cfg = MATCHES[id];
+    matchState[id] = { selected: null, done: 0 };
+    const box = document.getElementById(id);
+
+    const cols = document.createElement('div');
+    cols.className = 'match-cols';
+
+    const leftCol = document.createElement('div');
+    leftCol.innerHTML = '<div class="match-col-title">' + cfg.leftTitle + '</div>';
+    const rightCol = document.createElement('div');
+    rightCol.innerHTML = '<div class="match-col-title">' + cfg.rightTitle + '</div>';
+
+    cfg.pairs.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.innerHTML = p.left;
+      el.dataset.match = 'k' + i;
+      el.onclick = () => selectMatch(id, el);
+      leftCol.appendChild(el);
+    });
+
+    shuffle(cfg.pairs.map((p, i) => ({ p, i }))).forEach(({ p, i }) => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.innerHTML = p.right;
+      el.dataset.match = 'k' + i;
+      el.onclick = () => selectMatch(id, el);
+      rightCol.appendChild(el);
+    });
+
+    cols.appendChild(leftCol);
+    cols.appendChild(rightCol);
+    box.appendChild(cols);
+
+    const score = document.createElement('div');
+    score.className = 'match-score';
+    score.id = id + 'score';
+    score.textContent = '0 de ' + cfg.pairs.length + ' conectados';
+    box.appendChild(score);
+
+    const result = document.createElement('div');
+    result.className = 'match-result';
+    result.id = id + 'result';
+    result.textContent = cfg.done;
+    box.appendChild(result);
+  }
+
+  function selectMatch(id, el) {
+    const st = matchState[id];
+    const total = MATCHES[id].pairs.length;
+    if (el.classList.contains('matched')) return;
+
+    if (st.selected === null) {
+      st.selected = el;
+      el.classList.add('selected');
+      return;
+    }
+    if (st.selected === el) {
+      el.classList.remove('selected');
+      st.selected = null;
+      return;
+    }
+    if (st.selected.dataset.match === el.dataset.match) {
+      st.selected.classList.add('matched');
+      st.selected.classList.remove('selected');
+      el.classList.add('matched');
+      st.done++;
+      st.selected = null;
+      document.getElementById(id + 'score').textContent = st.done + ' de ' + total + ' conectados';
+      if (st.done === total) document.getElementById(id + 'result').classList.add('show');
+      refreshLive();
+    } else {
+      const a = st.selected, b = el;
+      a.classList.add('wrong-flash');
+      b.classList.add('wrong-flash');
+      setTimeout(() => {
+        a.classList.remove('selected', 'wrong-flash');
+        b.classList.remove('wrong-flash');
+      }, 500);
+      st.selected = null;
+    }
+  }
+
+  /* ============ riddles ============ */
+  const RIDDLES = {
+    riddle1: [
+      { q: 'Sou rapidíssima, mas esqueço absolutamente tudo no instante em que você me desliga. Quem sou eu?', a: 'A memória RAM', why: 'Ela é volátil: só guarda o que está em uso agora.' },
+      { q: 'Guardo tudo mesmo desligado, sou muito mais rápido que meu irmão velho e não tenho nenhuma peça girando dentro de mim.', a: 'O SSD', why: 'O HD tem disco que gira; o SSD não tem parte móvel.' },
+      { q: 'Não penso, não guardo nada e não faço imagem nenhuma. Mas sem mim, nenhuma peça consegue falar com as outras.', a: 'A placa-mãe', why: 'Ela é o esqueleto que conecta processador, RAM, SSD e o resto.' }
+    ],
+    riddle2: [
+      { q: 'Duas teclas e o seu último erro simplesmente desaparece. Quem sou eu?', a: 'Ctrl + Z', why: 'A máquina do tempo do computador.' },
+      { q: 'Eu levo o arquivo embora do lugar dele, e ele só reaparece quando você me cola em outro canto.', a: 'Ctrl + X (recortar)', why: 'Diferente do Ctrl + C, que deixa o original onde estava.' },
+      { q: 'Eu sou uma pasta que existe no seu computador e em outro lugar do mundo ao mesmo tempo.', a: 'A pasta do OneDrive', why: 'Ela sincroniza: seu arquivo fica no PC e na nuvem.' }
+    ],
+    riddle3: [
+      { q: 'Todo dia você me alimenta sem perceber e, em pouco tempo, eu conheço o seu gosto melhor que os seus amigos.', a: 'O algoritmo de recomendação', why: 'Cada segundo assistido é um dado que você entregou de graça.' },
+      { q: 'Meu nome parece céu, mas eu sou um galpão cheio de máquinas com ar-condicionado.', a: 'A nuvem', why: 'A nuvem é o computador de outra pessoa — num data center bem real.' },
+      { q: 'Você nunca me viu, estou longe daqui, e ainda assim tenho uma cópia de todos os sites que você abre.', a: 'O servidor', why: 'Ele guarda o site; o seu navegador só pede e monta na tela.' }
+    ],
+    riddle4: [
+      { q: 'Eu sou o esqueleto: eu digo o que existe na página, mas não tenho a menor ideia de como deixar isso bonito.', a: 'O HTML', why: 'Estrutura é HTML. Beleza é trabalho do CSS.' },
+      { q: 'Sou a roupa da página. Me tire e o site continua funcionando, mas fica com cara de 1996.', a: 'O CSS', why: 'Texto, links e imagens sobrevivem; só o estilo vai embora.' },
+      { q: 'Uma tecla só e você vê qualquer site do mundo por dentro, sem invadir nada.', a: 'F12 (o DevTools)', why: 'Você mexe na sua cópia. F5 apaga tudo o que você fez.' }
+    ]
+  };
+
+  const riddleState = {};
+
+  function buildRiddles(id) {
+    riddleState[id] = 0;
+    const box = document.getElementById(id);
+    RIDDLES[id].forEach((r, i) => {
+      const el = document.createElement('div');
+      el.className = 'riddle';
+      el.innerHTML =
+        '<div class="riddle-q">' + r.q + '</div>' +
+        '<div class="riddle-hint">Arrisque em voz alta · depois clique</div>' +
+        '<div class="riddle-a">👉 <strong>' + r.a + '</strong><br><span style="opacity:0.9; font-size:14px;">' + r.why + '</span></div>';
+      el.onclick = () => revealRiddle(id, el);
+      box.appendChild(el);
+    });
+  }
+
+  function revealRiddle(id, el) {
+    if (el.classList.contains('revealed')) return;
+    el.classList.add('revealed');
+    riddleState[id]++;
+    document.getElementById(id + 'score').textContent =
+      riddleState[id] + ' de ' + RIDDLES[id].length + ' reveladas';
+    refreshLive();
+  }
+
+  /* ============ scoreboard ============ */
+  function updateScoreboard() {
+    Object.keys(QUIZZES).forEach(id => {
+      document.getElementById(QUIZ_META[id].sb).textContent =
+        quizState[id].score + ' / ' + QUIZZES[id].length;
+    });
+
+    let matchDone = 0;
+    Object.keys(MATCHES).forEach(id => {
+      if (matchState[id].done === MATCHES[id].pairs.length) matchDone++;
+    });
+    document.getElementById('sbmatch').textContent = matchDone + ' / 4';
+
+    let riddlesDone = 0;
+    Object.keys(RIDDLES).forEach(id => riddlesDone += riddleState[id]);
+    document.getElementById('sbriddle').textContent = riddlesDone + ' / 12';
+
+    const total = totalPoints();
+    document.getElementById('grandNum').textContent = total;
+
+    let title, sub;
+    const pct = total / MAX_POINTS;
+    if (pct < 0.4) { title = '🌱 Aprendiz da Arena'; sub = 'Escolha um território do slide 2 e refaça só aquele quiz. Um por vez.'; }
+    else if (pct < 0.6) { title = '🔧 Técnico em treino'; sub = 'A base está montada. Falta firmar dois territórios.'; }
+    else if (pct < 0.8) { title = '💪 Operador confiante'; sub = 'Você resolve a maioria dos problemas sozinho já.'; }
+    else if (pct < 0.95) { title = '🌟 Quase lenda'; sub = 'Só faltam detalhes. Reveja os feedbacks das que escaparam.'; }
+    else { title = '🏆 Lenda da Arena'; sub = 'Máquina, sistema, rede, verdade, produção e raio-X: tudo dominado.'; }
+
+    document.getElementById('medalTitle').textContent = title;
+    document.getElementById('medalSub').textContent = sub;
+  }
+
+  /* ============ boot ============ */
+  Object.keys(QUIZZES).forEach(buildQuiz);
+  Object.keys(MATCHES).forEach(buildMatch);
+  Object.keys(RIDDLES).forEach(buildRiddles);
+  refreshLive();
+</script>
+</body>
+</html>
