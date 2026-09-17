@@ -91,7 +91,7 @@
 
   .meme-photo {
     max-width: 260px; width: 100%; border-radius: 14px; margin: 0 auto 14px; display: block;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4); cursor: zoom-in;
   }
 
   /* ---------- real examples grid ---------- */
@@ -100,13 +100,27 @@
     background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16);
     border-radius: 14px; padding: 12px; display: flex; gap: 14px; align-items: center; text-align: left;
   }
-  .example-card img { width: 84px; height: auto; border-radius: 10px; flex-shrink: 0; }
+  .example-card img { width: 84px; height: auto; border-radius: 10px; flex-shrink: 0; cursor: zoom-in; }
   .example-card p { font-size: 13.5px; line-height: 1.45; }
   .example-card strong { font-size: 14px; }
   @media (max-width: 460px) {
     .example-card { flex-direction: column; }
     .example-card img { width: 140px; }
   }
+
+  /* ---------- lightbox ---------- */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.88); align-items: center; justify-content: center;
+    padding: 30px; cursor: zoom-out;
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+  .lightbox-close {
+    position: absolute; top: 18px; right: 22px; color: #fff; font-size: 30px; font-weight: 700;
+    line-height: 1; cursor: pointer; opacity: 0.8;
+  }
+  .lightbox-close:hover { opacity: 1; }
 
   /* ---------- compare grid ---------- */
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
@@ -276,7 +290,7 @@
     <div class="slide-label">Slide 1 · O Gancho</div>
     <div class="slide-title">Por que vocês entenderam essa piada sem ninguém explicar? 😂</div>
     <div class="slide-body">
-      <img src="../assets/meme2.jpeg" alt="Meme de gato com legenda sobre dar sinais de insanidade" class="meme-photo">
+      <img src="../assets/meme2.jpeg" alt="Meme de gato com legenda sobre dar sinais de insanidade" class="meme-photo" onclick="openLightbox(this.src, this.alt)">
       <p>Vocês reconheceram esse formato na hora — cara de gato borrada, letra branca embaixo. Isso é o poder do <strong>meme</strong>.</p>
       <div class="warning-box">
         <span class="warning-emoji">🧠</span>
@@ -433,15 +447,15 @@
     <div class="slide-body">
       <div class="example-grid">
         <div class="example-card">
-          <img src="../assets/meme1.jpg" alt="Estátua de alienígena antiga com legenda de alarme de celular">
+          <img src="../assets/meme1.jpg" alt="Estátua de alienígena antiga com legenda de alarme de celular" onclick="openLightbox(this.src, this.alt)">
           <p><strong>Humor absurdo.</strong> Uma estátua milenar de "alienígena" com legenda de app de celular. A graça é o contraste: duas coisas que não têm nada a ver, uma do lado da outra.</p>
         </div>
         <div class="example-card">
-          <img src="../assets/meme3.jpeg" alt="Gato proibido de entrar em uma porta, formato de print de tweet">
+          <img src="../assets/meme3.jpeg" alt="Gato proibido de entrar em uma porta, formato de print de tweet" onclick="openLightbox(this.src, this.alt)">
           <p><strong>Remix + relacionável.</strong> Foto de gato reaproveitada (template) com uma legenda sobre nota baixa (variação). E olha o formato: um <em>print de tweet</em> — outro jeito comum de embalar meme.</p>
         </div>
         <div class="example-card">
-          <img src="../assets/meme4.jpeg" alt="Personagem de tirinha comentando sobre planos de vida e o fim do mundo">
+          <img src="../assets/meme4.jpeg" alt="Personagem de tirinha comentando sobre planos de vida e o fim do mundo" onclick="openLightbox(this.src, this.alt)">
           <p><strong>Timing.</strong> Mesmo personagem, atualizado ano após ano — o "fim do mundo" mudou de data, a piada continua.</p>
         </div>
       </div>
@@ -749,6 +763,11 @@
 </div>
 <div class="dots" id="dots"></div>
 
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <script>
   const TOTAL = 14;
   let current = 1;
@@ -777,6 +796,7 @@
     if (e.target.tagName === 'INPUT') return;
     if (e.key === 'ArrowRight') changeSlide(1);
     if (e.key === 'ArrowLeft') changeSlide(-1);
+    if (e.key === 'Escape') closeLightbox();
   });
 
   function revealChip(el, text) {
@@ -786,6 +806,14 @@
   }
 
   function revealPart(el) { el.classList.add('revealed'); }
+
+  /* ---------- lightbox ---------- */
+  function openLightbox(src, alt) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxImg').alt = alt;
+    document.getElementById('lightbox').classList.add('show');
+  }
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('show'); }
 
   /* ---------- match game ---------- */
   let matchSelected = null;
