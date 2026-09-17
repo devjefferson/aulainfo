@@ -46,13 +46,14 @@
   .slide-4  { background: linear-gradient(135deg, #4e342e, #795548); color: #fff; }
   .slide-5  { background: linear-gradient(135deg, #00695c, #00897b); color: #fff; }
   .slide-6  { background: linear-gradient(135deg, #e65100, #fb8c00); color: #fff; }
-  .slide-7  { background: linear-gradient(135deg, #0d47a1, #1e88e5); color: #fff; }
-  .slide-8  { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; }
-  .slide-9  { background: linear-gradient(135deg, #263238, #455a64); color: #fff; }
-  .slide-10 { background: linear-gradient(135deg, #b71c1c, #e53935); color: #fff; }
-  .slide-11 { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
-  .slide-12 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
-  .slide-13 { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
+  .slide-7  { background: linear-gradient(135deg, #37474f, #607d8b); color: #fff; }
+  .slide-8  { background: linear-gradient(135deg, #0d47a1, #1e88e5); color: #fff; }
+  .slide-9  { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; }
+  .slide-10 { background: linear-gradient(135deg, #263238, #455a64); color: #fff; }
+  .slide-11 { background: linear-gradient(135deg, #b71c1c, #e53935); color: #fff; }
+  .slide-12 { background: linear-gradient(135deg, #880e4f, #c2185b); color: #fff; }
+  .slide-13 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
+  .slide-14 { background: linear-gradient(135deg, #311b92, #512da8); color: #fff; }
 
   .slide-emoji { font-size: 54px; margin-bottom: 6px; }
   .slide-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; }
@@ -87,6 +88,25 @@
   }
   .meme-caption-bottom { margin-top: 8px; }
   .meme-visual { font-size: 56px; margin: 10px 0; }
+
+  .meme-photo {
+    max-width: 260px; width: 100%; border-radius: 14px; margin: 0 auto 14px; display: block;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4);
+  }
+
+  /* ---------- real examples grid ---------- */
+  .example-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .example-card {
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px; padding: 12px; display: flex; gap: 14px; align-items: center; text-align: left;
+  }
+  .example-card img { width: 84px; height: auto; border-radius: 10px; flex-shrink: 0; }
+  .example-card p { font-size: 13.5px; line-height: 1.45; }
+  .example-card strong { font-size: 14px; }
+  @media (max-width: 460px) {
+    .example-card { flex-direction: column; }
+    .example-card img { width: 140px; }
+  }
 
   /* ---------- compare grid ---------- */
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
@@ -247,7 +267,7 @@
     <div class="parte-badge">😂 Cultura da Internet</div>
   </div>
   <div class="header-info">
-    <strong>Aula de quinta-feira</strong> · 11–15 anos · 60 min · 6 formatos · 1 conecta · 4 charadas · 8 perguntas
+    <strong>Aula de quinta-feira</strong> · 11–15 anos · 60 min · 6 formatos · 4 exemplos reais · 1 conecta · 4 charadas · 8 perguntas
   </div>
 
   <!-- SLIDE 1 -->
@@ -256,15 +276,11 @@
     <div class="slide-label">Slide 1 · O Gancho</div>
     <div class="slide-title">Por que vocês entenderam essa piada sem ninguém explicar? 😂</div>
     <div class="slide-body">
-      <div class="meme-box">
-        <div class="meme-caption-top">EU ESTUDANDO PRA PROVA</div>
-        <div class="meme-visual">🐶🔥</div>
-        <div class="meme-caption-bottom">"ESTÁ TUDO BEM"</div>
-      </div>
-      <p>Vocês reconheceram esse cachorro na hora — mesmo eu não mostrando a imagem original. Isso é o poder do <strong>meme</strong>.</p>
+      <img src="../assets/meme2.jpeg" alt="Meme de gato com legenda sobre dar sinais de insanidade" class="meme-photo">
+      <p>Vocês reconheceram esse formato na hora — cara de gato borrada, letra branca embaixo. Isso é o poder do <strong>meme</strong>.</p>
       <div class="warning-box">
         <span class="warning-emoji">🧠</span>
-        Hoje a gente abre esse "cachorro" por dentro: de onde ele vem, por que se espalha tão rápido — e onde a brincadeira pode virar problema.
+        Hoje a gente abre esse "gato" por dentro: de onde vem, por que se espalha tão rápido — e onde a brincadeira pode virar problema.
       </div>
     </div>
   </div>
@@ -411,8 +427,35 @@
 
   <!-- SLIDE 7 -->
   <div class="slide slide-7">
+    <div class="slide-emoji">🖼️</div>
+    <div class="slide-label">Slide 7 · Exemplos Reais</div>
+    <div class="slide-title">Memes de verdade — ache o template, a variação e o porquê 🖼️</div>
+    <div class="slide-body">
+      <div class="example-grid">
+        <div class="example-card">
+          <img src="../assets/meme1.jpg" alt="Estátua de alienígena antiga com legenda de alarme de celular">
+          <p><strong>Humor absurdo.</strong> Uma estátua milenar de "alienígena" com legenda de app de celular. A graça é o contraste: duas coisas que não têm nada a ver, uma do lado da outra.</p>
+        </div>
+        <div class="example-card">
+          <img src="../assets/meme3.jpeg" alt="Gato proibido de entrar em uma porta, formato de print de tweet">
+          <p><strong>Remix + relacionável.</strong> Foto de gato reaproveitada (template) com uma legenda sobre nota baixa (variação). E olha o formato: um <em>print de tweet</em> — outro jeito comum de embalar meme.</p>
+        </div>
+        <div class="example-card">
+          <img src="../assets/meme4.jpeg" alt="Personagem de tirinha comentando sobre planos de vida e o fim do mundo">
+          <p><strong>Timing.</strong> Mesmo personagem, atualizado ano após ano — o "fim do mundo" mudou de data, a piada continua.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <span class="warning-emoji">🔎</span>
+        Repara: nenhum desses três se parece com o outro. <span style="font-weight:400;">Só tem uma coisa em comum — todos são imagem + legenda curta que alguém reconheceu na hora.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 -->
+  <div class="slide slide-8">
     <div class="slide-emoji">🚀</div>
-    <div class="slide-label">Slide 7 · Como Viraliza</div>
+    <div class="slide-label">Slide 8 · Como Viraliza</div>
     <div class="slide-title">O que faz um meme se espalhar rápido? 🚀</div>
     <div class="slide-body">
       <div class="compare-grid">
@@ -444,10 +487,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 8 -->
-  <div class="slide slide-8">
+  <!-- SLIDE 9 -->
+  <div class="slide slide-9">
     <div class="slide-emoji">🔗</div>
-    <div class="slide-label">Slide 8 · Conecta</div>
+    <div class="slide-label">Slide 9 · Conecta</div>
     <div class="slide-title">Ligue o termo ao significado 🔗</div>
     <div class="slide-body">
       <div class="match-container">
@@ -477,10 +520,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 9 -->
-  <div class="slide slide-9">
+  <!-- SLIDE 10 -->
+  <div class="slide slide-10">
     <div class="slide-emoji">🧩</div>
-    <div class="slide-label">Slide 9 · Charadas</div>
+    <div class="slide-label">Slide 10 · Charadas</div>
     <div class="slide-title">Charadas da Cultura de Internet 🧩</div>
     <div class="slide-body">
       <div class="riddle-list">
@@ -509,10 +552,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 10 -->
-  <div class="slide slide-10">
+  <!-- SLIDE 11 -->
+  <div class="slide slide-11">
     <div class="slide-emoji">🚨</div>
-    <div class="slide-label">Slide 10 · A Parte Séria</div>
+    <div class="slide-label">Slide 11 · A Parte Séria</div>
     <div class="slide-title">Meme engraçado pra você pode ser bullying pra outro 🚨</div>
     <div class="slide-body">
       <div class="mission-list">
@@ -528,10 +571,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 11 -->
-  <div class="slide slide-11">
+  <!-- SLIDE 12 -->
+  <div class="slide slide-12">
     <div class="slide-emoji">🎭</div>
-    <div class="slide-label">Slide 11 · Meme e Fake News</div>
+    <div class="slide-label">Slide 12 · Meme e Fake News</div>
     <div class="slide-title">Meme também mente. E engana rápido. 🎭</div>
     <div class="slide-body">
       <div class="meme-box">
@@ -548,10 +591,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 12 -->
-  <div class="slide slide-12">
+  <!-- SLIDE 13 -->
+  <div class="slide slide-13">
     <div class="slide-emoji">🧠</div>
-    <div class="slide-label">Slide 12 · Resumo</div>
+    <div class="slide-label">Slide 13 · Resumo</div>
     <div class="slide-title">O que fica da aula de hoje 🧠</div>
     <div class="slide-body">
       <table class="summary-table">
@@ -572,10 +615,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 13 · QUIZ -->
-  <div class="slide slide-13">
+  <!-- SLIDE 14 · QUIZ -->
+  <div class="slide slide-14">
     <div class="slide-emoji">🎓</div>
-    <div class="slide-label">Slide 13 · Quiz Final</div>
+    <div class="slide-label">Slide 14 · Quiz Final</div>
     <div class="slide-title">Prova do Especialista em Memes 🎓</div>
     <div class="slide-body">
       <div class="quiz-container" id="quizContainer">
@@ -701,13 +744,13 @@
 
 <div class="nav" style="margin-top:24px;">
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
-  <div class="progress" id="progressText">1 / 13</div>
+  <div class="progress" id="progressText">1 / 14</div>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
 </div>
 <div class="dots" id="dots"></div>
 
 <script>
-  const TOTAL = 13;
+  const TOTAL = 14;
   let current = 1;
 
   const dotsEl = document.getElementById('dots');
@@ -842,7 +885,7 @@
     const subs = [
       'Revise os slides 3 e 5 — o que é um meme e as 3 peças dele (template, variação, combinado).',
       'Você já pega a ideia. Falta firmar o cuidado com bullying e fake news.',
-      'Faltou pouco. Revise os slides 10 e 11 — meme e responsabilidade.',
+      'Faltou pouco. Revise os slides 11 e 12 — meme e responsabilidade.',
       'Você entende de onde vem, como viraliza e onde pode machucar. 🎉'
     ];
     document.getElementById('resultEmoji').textContent = emojis[idx];
