@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oficina de Edição no WordPad — Escritores Turbo 🚀✍️</title>
+  <title>Ilustradores do WordPad — Inserindo Imagens 🖼️✍️</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -85,12 +85,7 @@
     .slide-13 { background: linear-gradient(135deg, #4e342e, #6d4c41); color: #fff; }
     .slide-14 { background: linear-gradient(135deg, #b71c1c, #d32f2f); color: #fff; }
     .slide-15 { background: linear-gradient(135deg, #01579b, #0277bd); color: #fff; }
-    .slide-16 { background: linear-gradient(135deg, #1b5e20, #388e3c); color: #fff; }
-    .slide-17 { background: linear-gradient(135deg, #0d47a1, #283593); color: #fff; }
-    .slide-18 { background: linear-gradient(135deg, #4527a0, #5e35b1); color: #fff; }
-    .slide-19 { background: linear-gradient(135deg, #006064, #0097a7); color: #fff; }
-    .slide-20 { background: linear-gradient(135deg, #212121, #424242); color: #fff; }
-    .slide-21 { background: linear-gradient(135deg, #f57f17, #f9a825); color: #1a1a1a; }
+    .slide-16 { background: linear-gradient(135deg, #f57f17, #f9a825); color: #1a1a1a; }
 
     .slide-emoji { font-size: 68px; margin-bottom: 18px; line-height: 1; }
     .slide-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
@@ -199,21 +194,7 @@
       transition: all 0.25s;
     }
     .word-page .doc-line { display: block; transition: all 0.25s; }
-    .word-page .doc-line.gone { display: none; }
-    .word-page .sel { background: #b3d4fc; }
     .word-page ul { margin: 0; padding-left: 22px; list-style: none; }
-    .word-page ul.bullets { list-style: disc; }
-    .word-page ul li { transition: all 0.25s; }
-
-    .cursor-bar {
-      display: inline-block;
-      width: 2px;
-      height: 22px;
-      background: #1a1a1a;
-      vertical-align: text-bottom;
-      animation: blink 1s step-start infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
 
     /* Fake toolbar */
     .word-toolbar {
@@ -243,8 +224,29 @@
     }
     .tool-btn:hover { background: rgba(255,255,255,0.32); transform: scale(1.06); }
     .tool-btn.on { background: rgba(255,210,0,0.35); border-color: #ffd200; }
-    .tool-btn.danger { background: rgba(229,45,39,0.35); border-color: #e52d27; }
     .tool-hint { font-size: 13px; opacity: 0.7; margin-top: 10px; }
+
+    /* Image placeholder inside the fake document */
+    .img-box {
+      display: block;
+      margin: 12px auto;
+      background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+      border: 3px solid #0288d1;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #fff;
+    }
+    .img-box.size-none  { display: none; }
+    .img-box.size-small  { width: 90px;  height: 70px;  font-size: 26px; }
+    .img-box.size-medium { width: 170px; height: 130px; font-size: 40px; }
+    .img-box.size-big    { width: 320px; height: 240px; font-size: 60px; }
+    .img-box.squished { transform: scaleX(2.2) scaleY(0.55); }
+    .img-caption { font-size: 13px; text-align: center; opacity: 0.75; margin-top: -4px; }
+    .img-caption.italic-cap { font-style: italic; opacity: 1; }
 
     /* Review chips */
     .review-chips {
@@ -268,33 +270,6 @@
     }
     .review-chip:hover { background: rgba(255,255,255,0.28); transform: scale(1.05); }
     .review-chip.revealed { background: rgba(56,239,125,0.25); border-color: #38ef7d; }
-
-    /* Error hunt words */
-    .err-sentence {
-      background: #fff;
-      color: #1a1a1a;
-      border-radius: 10px;
-      padding: 20px 22px;
-      max-width: 480px;
-      margin: 14px auto 0;
-      font-family: 'Times New Roman', Georgia, serif;
-      font-size: 20px;
-      line-height: 2;
-    }
-    .err-word {
-      cursor: pointer;
-      border-radius: 6px;
-      padding: 1px 5px;
-      transition: all 0.2s;
-      border-bottom: 2px dashed transparent;
-    }
-    .err-word:hover { background: #eceff1; }
-    .err-word.found {
-      background: rgba(229,45,39,0.18);
-      border-bottom: 2px wavy #e52d27;
-      font-weight: 700;
-    }
-    .err-word.found::after { content: attr(data-fix); font-size: 13px; color: #2e7d32; font-weight: 800; margin-left: 5px; }
 
     /* Match game */
     .match-container { width: 100%; max-width: 620px; }
@@ -658,445 +633,320 @@
 <div class="carousel-wrapper">
 
   <div class="header-info">
-    <strong>Aula de segunda-feira</strong> · 8–11 anos · 90 min · Oficina de Edição no WordPad 🚀
-    <span class="part-badge">PARTE 2</span>
-    <span class="mission-badge">MISSÃO: EDITORES TURBO</span>
+    <strong>Aula de segunda-feira</strong> · 8–11 anos · 90 min · Inserindo Imagens no WordPad 🖼️
+    <span class="part-badge">PARTE 3</span>
+    <span class="mission-badge">MISSÃO: ILUSTRADORES</span>
   </div>
 
   <!-- SLIDE 1: Gancho + revisão -->
   <div class="slide slide-1 active">
-    <div class="slide-emoji">🚀</div>
+    <div class="slide-emoji">🖼️</div>
     <div class="slide-label">Slide 1 · Gancho + Revisão</div>
-    <div class="slide-title">Semana passada: Escritor.<br/>Hoje: <span class="hl">Editor Turbo</span>! 🚀</div>
+    <div class="slide-title">Semana passada: Editor Turbo.<br/>Hoje: <span class="hl">Ilustrador</span>! 🎨</div>
     <div class="slide-body">
       <p style="font-size:15px; opacity:0.85;">Toque nos botões e lembre o que cada um faz:</p>
       <div class="review-chips" id="revChips">
-        <div class="review-chip" onclick="revealChip(this,'deixa a letra grossa')">Botão N</div>
-        <div class="review-chip" onclick="revealChip(this,'joga o texto pro meio')">Botão ↔</div>
-        <div class="review-chip" onclick="revealChip(this,'pinta as letras')">Botão A colorido</div>
-        <div class="review-chip" onclick="revealChip(this,'letra maior ou menor')">Número 12, 20, 40</div>
-        <div class="review-chip" onclick="revealChip(this,'primeiro PINTA, depois muda!')">Regra de ouro</div>
+        <div class="review-chip" onclick="revealChip(this,'letra deitadinha')">Botão I</div>
+        <div class="review-chip" onclick="revealChip(this,'risquinho embaixo')">Botão S</div>
+        <div class="review-chip" onclick="revealChip(this,'esquerda, centro ou direita')">Alinhamento</div>
+        <div class="review-chip" onclick="revealChip(this,'cada coisa com a sua bolinha')">Marcadores</div>
+        <div class="review-chip" onclick="revealChip(this,'Ctrl + Z, a máquina do tempo')">Desfazer</div>
       </div>
       <p style="margin-top:16px; font-size:16px; opacity:0.9;">
-        Um <strong>editor</strong> pega um texto que já existe e deixa ele melhor. ✨
+        Hoje o seu texto vai ganhar <strong>fotos e desenhos</strong> de verdade! ✨
       </p>
     </div>
   </div>
 
-  <!-- SLIDE 2: O programa de hoje -->
+  <!-- SLIDE 2: Por que imagens? -->
   <div class="slide slide-2">
-    <div class="slide-emoji">📄</div>
-    <div class="slide-label">Slide 2 · O Programa</div>
-    <div class="slide-title">Nosso programa: o WordPad 📄</div>
+    <div class="slide-emoji">💡</div>
+    <div class="slide-label">Slide 2 · Por Que Imagens?</div>
+    <div class="slide-title">Uma imagem conta a história junto com você 💡</div>
     <div class="slide-body">
       <div class="compare-grid">
         <div class="compare-card">
-          <span class="compare-icon">📘</span>
-          <strong>Word</strong>
-          <p>tem 8 abas cheias de botões</p>
+          <span class="compare-icon">📄</span>
+          <strong>Só texto</strong>
+          <p>o leitor tem que imaginar tudo sozinho</p>
         </div>
         <div class="compare-card">
-          <span class="compare-icon">📗</span>
-          <strong>WordPad</strong>
-          <p>tem só 2 abas — dá para achar tudo!</p>
+          <span class="compare-icon">🖼️</span>
+          <strong>Texto + imagem</strong>
+          <p>o leitor <strong>vê</strong> o que você quis dizer</p>
         </div>
       </div>
       <p style="margin-top:18px; font-size:16px; opacity:0.9;">
-        É o <strong>irmão mais simples</strong> do Word. Os botões são os mesmos e ficam no mesmo lugar. 😉
+        Hoje você vai <span class="hl">inserir</span>, <span class="hl">redimensionar</span> e <span class="hl">posicionar</span> uma imagem no seu texto.
       </p>
     </div>
   </div>
 
-  <!-- SLIDE 3: Abrindo o arquivo -->
+  <!-- SLIDE 3: Onde estão as imagens -->
   <div class="slide slide-3">
     <div class="slide-emoji">📂</div>
-    <div class="slide-label">Slide 3 · Abrindo Seu Arquivo</div>
-    <div class="slide-title">Cadê o texto da semana passada? 📂</div>
+    <div class="slide-label">Slide 3 · Onde Estão as Imagens?</div>
+    <div class="slide-title">Cadê as fotos no computador? 📂</div>
     <div class="slide-body">
       <div class="path-steps">
-        <div class="path-step"><span class="path-num">1</span> Clique em <strong>Arquivo</strong></div>
-        <div class="path-step"><span class="path-num">2</span> Clique em <strong>Abrir</strong></div>
-        <div class="path-step"><span class="path-num">3</span> Entre na pasta <strong>Documentos</strong></div>
-        <div class="path-step"><span class="path-num">4</span> Clique em <strong>Meu Primeiro Texto</strong></div>
+        <div class="path-step"><span class="path-num">1</span> As fotos ficam guardadas na pasta <strong>Imagens</strong></div>
+        <div class="path-step"><span class="path-num">2</span> Assim como os textos ficam em <strong>Documentos</strong></div>
+        <div class="path-step"><span class="path-num">3</span> Cada tipo de arquivo mora na sua pastinha certa</div>
       </div>
       <p style="margin-top:18px; font-size:16px; opacity:0.9;">
-        O computador guardou o seu texto por <strong>uma semana inteira</strong>! 🤯<br/>
-        Foi porque você <span class="hl">salvou</span> 💾
+        Lembra da aula de <strong>tipos de arquivo</strong>? Uma foto é um arquivo, só que de imagem! 😉
       </p>
     </div>
   </div>
 
-  <!-- SLIDE 4: Regra de ouro -->
+  <!-- SLIDE 4: Inserir imagem -->
   <div class="slide slide-4">
-    <div class="slide-emoji">✋</div>
-    <div class="slide-label">Slide 4 · Regra de Ouro</div>
-    <div class="slide-title">Primeiro pinta, depois muda! ✋</div>
+    <div class="slide-emoji">➕</div>
+    <div class="slide-label">Slide 4 · Poder Novo 1</div>
+    <div class="slide-title">Poder Novo 1: Inserir Imagem ➕</div>
     <div class="slide-body">
-      <p>Vale para os poderes antigos e para os <strong>poderes novos</strong> de hoje.</p>
-      <div class="compare-grid">
-        <div class="compare-card">
-          <span class="compare-icon">1️⃣</span>
-          <strong>Pintar</strong>
-          <p>arrasta o mouse por cima da palavra</p>
-        </div>
-        <div class="compare-card">
-          <span class="compare-icon">2️⃣</span>
-          <strong>Mudar</strong>
-          <p>clica no botão do poder</p>
-        </div>
+      <div class="path-steps">
+        <div class="path-step"><span class="path-num">1</span> Clique onde o cursor deve ficar no texto</div>
+        <div class="path-step"><span class="path-num">2</span> Clique em <strong>Inserir</strong></div>
+        <div class="path-step"><span class="path-num">3</span> Clique em <strong>Imagem</strong> e escolha o arquivo</div>
       </div>
-      <p style="margin-top:18px; font-size:16px; opacity:0.9;">
-        O WordPad não adivinha. Sem pintar, ele não sabe <strong>o que</strong> mudar!
-      </p>
+      <div class="word-toolbar" style="margin-top:14px;">
+        <button class="tool-btn" onclick="insertImage()">➕ Inserir Imagem</button>
+      </div>
+      <div class="word-page" id="insertDemo" style="min-height:150px;">
+        <span class="doc-line">Meu animal favorito é o cachorro.</span>
+        <div class="img-box size-none" id="insertBox">🐶</div>
+      </div>
+      <div class="tool-hint" id="insertHint">Clique no botão para colocar a foto exatamente onde o cursor estava.</div>
     </div>
   </div>
 
-  <!-- SLIDE 5: Itálico -->
+  <!-- SLIDE 5: Redimensionar -->
   <div class="slide slide-5">
-    <div class="slide-emoji">✨</div>
-    <div class="slide-label">Slide 5 · Poder Novo 1</div>
-    <div class="slide-title">Poder Novo 1: Itálico ✨</div>
+    <div class="slide-emoji">🔍</div>
+    <div class="slide-label">Slide 5 · Poder Novo 2</div>
+    <div class="slide-title">Poder Novo 2: Redimensionar 🔍</div>
     <div class="slide-body">
-      <p style="font-size:15px; opacity:0.85;">O botão <strong>I</strong> deixa a letra <em>deitadinha</em>, como se estivesse com sono. 😴</p>
+      <p style="font-size:15px; opacity:0.85;">Toque no <strong>cantinho</strong> da imagem para deixá-la maior ou menor.</p>
       <div class="word-toolbar">
-        <button class="tool-btn" id="italBtn" onclick="toggleItalic()" style="font-family:serif; font-style:italic;">I</button>
+        <button class="tool-btn" onclick="resizeImg('small')">Pequena</button>
+        <button class="tool-btn on" id="resizeMediumBtn" onclick="resizeImg('medium')">Média</button>
+        <button class="tool-btn" onclick="resizeImg('big')">Grande</button>
       </div>
-      <div class="word-page" id="italDemo">
-        Meu desenho favorito é Bob Esponja.
+      <div class="word-page" style="display:flex; justify-content:center; min-height:170px;">
+        <div class="img-box size-medium" id="resizeBox">🐱</div>
       </div>
-      <div class="tool-hint">Serve para nome de <strong>filme</strong>, <strong>livro</strong> e <strong>desenho</strong>. Atalho: <span class="kbd">Ctrl + I</span></div>
+      <div class="tool-hint">Puxando pelo <strong>cantinho</strong>, a foto cresce sem ficar torta!</div>
     </div>
   </div>
 
-  <!-- SLIDE 6: Sublinhado -->
+  <!-- SLIDE 6: Cuidado, não estique do lado -->
   <div class="slide slide-6">
-    <div class="slide-emoji">📏</div>
-    <div class="slide-label">Slide 6 · Poder Novo 2</div>
-    <div class="slide-title">Poder Novo 2: Sublinhado 📏</div>
+    <div class="slide-emoji">😵</div>
+    <div class="slide-label">Slide 6 · Cuidado!</div>
+    <div class="slide-title">Puxou do lado? Ficou torta! 😵</div>
     <div class="slide-body">
-      <p style="font-size:15px; opacity:0.85;">O botão <strong>S</strong> coloca um <u>risquinho embaixo</u> da palavra.</p>
       <div class="word-toolbar">
-        <button class="tool-btn" id="undBtn" onclick="toggleUnderline()" style="font-family:serif; text-decoration:underline;">S</button>
+        <button class="tool-btn" onclick="squishToggle()" id="squishBtn">Puxar do lado</button>
       </div>
-      <div class="word-page" id="undDemo">
-        Tenho 9 anos.
+      <div class="word-page" style="display:flex; justify-content:center; min-height:170px;">
+        <div class="img-box size-medium" id="squishBox">🐢</div>
       </div>
-      <div class="tool-hint">É como marcar no caderno! Atalho: <span class="kbd">Ctrl + U</span></div>
+      <div class="tool-hint" id="squishHint">Puxar de <strong>lado</strong> ou de <strong>cima</strong> sozinho espreme a imagem.</div>
+      <p style="margin-top:14px; font-size:16px; opacity:0.9;">
+        Sempre puxe pelo <span class="hl">cantinho</span> — assim ela cresce <strong>igual</strong> nos dois lados.
+      </p>
     </div>
   </div>
 
-  <!-- SLIDE 7: Os três juntos -->
+  <!-- SLIDE 7: Posicionar -->
   <div class="slide slide-7">
-    <div class="slide-emoji">🎭</div>
-    <div class="slide-label">Slide 7 · Os Três Juntos</div>
-    <div class="slide-title">N + I + S ao mesmo tempo? 🎭</div>
-    <div class="slide-body">
-      <div class="word-toolbar">
-        <button class="tool-btn" id="trioBoldBtn" onclick="trioToggle('bold')" style="font-family:serif;">N</button>
-        <button class="tool-btn" id="trioItalBtn" onclick="trioToggle('ital')" style="font-family:serif; font-style:italic;">I</button>
-        <button class="tool-btn" id="trioUndBtn" onclick="trioToggle('und')" style="font-family:serif; text-decoration:underline;">S</button>
-      </div>
-      <div class="word-page" id="trioDemo">
-        Gosto de jogar bola no recreio.
-      </div>
-      <div class="tool-hint" id="trioHint">Ligue os três e veja o que acontece...</div>
-    </div>
-  </div>
-
-  <!-- SLIDE 8: Alinhamentos -->
-  <div class="slide slide-8">
     <div class="slide-emoji">📐</div>
-    <div class="slide-label">Slide 8 · Alinhamento</div>
-    <div class="slide-title">Os três lugares do texto 📐</div>
+    <div class="slide-label">Slide 7 · Poder Novo 3</div>
+    <div class="slide-title">Poder Novo 3: Posicionar a Foto 📐</div>
     <div class="slide-body">
       <div class="word-toolbar">
-        <button class="tool-btn on" id="alLeft" onclick="setAlign('left')">⬅ Esquerda</button>
-        <button class="tool-btn" id="alCenter" onclick="setAlign('center')">↔ Centro</button>
-        <button class="tool-btn" id="alRight" onclick="setAlign('right')">➡ Direita</button>
+        <button class="tool-btn on" id="posLeft" onclick="setImgAlign('left')">⬅ Esquerda</button>
+        <button class="tool-btn" id="posCenter" onclick="setImgAlign('center')">↔ Centro</button>
+        <button class="tool-btn" id="posRight" onclick="setImgAlign('right')">➡ Direita</button>
       </div>
-      <div class="word-page" id="alignDemo" style="min-height:90px;">
-        03/08/2026
+      <div class="word-page" id="posDemo" style="min-height:150px; text-align:left;">
+        <div class="img-box size-small" id="posBox" style="margin:8px 0;">🌳</div>
       </div>
-      <div class="key-grid three" style="margin-top:14px;">
-        <div class="key-card"><span class="key-icon">⬅️</span><strong>Esquerda</strong><span>o texto normal</span></div>
-        <div class="key-card"><span class="key-icon">↔️</span><strong>Centro</strong><span>os títulos</span></div>
-        <div class="key-card"><span class="key-icon">➡️</span><strong>Direita</strong><span>a data, o nome</span></div>
-      </div>
+      <div class="tool-hint">Os mesmos botões de alinhar texto funcionam para imagem também! 😉</div>
     </div>
   </div>
 
-  <!-- SLIDE 9: Lista com marcadores -->
+  <!-- SLIDE 8: Legenda -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🏷️</div>
+    <div class="slide-label">Slide 8 · Combinando Poderes</div>
+    <div class="slide-title">Uma legenda embaixo da foto 🏷️</div>
+    <div class="slide-body">
+      <p style="font-size:15px; opacity:0.85;">Uma <strong>legenda</strong> explica o que a foto mostra. Vamos deixá-la em itálico, como já aprendemos!</p>
+      <div class="word-toolbar">
+        <button class="tool-btn" id="capItalBtn" onclick="toggleCaption()">I</button>
+      </div>
+      <div class="word-page" style="display:flex; flex-direction:column; align-items:center; min-height:170px;">
+        <div class="img-box size-medium">🦋</div>
+        <div class="img-caption" id="captionText">Minha borboleta favorita</div>
+      </div>
+      <div class="tool-hint">Pinte a legenda e clique no botão <strong>I</strong> — o mesmo poder da aula passada!</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Cuidado com direitos autorais -->
   <div class="slide slide-9">
-    <div class="slide-emoji">🔹</div>
-    <div class="slide-label">Slide 9 · Lista com Marcadores</div>
-    <div class="slide-title">Cada coisa com a sua bolinha 🔹</div>
-    <div class="slide-body">
-      <div class="word-toolbar">
-        <button class="tool-btn" id="bulletBtn" onclick="toggleBullets()">• Marcadores</button>
-      </div>
-      <div class="word-page" id="listDemo">
-        Minhas 3 coisas favoritas:
-        <ul id="listUl">
-          <li>sorvete</li>
-          <li>futebol</li>
-          <li>desenho</li>
-        </ul>
-      </div>
-      <div class="tool-hint">Pinte as linhas e clique no botão. Ficou mais fácil de ler, né? 😍</div>
-    </div>
-  </div>
-
-  <!-- SLIDE 10: Máquina do tempo (desfazer) -->
-  <div class="slide slide-10">
-    <div class="slide-emoji">⏪</div>
-    <div class="slide-label">Slide 10 · A Máquina do Tempo</div>
-    <div class="slide-title">Apagou sem querer? Volta! ⏪</div>
-    <div class="slide-body">
-      <div class="word-toolbar">
-        <button class="tool-btn danger" onclick="undoDemoDelete()">🗑️ Apagar uma linha</button>
-        <button class="tool-btn" onclick="undoDemoUndo()">⏪ Ctrl + Z</button>
-      </div>
-      <div class="word-page" id="undoDemo">
-        <span class="doc-line">Meu nome é Ana.</span>
-        <span class="doc-line">Tenho 9 anos.</span>
-        <span class="doc-line">Gosto de desenhar.</span>
-      </div>
-      <div class="tool-hint" id="undoHint">Apague as linhas e traga todas de volta com <span class="kbd">Ctrl + Z</span></div>
-      <p style="margin-top:12px; font-size:16px; opacity:0.9;">
-        Agora você pode <strong>experimentar sem medo</strong>! 💪
-      </p>
-    </div>
-  </div>
-
-  <!-- SLIDE 11: Refazer -->
-  <div class="slide slide-11">
-    <div class="slide-emoji">⏩</div>
-    <div class="slide-label">Slide 11 · Refazer</div>
-    <div class="slide-title">A máquina também anda pra frente ⏩</div>
+    <div class="slide-emoji">⚠️</div>
+    <div class="slide-label">Slide 9 · Cuidado!</div>
+    <div class="slide-title">Nem toda imagem pode ser usada ⚠️</div>
     <div class="slide-body">
       <div class="compare-grid">
         <div class="compare-card">
-          <span class="compare-icon">⏪</span>
-          <strong>Ctrl + Z</strong>
-          <p><strong>Desfaz</strong> o que você acabou de fazer</p>
+          <span class="compare-icon">🖍️</span>
+          <strong>Pode usar</strong>
+          <p>desenho seu ou foto tirada por você/família</p>
         </div>
         <div class="compare-card">
-          <span class="compare-icon">⏩</span>
-          <strong>Ctrl + Y</strong>
-          <p><strong>Refaz</strong> o que você desfez</p>
+          <span class="compare-icon">🚫</span>
+          <strong>Peça ajuda</strong>
+          <p>foto de qualquer lugar da internet — pode ter dono</p>
         </div>
       </div>
-      <div class="word-toolbar" style="margin-top:16px;">
-        <button class="tool-btn" onclick="redoDemo('undo')">⏪ Ctrl + Z</button>
-        <button class="tool-btn" onclick="redoDemo('redo')">⏩ Ctrl + Y</button>
-      </div>
-      <div class="word-page" id="redoDemoPage" style="min-height:80px;">
-        <span id="redoText">Gosto de sorvete de chocolate.</span>
-      </div>
-      <div class="tool-hint">Pode apertar <strong>várias vezes</strong> seguidas!</div>
-    </div>
-  </div>
-
-  <!-- SLIDE 12: Copiar e colar -->
-  <div class="slide slide-12">
-    <div class="slide-emoji">📋</div>
-    <div class="slide-label">Slide 12 · Copiar e Colar</div>
-    <div class="slide-title">Copiar é tirar uma fotocópia 📋</div>
-    <div class="slide-body">
-      <div class="word-toolbar">
-        <button class="tool-btn" onclick="clipAction('copy')">Ctrl + C</button>
-        <button class="tool-btn" onclick="clipAction('cut')">Ctrl + X</button>
-        <button class="tool-btn" onclick="clipAction('paste')">Ctrl + V</button>
-      </div>
-      <div class="word-page" id="clipDemo" style="min-height:110px;">
-        <span class="doc-line" id="clipLine">Minhas 3 coisas favoritas:</span>
-      </div>
-      <div class="tool-hint" id="clipHint">Copie a linha e cole! Área de transferência: <strong id="clipBoard">(vazia)</strong></div>
-      <p style="margin-top:10px; font-size:15px; opacity:0.9;">
-        <strong>Copiar</strong> = o original fica · <strong>Cortar</strong> = o original sai do lugar
-      </p>
-    </div>
-  </div>
-
-  <!-- SLIDE 13: Selecionar tudo -->
-  <div class="slide slide-13">
-    <div class="slide-emoji">🖐️</div>
-    <div class="slide-label">Slide 13 · Selecionar Tudo</div>
-    <div class="slide-title">Pinta tudo de uma vez! 🖐️</div>
-    <div class="slide-body">
-      <p style="font-size:15px; opacity:0.85;"><span class="kbd">Ctrl + A</span> pinta o texto <strong>inteiro</strong> num piscar de olhos.</p>
-      <div class="word-toolbar">
-        <button class="tool-btn" id="selAllBtn" onclick="toggleSelectAll()">🖐️ Ctrl + A</button>
-      </div>
-      <div class="word-page" id="selDemo">
-        <span class="sel-target">Meu nome é Ana. Tenho 9 anos. Gosto de desenhar. Meu desenho favorito é Bob Esponja.</span>
-      </div>
-      <div class="tool-hint">Bem mais rápido que arrastar o mouse até o fim da página! 🏃</div>
-    </div>
-  </div>
-
-  <!-- SLIDE 14: Sem risco vermelho -->
-  <div class="slide slide-14">
-    <div class="slide-emoji">🔎</div>
-    <div class="slide-label">Slide 14 · Cuidado!</div>
-    <div class="slide-title">Aqui não tem risco vermelho 🔎</div>
-    <div class="slide-body">
-      <p style="font-size:15px; opacity:0.9;">Ache os erros nesta frase — toque nas palavras!</p>
-      <div class="err-sentence">
-        <span class="err-word" onclick="markErr(this)" data-fix="(Eu)">eu</span>
-        gosto muito de
-        <span class="err-word" onclick="markErr(this)" data-fix="(sorvete)">sorveti</span>
-        e de
-        <span class="err-word" onclick="markErr(this)" data-fix="(jogar)">joga</span>
-        <span class="err-word" onclick="markErr(this)" data-fix="(bola.)">bola</span>
-      </div>
-      <div class="tool-hint" id="errHint">Achou <strong id="errCount">0</strong> de 4</div>
-      <p style="margin-top:14px; font-size:16px; opacity:0.95;">
-        O WordPad <strong>não avisa</strong> erro de português. Quem revisa é <span class="hl">você</span>!
-      </p>
       <div class="ask-box">
-        <div class="ask-label">Truque de revisão</div>
+        <div class="ask-label">Truque de ilustrador</div>
         <ul>
-          <li>Leia o seu texto <strong>em voz baixa</strong> — o ouvido pega o que o olho não vê</li>
-          <li>Peça pro colega do lado ler também</li>
+          <li>Prefira <strong>seus próprios</strong> desenhos e fotos</li>
+          <li>Se for da internet, <strong>peça ajuda</strong> a um adulto antes</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 15: Salvar de novo -->
-  <div class="slide slide-15">
-    <div class="slide-emoji">💾</div>
-    <div class="slide-label">Slide 15 · Salvar de Novo</div>
-    <div class="slide-title">Salvar Como × Salvar 💾</div>
+  <!-- SLIDE 10: Foto gigante -->
+  <div class="slide slide-10">
+    <div class="slide-emoji">🙈</div>
+    <div class="slide-label">Slide 10 · Cuidado!</div>
+    <div class="slide-title">Foto gigante toma a página toda 🙈</div>
     <div class="slide-body">
-      <div class="compare-grid">
-        <div class="compare-card">
-          <span class="compare-icon">🆕</span>
-          <strong>Salvar Como</strong>
-          <p>usei na semana passada, quando o arquivo <strong>ainda não tinha nome</strong></p>
-        </div>
-        <div class="compare-card">
-          <span class="compare-icon">💾</span>
-          <strong>Salvar</strong>
-          <p>uso hoje: o arquivo <strong>já tem nome</strong>, só guarda as mudanças</p>
-        </div>
+      <div class="word-toolbar">
+        <button class="tool-btn" onclick="giantToggle()" id="giantBtn">📏 Deixar gigante</button>
       </div>
-      <p style="margin-top:18px; font-size:17px;">
-        Atalho de campeão: <span class="kbd">Ctrl + S</span>
-      </p>
-      <div class="tool-hint">Aperte de vez em quando enquanto escreve. Salvar nunca é demais! 😉</div>
+      <div class="word-page" id="giantDemo" style="min-height:150px;">
+        <span class="doc-line" id="giantLine1">Ontem eu fui ao parque com minha família.</span>
+        <div class="img-box size-small" id="giantBox">🌞</div>
+        <span class="doc-line" id="giantLine2">Foi um dia muito divertido!</span>
+      </div>
+      <div class="tool-hint" id="giantHint">Uma foto muito grande pode <strong>esconder</strong> o resto do seu texto!</div>
     </div>
   </div>
 
-  <!-- SLIDE 16: Oficina de comandos -->
-  <div class="slide slide-16">
+  <!-- SLIDE 11: Oficina de comandos -->
+  <div class="slide slide-11">
     <div class="slide-emoji">🎨</div>
-    <div class="slide-label">Slide 16 · Atividade — Oficina de Comandos</div>
+    <div class="slide-label">Slide 11 · Atividade — Oficina de Comandos</div>
     <div class="slide-title">Oficina de Comandos! 🎨</div>
     <div class="slide-body">
-      <p style="font-size:15px; opacity:0.85; margin-bottom:8px;">O professor fala o comando. Toque para ver o botão ou o atalho!</p>
+      <p style="font-size:15px; opacity:0.85; margin-bottom:8px;">O professor fala o comando. Toque para ver o caminho!</p>
       <div class="review-chips" id="oficinaChips">
-        <div class="review-chip" onclick="revealOficina(this,'pinte o desenho + botão I')">Desenho favorito em itálico</div>
-        <div class="review-chip" onclick="revealOficina(this,'pinte a idade + botão S')">Idade sublinhada</div>
-        <div class="review-chip" onclick="revealOficina(this,'pinte a data + botão ➡ Direita')">Data no cantinho direito</div>
-        <div class="review-chip" onclick="revealOficina(this,'pinte as 3 linhas + botão •')">3 coisas favoritas em lista</div>
-        <div class="review-chip" onclick="revealOficina(this,'Ctrl + Z três vezes')">Desfaça 3 coisas</div>
-        <div class="review-chip" onclick="revealOficina(this,'Ctrl + A')">Pinte o texto inteiro</div>
-        <div class="review-chip" onclick="revealOficina(this,'Ctrl + S')">Guarde as mudanças</div>
+        <div class="review-chip" onclick="revealOficina(this,'Inserir → Imagem')">Colocar uma foto</div>
+        <div class="review-chip" onclick="revealOficina(this,'puxe pelo cantinho')">Deixar a foto maior</div>
+        <div class="review-chip" onclick="revealOficina(this,'botão ➡ Direita')">Foto no canto direito</div>
+        <div class="review-chip" onclick="revealOficina(this,'pinte a legenda + botão I')">Legenda em itálico</div>
+        <div class="review-chip" onclick="revealOficina(this,'Ctrl + S')">Guardar as mudanças</div>
       </div>
-      <div class="tool-hint">Lembre sempre: primeiro pinta, depois muda! ✋</div>
+      <div class="tool-hint">Lembre sempre: puxe pelo cantinho, nunca do lado! ✋</div>
     </div>
   </div>
 
-  <!-- SLIDE 17: Match game -->
-  <div class="slide slide-17">
+  <!-- SLIDE 12: Match game -->
+  <div class="slide slide-12">
     <div class="slide-emoji">🎯</div>
-    <div class="slide-label">Slide 17 · Conecta os Atalhos</div>
-    <div class="slide-title">Conecta os atalhos! 🎯</div>
+    <div class="slide-label">Slide 12 · Conecta os Comandos</div>
+    <div class="slide-title">Conecta os comandos! 🎯</div>
     <div class="slide-body" style="width:100%; max-width:600px;">
       <div class="match-container">
         <div class="match-cols">
           <div>
-            <div class="match-col-title">Atalho</div>
-            <div class="match-item" data-match="undo" onclick="selectMatch(this)">⏪ Ctrl + Z</div>
-            <div class="match-item" data-match="copy" onclick="selectMatch(this)">📋 Ctrl + C</div>
-            <div class="match-item" data-match="paste" onclick="selectMatch(this)">📌 Ctrl + V</div>
-            <div class="match-item" data-match="all" onclick="selectMatch(this)">🖐️ Ctrl + A</div>
-            <div class="match-item" data-match="save" onclick="selectMatch(this)">💾 Ctrl + S</div>
+            <div class="match-col-title">Comando</div>
+            <div class="match-item" data-match="insert" onclick="selectMatch(this)">➕ Inserir</div>
+            <div class="match-item" data-match="corner" onclick="selectMatch(this)">🔍 Cantinho</div>
+            <div class="match-item" data-match="side" onclick="selectMatch(this)">😵 Puxar do lado</div>
+            <div class="match-item" data-match="align" onclick="selectMatch(this)">📐 Alinhar</div>
+            <div class="match-item" data-match="caption" onclick="selectMatch(this)">🏷️ Legenda</div>
           </div>
           <div>
             <div class="match-col-title">O que faz</div>
-            <div class="match-item" data-match="all" onclick="selectMatch(this)">Pinta o texto inteiro</div>
-            <div class="match-item" data-match="save" onclick="selectMatch(this)">Guarda as mudanças</div>
-            <div class="match-item" data-match="undo" onclick="selectMatch(this)">Desfaz o que você fez</div>
-            <div class="match-item" data-match="paste" onclick="selectMatch(this)">Cola onde o cursor está</div>
-            <div class="match-item" data-match="copy" onclick="selectMatch(this)">Tira uma fotocópia</div>
+            <div class="match-item" data-match="align" onclick="selectMatch(this)">Muda o lugar da foto</div>
+            <div class="match-item" data-match="caption" onclick="selectMatch(this)">Explica o que a foto mostra</div>
+            <div class="match-item" data-match="insert" onclick="selectMatch(this)">Coloca a foto no texto</div>
+            <div class="match-item" data-match="side" onclick="selectMatch(this)">Deixa a foto torta</div>
+            <div class="match-item" data-match="corner" onclick="selectMatch(this)">Redimensiona sem distorcer</div>
           </div>
         </div>
         <div class="match-score" id="matchScore"></div>
-        <div class="match-result" id="matchResult">🎉 Você virou craque nos atalhos!</div>
-        <button class="match-next-btn" id="matchNextBtn" onclick="goToSlide(18)">Próximo →</button>
+        <div class="match-result" id="matchResult">🎉 Você virou craque nas imagens!</div>
+        <button class="match-next-btn" id="matchNextBtn" onclick="goToSlide(13)">Próximo →</button>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 18: Verdadeiro ou Falso -->
-  <div class="slide slide-18">
+  <!-- SLIDE 13: Verdadeiro ou Falso -->
+  <div class="slide slide-13">
     <div class="slide-emoji">🤔</div>
-    <div class="slide-label">Slide 18 · Verdadeiro ou Falso?</div>
+    <div class="slide-label">Slide 13 · Verdadeiro ou Falso?</div>
     <div class="slide-title">Verdadeiro ou Falso? 🤔</div>
     <div class="slide-body">
       <p style="font-size:15px; opacity:0.75; margin-bottom:12px;">Toque nos cards para ver a resposta!</p>
       <div class="flip-grid">
         <div class="flip-card" onclick="flipCard(this, true)">
-          <span class="fc-text">"Ctrl + Z traz de volta o que eu apaguei sem querer."</span>
-          <span class="fc-answer">✅ Verdade! É a máquina do tempo.</span>
+          <span class="fc-text">"Para redimensionar sem distorcer, eu puxo pelo cantinho."</span>
+          <span class="fc-answer">✅ Verdade! O cantinho mantém a proporção.</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, false)">
-          <span class="fc-text">"O WordPad avisa quando eu escrevo errado."</span>
-          <span class="fc-answer">❌ Falso! Aqui não tem risco vermelho.</span>
+          <span class="fc-text">"Posso usar qualquer foto da internet sem pedir ajuda."</span>
+          <span class="fc-answer">❌ Falso! Melhor pedir ajuda de um adulto antes.</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, true)">
-          <span class="fc-text">"O botão I deixa a letra deitadinha."</span>
-          <span class="fc-answer">✅ Verdade! É o itálico.</span>
+          <span class="fc-text">"Uma legenda pode ficar em itálico."</span>
+          <span class="fc-answer">✅ Verdade! É só usar o botão I de novo.</span>
         </div>
         <div class="flip-card" onclick="flipCard(this, false)">
-          <span class="fc-text">"Quando eu copio uma palavra, ela sai do lugar."</span>
-          <span class="fc-answer">❌ Falso! Isso é cortar (Ctrl+X).</span>
+          <span class="fc-text">"Uma foto gigante nunca atrapalha o texto."</span>
+          <span class="fc-answer">❌ Falso! Ela pode esconder o resto do texto.</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 19: Charada -->
-  <div class="slide slide-19">
+  <!-- SLIDE 14: Charada -->
+  <div class="slide slide-14">
     <div class="slide-emoji">🧩</div>
-    <div class="slide-label">Slide 19 · Charada do Editor</div>
-    <div class="slide-title">Charada do Editor! 🧩</div>
+    <div class="slide-label">Slide 14 · Charada do Ilustrador</div>
+    <div class="slide-title">Charada do Ilustrador! 🧩</div>
     <div class="slide-body">
       <div class="charada-box">
-        "Sou duas teclinhas apertadas juntas,<br/>
-        volto no tempo e conserto o susto.<br/>
-        Apagou tudo? Eu traço de volta.<br/>
-        Quem sou eu?"
+        "Eu moro no cantinho da figura,<br/>
+        me puxe com jeito, sem pressa e sem apura.<br/>
+        Faço a foto crescer sem ficar torta,<br/>
+        Quem sou eu, que abro essa porta?"
       </div>
       <div class="charada-input-row">
         <input class="charada-input" id="charadaInput" type="text" placeholder="Digite a resposta..." />
         <button class="charada-btn" onclick="checkCharada()">Tentar</button>
       </div>
       <div class="charada-feedback" id="charadaFeedback"></div>
-      <div class="charada-hint">Dica: começa com Ctrl e é a máquina do tempo ⏪</div>
+      <div class="charada-hint">Dica: é o pontinho no canto da imagem 🔍</div>
     </div>
   </div>
 
-  <!-- SLIDE 20: Quiz -->
-  <div class="slide slide-20">
+  <!-- SLIDE 15: Quiz -->
+  <div class="slide slide-15">
     <div class="quiz-container" id="quizContainer">
       <div class="quiz-header">
         <div class="quiz-emoji">🧠</div>
-        <h2>Quiz — Oficina de Edição</h2>
-        <p>5 perguntas · Você já é um Editor Turbo?</p>
+        <h2>Quiz — Ilustradores do WordPad</h2>
+        <p>5 perguntas · Você já sabe inserir imagens?</p>
       </div>
 
       <div class="quiz-score-bar">
@@ -1107,12 +957,12 @@
       <!-- Q1 -->
       <div class="question-card active" id="qq1">
         <div class="q-number">Pergunta 1 de 5</div>
-        <div class="q-text">Você apagou uma linha sem querer. O que você aperta?</div>
+        <div class="q-text">Onde ficam guardadas as fotos no computador?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">A</span> Ctrl + S</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq1','qq2')"><span class="opt-letter">B</span> Ctrl + Z</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">C</span> Ctrl + C</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">D</span> Delete</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">A</span> Pasta Documentos</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq1','qq2')"><span class="opt-letter">B</span> Pasta Imagens</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">C</span> Pasta Música</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq1','qq2')"><span class="opt-letter">D</span> Lixeira</button>
         </div>
         <div class="feedback-msg" id="fb1"></div>
         <button class="next-q-btn" id="nxt1" onclick="nextQ('qq1','qq2',2)">Próxima →</button>
@@ -1121,12 +971,12 @@
       <!-- Q2 -->
       <div class="question-card" id="qq2">
         <div class="q-number">Pergunta 2 de 5</div>
-        <div class="q-text">O botão <strong>I</strong> faz o quê com a letra?</div>
+        <div class="q-text">Qual caminho coloca uma imagem no seu texto?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">A</span> Deixa ela grossa</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">B</span> Pinta de azul</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq2','qq3')"><span class="opt-letter">C</span> Deixa ela deitadinha (itálico)</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">D</span> Coloca um risco embaixo</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq2','qq3')"><span class="opt-letter">A</span> Inserir → Imagem</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">B</span> Arquivo → Salvar</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">C</span> Editar → Desfazer</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq2','qq3')"><span class="opt-letter">D</span> Ctrl + Z</button>
         </div>
         <div class="feedback-msg" id="fb2"></div>
         <button class="next-q-btn" id="nxt2" onclick="nextQ('qq2','qq3',3)">Próxima →</button>
@@ -1135,12 +985,12 @@
       <!-- Q3 -->
       <div class="question-card" id="qq3">
         <div class="q-number">Pergunta 3 de 5</div>
-        <div class="q-text">Onde a gente costuma colocar a <strong>data</strong> no texto?</div>
+        <div class="q-text">Como deixar a foto maior <strong>sem</strong> distorcer?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">A</span> Centralizada no meio</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq3','qq4')"><span class="opt-letter">B</span> Alinhada à direita</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">C</span> Em negrito e vermelho</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">D</span> Em lista com bolinhas</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">A</span> Puxando só de cima</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">B</span> Puxando só do lado</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq3','qq4')"><span class="opt-letter">C</span> Puxando pelo cantinho</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq3','qq4')"><span class="opt-letter">D</span> Apertando Ctrl + S</button>
         </div>
         <div class="feedback-msg" id="fb3"></div>
         <button class="next-q-btn" id="nxt3" onclick="nextQ('qq3','qq4',4)">Próxima →</button>
@@ -1149,12 +999,12 @@
       <!-- Q4 -->
       <div class="question-card" id="qq4">
         <div class="q-number">Pergunta 4 de 5</div>
-        <div class="q-text">Você escreveu "sorveti" no WordPad. O que acontece?</div>
+        <div class="q-text">Você achou uma foto na internet para usar no seu texto. O que fazer?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">A</span> Aparece um risco vermelho embaixo</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">B</span> O programa corrige sozinho</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq4','qq5')"><span class="opt-letter">C</span> Nada — quem tem que achar o erro sou eu</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">D</span> O texto fica todo apagado</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">A</span> Usar direto, sem falar com ninguém</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq4','qq5')"><span class="opt-letter">B</span> Pedir ajuda a um adulto antes</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">C</span> Apagar a foto sem olhar</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq4','qq5')"><span class="opt-letter">D</span> Deixar ela gigante na página</button>
         </div>
         <div class="feedback-msg" id="fb4"></div>
         <button class="next-q-btn" id="nxt4" onclick="nextQ('qq4','qq5',5)">Próxima →</button>
@@ -1163,12 +1013,12 @@
       <!-- Q5 -->
       <div class="question-card" id="qq5">
         <div class="q-number">Pergunta 5 de 5</div>
-        <div class="q-text">Qual é a diferença entre <strong>copiar</strong> e <strong>cortar</strong>?</div>
+        <div class="q-text">Para que serve uma legenda embaixo da foto?</div>
         <div class="options">
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">A</span> Nenhuma, é a mesma coisa</button>
-          <button class="option-btn" onclick="answer(this,'correct','qq5',null)"><span class="opt-letter">B</span> Copiar deixa o original; cortar tira do lugar</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">C</span> Cortar salva o arquivo</button>
-          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">D</span> Copiar apaga o texto</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">A</span> Para apagar a foto</button>
+          <button class="option-btn" onclick="answer(this,'correct','qq5',null)"><span class="opt-letter">B</span> Para explicar o que a foto mostra</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">C</span> Para deixar a foto maior</button>
+          <button class="option-btn" onclick="answer(this,'wrong','qq5',null)"><span class="opt-letter">D</span> Para salvar o arquivo</button>
         </div>
         <div class="feedback-msg" id="fb5"></div>
         <button class="next-q-btn" id="nxt5" onclick="showResult()">Ver resultado →</button>
@@ -1177,8 +1027,8 @@
       <!-- Result -->
       <div class="quiz-result" id="quizResult">
         <div class="result-emoji" id="resultEmoji">🏆</div>
-        <div class="result-title" id="resultTitle">Editor Turbo!</div>
-        <div class="result-subtitle" id="resultSubtitle">Você já sabe editar de verdade!</div>
+        <div class="result-title" id="resultTitle">Ilustrador Craque!</div>
+        <div class="result-subtitle" id="resultSubtitle">Você já sabe ilustrar de verdade!</div>
         <div class="result-score" id="resultScore">5</div>
         <div class="result-max">de 5 pontos</div>
         <button class="restart-btn" onclick="restartQuiz()">Jogar de novo 🔄</button>
@@ -1186,10 +1036,10 @@
     </div>
   </div>
 
-  <!-- SLIDE 21: Conquistas + fechamento -->
-  <div class="slide slide-21">
+  <!-- SLIDE 16: Conquistas + fechamento -->
+  <div class="slide slide-16">
     <div class="slide-emoji">🏅</div>
-    <div class="slide-label">Slide 21 · Conquistas</div>
+    <div class="slide-label">Slide 16 · Conquistas</div>
     <div class="slide-title" style="color:#1a1a1a;">Suas Conquistas! 🏅</div>
     <div class="slide-body" style="width:100%; max-width:560px; color:#1a1a1a;">
       <div class="achievement-grid">
@@ -1197,44 +1047,44 @@
           <span class="ach-lock">🔒</span>
           <span class="ach-locked-text">Oficina de Comandos completa</span>
           <span class="ach-icon">🎨</span>
-          <span class="ach-rule" style="color:#1a1a1a;">Editor Caprichoso!</span>
+          <span class="ach-rule" style="color:#1a1a1a;">Ilustrador Caprichoso!</span>
           <span class="ach-check" style="color:#1a6b3c;">✅ Desbloqueado!</span>
         </div>
         <div class="ach-card" id="ach2" onclick="unlockAch('ach2')">
           <span class="ach-lock">🔒</span>
-          <span class="ach-locked-text">Ctrl + Z usado</span>
-          <span class="ach-icon">⏪</span>
-          <span class="ach-rule" style="color:#1a1a1a;">Piloto da Máquina do Tempo!</span>
+          <span class="ach-locked-text">Imagem inserida no slide 4</span>
+          <span class="ach-icon">➕</span>
+          <span class="ach-rule" style="color:#1a1a1a;">Mestre do Inserir!</span>
           <span class="ach-check" style="color:#1a6b3c;">✅ Desbloqueado!</span>
         </div>
         <div class="ach-card" id="ach3" onclick="unlockAch('ach3')">
           <span class="ach-lock">🔒</span>
-          <span class="ach-locked-text">Os 4 erros encontrados</span>
-          <span class="ach-icon">🔎</span>
-          <span class="ach-rule" style="color:#1a1a1a;">Caçador de Erros!</span>
+          <span class="ach-locked-text">Legenda em itálico feita</span>
+          <span class="ach-icon">🏷️</span>
+          <span class="ach-rule" style="color:#1a1a1a;">Caçador de Legendas!</span>
           <span class="ach-check" style="color:#1a6b3c;">✅ Desbloqueado!</span>
         </div>
         <div class="ach-card" id="ach4" onclick="unlockAch('ach4')">
           <span class="ach-lock">🔒</span>
           <span class="ach-locked-text">Quiz 5/5</span>
-          <span class="ach-icon">🚀</span>
-          <span class="ach-rule" style="color:#1a1a1a;">Editor Turbo!</span>
+          <span class="ach-icon">🖼️</span>
+          <span class="ach-rule" style="color:#1a1a1a;">Ilustrador Craque!</span>
           <span class="ach-check" style="color:#1a6b3c;">✅ Desbloqueado!</span>
         </div>
       </div>
       <p style="margin-top:16px; font-size:16px; font-weight:700;">
-        🚀 Hoje você abriu, editou, desfez, colou e salvou.<br/>
-        Você é um <strong>Editor Turbo</strong>!
+        🖼️ Hoje você inseriu, redimensionou, posicionou e legendou uma imagem.<br/>
+        Você é um <strong>Ilustrador</strong>!
       </p>
       <p style="margin-top:10px; font-size:14px; opacity:0.8;">
-        Na próxima aula: colocar <strong>imagem</strong> dentro do texto! 🖼️
+        Na próxima aula: mais surpresas na oficina de texto! 🚀
       </p>
     </div>
   </div>
 
   <div class="nav">
     <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Voltar</button>
-    <span class="progress" id="progress">1 / 21</span>
+    <span class="progress" id="progress">1 / 16</span>
     <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Avançar →</button>
   </div>
   <div class="dots" id="dots"></div>
@@ -1242,7 +1092,7 @@
 </div>
 
 <script>
-  const totalSlides = 21;
+  const totalSlides = 16;
   let currentSlide = 1;
 
   function renderDots() {
@@ -1285,140 +1135,67 @@
     el.textContent = el.textContent + ' → ' + answer;
   }
 
-  // Slide 5: itálico
-  let italOn = false;
-  function toggleItalic() {
-    italOn = !italOn;
-    document.getElementById('italDemo').style.fontStyle = italOn ? 'italic' : 'normal';
-    document.getElementById('italBtn').classList.toggle('on', italOn);
-  }
-
-  // Slide 6: sublinhado
-  let undOn = false;
-  function toggleUnderline() {
-    undOn = !undOn;
-    document.getElementById('undDemo').style.textDecoration = undOn ? 'underline' : 'none';
-    document.getElementById('undBtn').classList.toggle('on', undOn);
-  }
-
-  // Slide 7: os três juntos
-  const trio = { bold: false, ital: false, und: false };
-  function trioToggle(key) {
-    trio[key] = !trio[key];
-    const demo = document.getElementById('trioDemo');
-    demo.style.fontWeight = trio.bold ? '900' : '400';
-    demo.style.fontStyle = trio.ital ? 'italic' : 'normal';
-    demo.style.textDecoration = trio.und ? 'underline' : 'none';
-    document.getElementById('trioBoldBtn').classList.toggle('on', trio.bold);
-    document.getElementById('trioItalBtn').classList.toggle('on', trio.ital);
-    document.getElementById('trioUndBtn').classList.toggle('on', trio.und);
-    const hint = document.getElementById('trioHint');
-    if (trio.bold && trio.ital && trio.und) {
-      hint.innerHTML = '😵 Ficou <strong>demais</strong>! Se você destaca tudo, nada fica destacado.';
-    } else {
-      hint.innerHTML = 'Ligue os três e veja o que acontece...';
-    }
-  }
-
-  // Slide 8: alinhamento
-  function setAlign(mode) {
-    document.getElementById('alignDemo').style.textAlign = mode;
-    document.getElementById('alLeft').classList.toggle('on', mode === 'left');
-    document.getElementById('alCenter').classList.toggle('on', mode === 'center');
-    document.getElementById('alRight').classList.toggle('on', mode === 'right');
-  }
-
-  // Slide 9: lista com marcadores
-  let bulletsOn = false;
-  function toggleBullets() {
-    bulletsOn = !bulletsOn;
-    document.getElementById('listUl').classList.toggle('bullets', bulletsOn);
-    document.getElementById('bulletBtn').classList.toggle('on', bulletsOn);
-  }
-
-  // Slide 10: máquina do tempo
-  const undoStack = [];
-  function undoDemoDelete() {
-    const lines = Array.from(document.querySelectorAll('#undoDemo .doc-line'));
-    const target = lines.find(l => !l.classList.contains('gone'));
-    if (!target) {
-      document.getElementById('undoHint').innerHTML = '😱 Apagou tudo! Aperte <span class="kbd">Ctrl + Z</span> para trazer de volta.';
-      return;
-    }
-    target.classList.add('gone');
-    undoStack.push(target);
-    document.getElementById('undoHint').innerHTML = 'Uma linha desapareceu! Aperte <span class="kbd">Ctrl + Z</span>.';
-  }
-  function undoDemoUndo() {
-    const last = undoStack.pop();
-    if (!last) {
-      document.getElementById('undoHint').innerHTML = 'Nada para desfazer — o texto já está inteiro. 😉';
-      return;
-    }
-    last.classList.remove('gone');
+  // Slide 4: inserir imagem
+  function insertImage() {
+    const box = document.getElementById('insertBox');
+    box.classList.remove('size-none');
+    box.classList.add('size-medium');
+    document.getElementById('insertHint').innerHTML = '🐶 Foto inserida! Ela apareceu exatamente onde o cursor estava.';
     unlockAch('ach2');
-    document.getElementById('undoHint').innerHTML = '⏪ Voltou! O <span class="kbd">Ctrl + Z</span> é a máquina do tempo.';
   }
 
-  // Slide 11: desfazer / refazer
-  const redoFull = 'Gosto de sorvete de chocolate.';
-  const redoShort = 'Gosto de sorvete';
-  function redoDemo(mode) {
-    const el = document.getElementById('redoText');
-    el.textContent = mode === 'undo' ? redoShort : redoFull;
-    if (mode === 'undo') unlockAch('ach2');
+  // Slide 5: redimensionar
+  function resizeImg(size) {
+    const box = document.getElementById('resizeBox');
+    box.classList.remove('size-small', 'size-medium', 'size-big');
+    box.classList.add('size-' + size);
+    document.getElementById('resizeMediumBtn').classList.toggle('on', size === 'medium');
   }
 
-  // Slide 12: copiar / colar
-  let clipboard = null;
-  function clipAction(mode) {
-    const demo = document.getElementById('clipDemo');
-    const board = document.getElementById('clipBoard');
-    const hint = document.getElementById('clipHint');
-    const first = demo.querySelector('.doc-line');
-    if (mode === 'copy') {
-      if (!first) { hint.innerHTML = 'Não tem nada para copiar. Cole primeiro! 😉'; return; }
-      clipboard = first.textContent;
-      board.textContent = '"' + clipboard + '"';
-      hint.innerHTML = '📋 Copiado! O original <strong>ficou no lugar</strong>. Agora cole com Ctrl + V.';
-    } else if (mode === 'cut') {
-      if (!first) { hint.innerHTML = 'Não tem nada para cortar. 😉'; return; }
-      clipboard = first.textContent;
-      board.textContent = '"' + clipboard + '"';
-      first.remove();
-      hint.innerHTML = '✂️ Cortado! O original <strong>saiu do lugar</strong>. Cole com Ctrl + V.';
-    } else {
-      if (!clipboard) { hint.innerHTML = 'A área de transferência está vazia. Copie algo primeiro!'; return; }
-      const line = document.createElement('span');
-      line.className = 'doc-line';
-      line.textContent = clipboard;
-      demo.appendChild(line);
-      hint.innerHTML = '📌 Colado onde o cursor estava! Área de transferência: <strong>"' + clipboard + '"</strong>';
-    }
+  // Slide 6: espremer
+  let squished = false;
+  function squishToggle() {
+    squished = !squished;
+    document.getElementById('squishBox').classList.toggle('squished', squished);
+    document.getElementById('squishBtn').classList.toggle('on', squished);
+    const hint = document.getElementById('squishHint');
+    hint.innerHTML = squished
+      ? '😵 Viu como ficou <strong>esticada e torta</strong>?'
+      : 'Puxar de <strong>lado</strong> ou de <strong>cima</strong> sozinho espreme a imagem.';
   }
 
-  // Slide 13: selecionar tudo
-  let selAllOn = false;
-  function toggleSelectAll() {
-    selAllOn = !selAllOn;
-    document.querySelector('#selDemo .sel-target').classList.toggle('sel', selAllOn);
-    document.getElementById('selAllBtn').classList.toggle('on', selAllOn);
+  // Slide 7: posicionar
+  function setImgAlign(mode) {
+    document.getElementById('posDemo').style.textAlign = mode;
+    document.getElementById('posLeft').classList.toggle('on', mode === 'left');
+    document.getElementById('posCenter').classList.toggle('on', mode === 'center');
+    document.getElementById('posRight').classList.toggle('on', mode === 'right');
   }
 
-  // Slide 14: caça aos erros
-  let errFound = 0;
-  function markErr(el) {
-    if (el.classList.contains('found')) return;
-    el.classList.add('found');
-    errFound++;
-    document.getElementById('errCount').textContent = errFound;
-    if (errFound === 4) {
-      document.getElementById('errHint').innerHTML = '🔎 <strong>Achou os 4!</strong> E o WordPad não avisou nenhum.';
-      unlockAch('ach3');
-    }
+  // Slide 8: legenda
+  let captionItalic = false;
+  function toggleCaption() {
+    captionItalic = !captionItalic;
+    document.getElementById('captionText').classList.toggle('italic-cap', captionItalic);
+    document.getElementById('capItalBtn').classList.toggle('on', captionItalic);
+    if (captionItalic) unlockAch('ach3');
   }
 
-  // Slide 16: oficina de comandos
+  // Slide 10: foto gigante
+  let giant = false;
+  function giantToggle() {
+    giant = !giant;
+    const box = document.getElementById('giantBox');
+    box.classList.remove('size-small', 'size-big');
+    box.classList.add(giant ? 'size-big' : 'size-small');
+    document.getElementById('giantLine2').style.display = giant ? 'none' : 'block';
+    document.getElementById('giantBtn').textContent = giant ? '📏 Deixar do tamanho certo' : '📏 Deixar gigante';
+    document.getElementById('giantHint').innerHTML = giant
+      ? '🙈 A segunda frase <strong>sumiu</strong> — a foto tomou o lugar dela!'
+      : 'Uma foto muito grande pode <strong>esconder</strong> o resto do seu texto!';
+  }
+
+  // Slide 11: oficina de comandos
   function revealOficina(el, answer) {
     if (el.classList.contains('revealed')) return;
     el.classList.add('revealed');
@@ -1428,7 +1205,7 @@
     if (chips.length && revealed.length === chips.length) unlockAch('ach1');
   }
 
-  // Slide 17: match game
+  // Slide 12: match game
   let matchSelected = null;
   let matchPairsFound = 0;
   const matchTotalPairs = 5;
@@ -1464,30 +1241,30 @@
     }
   }
 
-  // Slide 18: flip cards
+  // Slide 13: flip cards
   function flipCard(el, isTrue) {
     el.classList.add(isTrue ? 'vtrue' : 'vfalse');
   }
 
-  // Slide 19: charada
+  // Slide 14: charada
   function checkCharada() {
     const input = document.getElementById('charadaInput');
     const feedback = document.getElementById('charadaFeedback');
     const val = input.value.trim().toLowerCase();
-    const correct = ['ctrl z', 'ctrl+z', 'ctrl + z', 'desfazer', 'controlz', 'control z'];
+    const correct = ['cantinho', 'canto', 'alça', 'alca', 'quadradinho do canto'];
     if (correct.some(c => val.includes(c))) {
-      feedback.textContent = '✅ Isso mesmo! É o Ctrl + Z, o desfazer!';
+      feedback.textContent = '✅ Isso mesmo! É o cantinho da imagem!';
       feedback.className = 'charada-feedback ok';
       input.classList.remove('charada-wrong');
     } else {
-      feedback.textContent = '❌ Quase! Pensa nas duas teclas que voltam no tempo...';
+      feedback.textContent = '❌ Quase! Pensa no pontinho que fica no canto da foto...';
       feedback.className = 'charada-feedback err';
       input.classList.add('charada-wrong');
       setTimeout(() => input.classList.remove('charada-wrong'), 400);
     }
   }
 
-  // Slide 20: quiz
+  // Slide 15: quiz
   let quizScore = 0;
   let quizAnswered = {};
 
@@ -1530,14 +1307,14 @@
     const subtitle = document.getElementById('resultSubtitle');
 
     if (quizScore === 5) {
-      emoji.textContent = '🚀';
-      title.textContent = 'Editor Turbo!';
-      subtitle.textContent = 'Você acertou tudo! Já sabe editar como gente grande!';
+      emoji.textContent = '🖼️';
+      title.textContent = 'Ilustrador Craque!';
+      subtitle.textContent = 'Você acertou tudo! Já sabe ilustrar como gente grande!';
       unlockAch('ach4');
     } else if (quizScore >= 3) {
       emoji.textContent = '⭐';
       title.textContent = 'Muito bem!';
-      subtitle.textContent = 'Você já manda bem na edição de texto!';
+      subtitle.textContent = 'Você já manda bem com imagens!';
     } else {
       emoji.textContent = '💪';
       title.textContent = 'Quase lá!';
@@ -1561,7 +1338,7 @@
     document.getElementById('qq1').classList.add('active');
   }
 
-  // Slide 21: conquistas
+  // Slide 16: conquistas
   function unlockAch(id) {
     const card = document.getElementById(id);
     if (card) card.classList.add('ach-unlocked');
