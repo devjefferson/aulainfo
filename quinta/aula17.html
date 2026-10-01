@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revisão WordPad — Feira de Talentos 🔁📄</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #06101f;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 20px 16px 40px;
+  }
+
+  .poster-mock { user-select: none; -webkit-user-select: none; }
+
+  .topbar { width: 100%; max-width: 720px; margin-bottom: 14px; }
+  .topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .badge-level { border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+  .badge-level.n1 { background: #388e3c; color: #fff; }
+  .badge-level.n2 { background: #0288d1; color: #fff; }
+  .badge-level.n3 { background: #d32f2f; color: #fff; }
+  .badge-level.fin{ background: #e64a19; color: #fff; }
+  .badge-level.end{ background: #50e6ff; color: #06101f; }
+  .score-pill { background: rgba(255,255,255,0.12); border-radius: 50px; padding: 5px 16px; font-weight: 800; color: #50e6ff; white-space: nowrap; }
+  .bar { height: 7px; background: rgba(255,255,255,0.12); border-radius: 50px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0078d4, #50e6ff); border-radius: 50px; transition: width 0.4s ease; }
+
+  .card {
+    width: 100%; max-width: 720px;
+    background: linear-gradient(150deg, #12233b, #0b1728);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 24px; padding: 36px 34px;
+    color: #fff; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)} }
+  .shake { animation: shake 0.4s ease; }
+
+  .c-emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; text-align: center; }
+  .c-kicker { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; text-align: center; }
+  .c-question { font-size: 24px; font-weight: 800; line-height: 1.35; text-align: center; margin-bottom: 8px; }
+  .c-sub { font-size: 15px; line-height: 1.6; opacity: 0.8; text-align: center; margin-bottom: 22px; }
+  .c-pts { display: block; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 1px; opacity: 0.55; text-transform: uppercase; margin-bottom: 20px; }
+
+  .field { margin-bottom: 14px; }
+  .field-label { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.65; margin-bottom: 6px; }
+  .field input[type="text"], .field textarea {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 13px 16px; font-size: 16px; color: #fff;
+    font-family: inherit; transition: border-color 0.2s, background 0.2s;
+  }
+  .field textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.32); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: #50e6ff; background: rgba(255,255,255,0.11); }
+  .field.ok input, .field.ok textarea { border-color: #38ef7d; background: rgba(56,239,125,0.12); }
+  .field.err input, .field.err textarea { border-color: #ef5350; background: rgba(239,83,80,0.12); }
+  .field-note { font-size: 12px; opacity: 0.5; margin-top: 5px; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 10px; }
+  .choice {
+    flex: 1 1 200px; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 14px 16px; font-size: 15px; font-weight: 700; color: #fff;
+    cursor: pointer; text-align: center; transition: all 0.2s; user-select: none;
+  }
+  .choice:hover { background: rgba(255,255,255,0.14); }
+  .choice.picked { border-color: #50e6ff; background: rgba(80,230,255,0.18); }
+  .field.ok .choice.picked { border-color: #38ef7d; background: rgba(56,239,125,0.2); }
+  .field.err .choice.picked { border-color: #ef5350; background: rgba(239,83,80,0.2); }
+  .choices.locked .choice { cursor: default; }
+
+  .msg { display: none; margin-top: 14px; border-radius: 12px; padding: 13px 18px; font-size: 15px; font-weight: 700; line-height: 1.55; }
+  .msg.show { display: block; animation: fadeIn 0.2s ease; }
+  .msg.err { background: rgba(239,83,80,0.16); border: 1px solid rgba(239,83,80,0.45); color: #ffcdd2; }
+  .msg.hint { background: rgba(80,230,255,0.14); border: 1px solid rgba(80,230,255,0.45); color: #d6f7ff; }
+
+  .btn {
+    display: block; width: 100%; margin-top: 20px; border: none;
+    border-radius: 50px; padding: 15px 28px; font-size: 16px; font-weight: 800;
+    cursor: pointer; transition: transform 0.15s, filter 0.2s; font-family: inherit;
+  }
+  .btn:hover { transform: scale(1.02); }
+  .btn-check { background: linear-gradient(135deg, #0078d4, #01579b); color: #fff; }
+  .btn-next  { background: linear-gradient(135deg, #38ef7d, #1a6b3c); color: #fff; }
+  .btn-ghost { background: rgba(255,255,255,0.10); color: #fff; border: 2px solid rgba(255,255,255,0.22); margin-top: 10px; }
+
+  .explain { display: none; margin-top: 22px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.12); animation: fadeIn 0.35s ease; }
+  .explain.show { display: block; }
+  .explain-tag { display: inline-block; background: rgba(56,239,125,0.2); border: 1px solid #38ef7d; color: #38ef7d; border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+  .explain p { font-size: 15.5px; line-height: 1.7; margin-bottom: 10px; opacity: 0.92; }
+  .explain strong { color: #50e6ff; }
+
+  .hl { display: inline-block; background: rgba(255,255,255,0.16); border-radius: 8px; padding: 1px 10px; font-weight: 700; }
+
+  .callout { background: rgba(80,230,255,0.12); border: 1px solid rgba(80,230,255,0.42); border-radius: 14px; padding: 14px 18px; margin: 14px 0; font-size: 15px; line-height: 1.6; color: #d6f7ff; }
+  .callout .co-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  .poster-mock {
+    background: rgba(255,255,255,0.95); color: #1a1a1a; border-radius: 14px;
+    padding: 18px 20px; margin: 14px 0; text-align: left; font-family: Georgia, 'Times New Roman', serif;
+  }
+  .poster-title { text-align: center; font-weight: 900; font-size: 17px; margin-bottom: 6px; }
+  .poster-sub { text-align: center; color: #b71c1c; text-decoration: underline; font-size: 13px; margin-bottom: 10px; font-weight: 700; }
+  .poster-body { text-align: justify; font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+  .poster-list { font-size: 13px; line-height: 1.7; padding-left: 20px; }
+
+  .rules { margin: 18px 0; }
+  .rule { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 11px 16px; margin-bottom: 8px; font-size: 14.5px; line-height: 1.55; text-align: left; }
+  .rule-n { background: rgba(255,255,255,0.18); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+
+  .ptable { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .ptable td { padding: 8px 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+  .ptable tr:last-child td { border-bottom: none; }
+  .ptable .p-lv { font-weight: 900; white-space: nowrap; }
+  .ptable .p-pt { text-align: right; font-weight: 900; color: #50e6ff; white-space: nowrap; }
+
+  .ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 16px 0; }
+  .ach { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; font-size: 13px; line-height: 1.35; text-align: left; }
+  .ach .ach-i { font-size: 24px; flex-shrink: 0; }
+  .ach strong { display: block; font-size: 13.5px; font-weight: 900; }
+  .ach span { font-size: 11.5px; opacity: 0.8; }
+
+  .mantra { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; align-items: center; margin: 18px 0; }
+  .mantra-step { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 9px 18px; font-size: 15px; font-weight: 900; }
+  .mantra-arrow { opacity: 0.6; }
+
+  .final-score { font-size: 62px; font-weight: 900; color: #50e6ff; text-align: center; line-height: 1; }
+  .final-max { text-align: center; font-size: 14px; opacity: 0.6; margin-bottom: 20px; }
+
+  .teacher-note { margin-top: 18px; font-size: 12.5px; opacity: 0.5; text-align: center; line-height: 1.6; }
+
+  @media (max-width: 640px) {
+    .card { padding: 26px 20px; }
+    .c-question { font-size: 20px; }
+    .ach-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="badge-level end" id="levelBadge">Revisão</span>
+    <span id="stepLabel">Início</span>
+    <span class="score-pill"><span id="scoreVal">0</span> / 23 pts</span>
+  </div>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<div id="stage"></div>
+
+<script>
+document.addEventListener('copy', e => {
+  if (e.target.closest('.poster-mock')) e.preventDefault();
+});
+
+/* ---------- utilidades ---------- */
+const norm = s => (s || '')
+  .toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[^a-z0-9 ]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const LEVELS = {
+  n1:  { badge: 'n1',  label: '🟢 Nível 1 · Texto e Título' },
+  n2:  { badge: 'n2',  label: '🔵 Nível 2 · Formatação' },
+  n3:  { badge: 'n3',  label: '🔴 Nível 3 · Revisão e Entrega' },
+  fin: { badge: 'fin', label: '🏆 Revisão Final' }
+};
+
+/* ---------- as missões do desafio ---------- */
+const QUESTIONS = [
+  /* ============ NÍVEL 1 ============ */
+  {
+    level: 'n1', pts: 1, emoji: '✋', kicker: 'Revisão 1 · Regra de ouro',
+    q: 'Você quer deixar uma palavra em negrito no WordPad. Qual é o primeiro passo?',
+    fields: [{ key: 'r', label: 'Escolha a resposta certa', type: 'choice', options: ['Selecionar a palavra', 'Apertar Ctrl + B e depois digitar a palavra', 'Mudar o zoom da tela'], correct: 'Selecionar a palavra' }],
+    hint: 'A regra de ouro tem só duas palavras: selecionar antes de...',
+    explain: '<p><strong>Selecionar antes de formatar.</strong> Sem seleção, o WordPad não sabe o que você quer mudar.</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '⌨️', kicker: 'Revisão 2 · Atalhos do cartaz',
+    q: 'Ligue cada ação ao atalho certo.',
+    fields: [
+      { key: 'c', label: 'Centralizar o título', type: 'choice', options: ['Ctrl + E', 'Ctrl + J', 'Ctrl + U'], correct: 'Ctrl + E' },
+      { key: 'b', label: 'Negrito', type: 'choice', options: ['Ctrl + B', 'Ctrl + I', 'Ctrl + E'], correct: 'Ctrl + B' },
+      { key: 'j', label: 'Justificar o parágrafo', type: 'choice', options: ['Ctrl + J', 'Ctrl + L', 'Ctrl + U'], correct: 'Ctrl + J' }
+    ],
+    hint: 'E de cEntralizar, B de Bold, J de Justificar.',
+    explain: '<p><strong>Ctrl + E</strong> centraliza, <strong>Ctrl + B</strong> deixa em negrito e <strong>Ctrl + J</strong> justifica. Sublinhado é <strong>Ctrl + U</strong>.</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🔠', kicker: 'Revisão 3 · Conteúdo primeiro',
+    q: 'Na aula passada vocês digitaram todo o texto antes de formatar. Por que essa ordem?',
+    fields: [{ key: 'r', label: 'Escolha a melhor explicação', type: 'choice', options: ['Para não refazer a formatação a cada frase que muda', 'Porque o WordPad não deixa formatar enquanto digita', 'Porque formatar é opcional'], correct: 'Para não refazer a formatação a cada frase que muda' }],
+    hint: 'Pense no trabalho que dá formatar uma frase e depois ter que apagar ou reescrever.',
+    explain: '<p><strong>Conteúdo primeiro, aparência depois.</strong> Formatar frase por frase enquanto digita faz você refazer o trabalho duas vezes.</p>'
+  },
+
+  /* ============ NÍVEL 2 ============ */
+  {
+    level: 'n2', pts: 2, emoji: '📋', kicker: 'Revisão 4 · Qual lista usar?',
+    q: 'Para cada situação, escolha o tipo de lista mais adequado.',
+    fields: [
+      { key: 'a', label: 'Os passos para se inscrever na feira (primeiro, depois, por fim)', type: 'choice', options: ['Numerada', 'Marcadores'], correct: 'Numerada' },
+      { key: 'b', label: 'O que levar para a apresentação: violão, fantasia, microfone', type: 'choice', options: ['Numerada', 'Marcadores'], correct: 'Marcadores' }
+    ],
+    hint: 'Se trocar a ordem dos itens muda o sentido, a lista é numerada.',
+    explain: '<p>Passos em sequência pedem lista <strong>numerada</strong>. Itens soltos, sem ordem, pedem <strong>marcadores</strong>.</p><div class="callout"><span class="co-icon">⚠️</span>Nunca digite "1." ou "-" na mão. Use o botão de lista do WordPad.</div>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '📐', kicker: 'Revisão 5 · Espaçamento 1,5',
+    q: 'O parágrafo do cartaz ficou com espaçamento entre linhas de 1,5.',
+    fields: [
+      { key: 'esp', label: 'Onde se muda o espaçamento entre linhas?', type: 'choice', options: ['Na aba Início, no botão de espaçamento entre linhas', 'No menu Arquivo → Salvar', 'Só dá para mudar apertando Enter'], correct: 'Na aba Início, no botão de espaçamento entre linhas' },
+      { key: 'why', label: 'Por que usar 1,5 e não 1,0?', type: 'textarea', placeholder: 'Escreva com suas palavras, pelo menos uma frase completa.', minLen: 30 }
+    ],
+    hint: 'Pense em leitura fácil e em espaço para corrigir ou anotar.',
+    explain: '<p>O espaçamento fica na aba <strong>Início</strong>. Com 1,5 o texto fica <strong>arejado</strong>: mais fácil de ler e com espaço para correções.</p>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🔴', kicker: 'Revisão 6 · O que destacar?',
+    q: 'No cartaz, a linha "Sexta-feira, 18 de dezembro — Pátio da escola, 14h" ficou em vermelho e sublinhada.',
+    fields: [
+      { key: 'why', label: 'Por que essa linha merece destaque?', type: 'choice', options: ['É a informação mais prática: quando e onde vai acontecer', 'Porque vermelho é a cor mais bonita', 'Porque o texto estava errado'], correct: 'É a informação mais prática: quando e onde vai acontecer' },
+      { key: 'cor', label: 'Onde se troca a cor da fonte?', type: 'choice', options: ['Aba Início, botão de cor da fonte (letra "A" colorida)', 'Menu Arquivo', 'Não dá para trocar'], correct: 'Aba Início, botão de cor da fonte (letra "A" colorida)' }
+    ],
+    hint: 'Destaque serve para quem passa correndo pelo cartaz achar o que importa.',
+    explain: '<p>Destaque guia o olho. Data e local são o que a pessoa precisa para <strong>aparecer na feira</strong>, por isso ganham cor e sublinhado.</p>'
+  },
+
+  /* ============ NÍVEL 3 ============ */
+  {
+    level: 'n3', pts: 3, emoji: '🔎', kicker: 'Revisão 7 · Caçada aos erros',
+    q: 'Este trecho do cartaz tem 2 erros de digitação. Corrija e digite as palavras certas.',
+    sub: 'Lembre-se: o WordPad não sublinha erro nenhum.',
+    html: '<div class="poster-mock"><div class="poster-body">Faça sua <strong>inscrisão</strong> e venha <strong>partissipar</strong> da Feira de Talentos!</div></div>',
+    fields: [
+      { key: 'e1', label: 'Como se escreve certo a palavra 1?', type: 'text', accept: ['inscricao'], placeholder: 'Digite a palavra corrigida' },
+      { key: 'e2', label: 'Como se escreve certo a palavra 2?', type: 'text', accept: ['participar'], placeholder: 'Digite a palavra corrigida' }
+    ],
+    hint: 'Leia em voz baixa, bem devagar. Uma é com "ç", a outra tem "ti" no meio.',
+    explain: '<p><strong>Inscrição</strong> e <strong>participar</strong>. Sem corretor, revisar é trabalho seu: erro no cartaz é erro que a escola inteira vai ver.</p>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '💾', kicker: 'Revisão 8 · Nome de arquivo',
+    q: 'Você vai salvar um convite de aniversário feito pela Maria. Qual nome está certo?',
+    fields: [{ key: 'r', label: 'Escolha o nome de arquivo correto', type: 'choice', options: ['Convite-Aniversario-Maria.rtf', 'novo documento (3).rtf', 'CONVITE FINAL FINAL2.rtf'], correct: 'Convite-Aniversario-Maria.rtf' }],
+    hint: 'Um bom nome diz o que é e de quem é, sem "final final" e sem número aleatório.',
+    explain: '<p>Nome de arquivo também é comunicação: quem abre a pasta precisa entender <strong>o que é</strong> e <strong>de quem é</strong> sem abrir o documento.</p>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '🖨️', kicker: 'Revisão 9 · Virar PDF',
+    q: 'A coordenação pediu o cartaz em PDF.',
+    fields: [
+      { key: 'how', label: 'Como gerar o PDF pelo WordPad?', type: 'choice', options: ['Arquivo → Imprimir → Microsoft Print to PDF', 'Salvar como → .txt', 'Não é possível'], correct: 'Arquivo → Imprimir → Microsoft Print to PDF' },
+      { key: 'why', label: 'Por que PDF e não só o .rtf?', type: 'choice', options: ['Abre igual em qualquer computador, sem perder a formatação', 'Porque o PDF é editável', 'Porque o .rtf não abre em lugar nenhum'], correct: 'Abre igual em qualquer computador, sem perder a formatação' }
+    ],
+    hint: 'Você não imprime em papel, imprime para dentro de um arquivo.',
+    explain: '<p><strong>Arquivo → Imprimir → Microsoft Print to PDF.</strong> O PDF mantém o cartaz exatamente como você montou, em qualquer computador.</p>'
+  },
+
+  /* ============ FINAL ============ */
+  {
+    level: 'fin', pts: 5, emoji: '🏆', kicker: 'Revisão Final · O mantra',
+    q: 'Digitar → Formatar → Revisar → Entregar. Explique com suas palavras o que se faz em cada etapa.',
+    sub: 'Use o cartaz da Feira de Talentos como exemplo. Uma frase por etapa.',
+    fields: [{ key: 'r', label: 'O que você faz em cada uma das 4 etapas?', type: 'textarea', placeholder: 'Ex.: Digitar: escrevi o texto todo cru. Formatar: ...', minLen: 80 }],
+    hint: 'Digitar = texto cru. Formatar = título, destaque, lista. Revisar = caçar erros. Entregar = salvar .rtf e exportar PDF.',
+    explain: '<p>Quem segue essa ordem faz o trabalho <strong>uma vez só</strong> e entrega um documento limpo, bem nomeado e que abre igual em qualquer lugar.</p>'
+  }
+];
+
+const TOTAL_PTS = QUESTIONS.reduce((a, q) => a + q.pts, 0);
+
+/* ---------- estado ---------- */
+let idx = -1;
+let score = 0;
+let attempts = 0;
+const stage = document.getElementById('stage');
+
+/* ---------- topo ---------- */
+function paintTop(badgeClass, badgeText, stepText, progress) {
+  const b = document.getElementById('levelBadge');
+  b.className = 'badge-level ' + badgeClass;
+  b.textContent = badgeText;
+  document.getElementById('stepLabel').textContent = stepText;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('barFill').style.width = progress + '%';
+}
+
+/* ---------- capa ---------- */
+function renderCover() {
+  paintTop('end', '🔁 Revisão WordPad', 'Início', 0);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🔁</div>' +
+      '<div class="c-kicker">Aula de quinta-feira · 11–15 anos · revisão da aula 16</div>' +
+      '<div class="c-question">Revisão — Cartaz da Feira de Talentos</div>' +
+      '<div class="c-sub">Na última aula vocês criaram o cartaz do zero até o PDF.<br>Hoje vamos <strong>reforçar o que ficou</strong> e consertar o que escapou.</div>' +
+      '<div class="rules">' +
+        '<div class="rule"><span class="rule-n">1</span><span>💻 Se travar, abra o WordPad e teste na prática antes de responder.</span></div>' +
+        '<div class="rule"><span class="rule-n">2</span><span>✋ Regra de ouro continua valendo: <strong>selecionar antes de formatar</strong>.</span></div>' +
+        '<div class="rule"><span class="rule-n">3</span><span>🔒 Só avança para a próxima revisão acertando o card.</span></div>' +
+        '<div class="rule"><span class="rule-n">4</span><span>💡 Depois de 3 erros aparece uma dica.</span></div>' +
+      '</div>' +
+      '<table class="ptable">' +
+        '<tr><td class="p-lv">🟢 Nível 1</td><td>Regra de ouro, atalhos, ordem do trabalho — 3 revisões</td><td class="p-pt">1 pt</td></tr>' +
+        '<tr><td class="p-lv">🔵 Nível 2</td><td>Listas, espaçamento, destaque</td><td class="p-pt">2 pts</td></tr>' +
+        '<tr><td class="p-lv">🔴 Nível 3</td><td>Erros, nome de arquivo, PDF</td><td class="p-pt">3 pts</td></tr>' +
+        '<tr><td class="p-lv">🏆 Final</td><td>O mantra com suas palavras</td><td class="p-pt">5 pts</td></tr>' +
+      '</table>' +
+      '<button class="btn btn-next" onclick="start()">Começar a revisão 🚀</button>' +
+      '<div class="teacher-note">Professor: use os erros dos cards para identificar quem ainda tem dúvida e retome o ponto no quadro.</div>' +
+    '</div>';
+}
+
+function start() { idx = 0; attempts = 0; renderQuestion(); }
+
+/* ---------- card de missão ---------- */
+function renderQuestion() {
+  const q = QUESTIONS[idx];
+  const lv = LEVELS[q.level];
+  paintTop(lv.badge, lv.label, 'Revisão ' + (idx + 1) + ' de ' + QUESTIONS.length, Math.round(idx / QUESTIONS.length * 100));
+
+  let html =
+    '<div class="card" id="card">' +
+      '<div class="c-emoji">' + q.emoji + '</div>' +
+      '<div class="c-kicker">' + q.kicker + '</div>' +
+      '<div class="c-question">' + q.q + '</div>' +
+      (q.sub ? '<div class="c-sub">' + q.sub + '</div>' : '') +
+      (q.html || '') +
+      '<span class="c-pts">Vale ' + q.pts + (q.pts > 1 ? ' pontos' : ' ponto') + '</span>' +
+      '<div id="fields">';
+
+  q.fields.forEach((f, i) => {
+    html += '<div class="field" id="f' + i + '">';
+    html += '<label class="field-label">' + f.label + '</label>';
+    if (f.type === 'choice') {
+      html += '<div class="choices" id="ch' + i + '">';
+      f.options.forEach(opt => {
+        html += '<div class="choice" data-val="' + opt.replace(/"/g, '&quot;') + '" onclick="pick(' + i + ', this)">' + opt + '</div>';
+      });
+      html += '</div>';
+    } else if (f.type === 'textarea') {
+      html += '<textarea id="i' + i + '" placeholder="' + (f.placeholder || '') + '"></textarea>';
+    } else {
+      html += '<input type="text" id="i' + i + '" placeholder="' + (f.placeholder || '') + '" autocomplete="off" />';
+    }
+    if (f.note) html += '<div class="field-note">' + f.note + '</div>';
+    html += '</div>';
+  });
+
+  html +=
+      '</div>' +
+      '<div class="msg" id="msg"></div>' +
+      '<button class="btn btn-check" id="btnCheck" onclick="check()">Conferir</button>' +
+      '<div class="explain" id="explain">' +
+        '<span class="explain-tag">✅ Certo · +' + q.pts + ' pts</span>' +
+        q.explain +
+        '<button class="btn btn-next" onclick="nextCard()">' + (idx === QUESTIONS.length - 1 ? 'Ver resultado final 🏆' : 'Próxima revisão →') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  stage.innerHTML = html;
+
+  const first = document.getElementById('i0');
+  if (first) first.focus();
+  document.querySelectorAll('#fields input').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  });
+}
+
+/* ---------- escolha ---------- */
+const picked = {};
+function pick(i, el) {
+  const box = document.getElementById('ch' + i);
+  if (box.classList.contains('locked')) return;
+  box.querySelectorAll('.choice').forEach(c => c.classList.remove('picked'));
+  el.classList.add('picked');
+  picked[i] = el.dataset.val;
+}
+
+/* ---------- validação ---------- */
+function check() {
+  const q = QUESTIONS[idx];
+  let allOk = true;
+  const problems = [];
+
+  q.fields.forEach((f, i) => {
+    const wrap = document.getElementById('f' + i);
+    wrap.classList.remove('ok', 'err');
+    let ok = false;
+
+    if (f.type === 'choice') {
+      const val = picked[i];
+      if (!val) { problems.push('Falta marcar: ' + f.label.toLowerCase() + '.'); }
+      else if (val === f.correct) { ok = true; }
+      else { problems.push('A opção marcada não está certa. Pense de novo antes de tentar.'); }
+    } else {
+      const val = (document.getElementById('i' + i).value || '').trim();
+      if (f.accept) {
+        const n = norm(val);
+        if (!n) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else if (f.accept.some(a => n.includes(a))) { ok = true; }
+        else { problems.push('Essa resposta não confere. Releia e tente de novo.'); }
+      } else {
+        const min = f.minLen || 3;
+        if (val.length >= min) { ok = true; }
+        else if (!val) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else { problems.push('Escreva um pouco mais em: ' + f.label.toLowerCase() + '.'); }
+      }
+    }
+
+    wrap.classList.add(ok ? 'ok' : 'err');
+    if (!ok) allOk = false;
+  });
+
+  const msg = document.getElementById('msg');
+
+  if (!allOk) {
+    attempts++;
+    const card = document.getElementById('card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+
+    if (attempts >= 3 && q.hint) {
+      msg.className = 'msg hint show';
+      msg.innerHTML = '💡 <strong>Dica:</strong> ' + q.hint;
+    } else {
+      msg.className = 'msg err show';
+      msg.innerHTML = '🔒 ' + problems.slice(0, 2).join(' ') + ' <span style="font-weight:400">Você não avança sem acertar.</span>';
+    }
+    return;
+  }
+
+  score += q.pts;
+  document.getElementById('scoreVal').textContent = score;
+  msg.className = 'msg';
+  document.getElementById('btnCheck').style.display = 'none';
+  document.querySelectorAll('#fields input, #fields textarea').forEach(el => el.disabled = true);
+  document.querySelectorAll('.choices').forEach(c => c.classList.add('locked'));
+  document.getElementById('explain').classList.add('show');
+  document.getElementById('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function nextCard() {
+  idx++;
+  attempts = 0;
+  for (const k in picked) delete picked[k];
+  if (idx >= QUESTIONS.length) { renderEnd(); return; }
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- fechamento ---------- */
+function renderEnd() {
+  paintTop('end', '🏆 Revisão concluída', 'Concluído', 100);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🎪</div>' +
+      '<div class="c-kicker">Revisão encerrada</div>' +
+      '<div class="final-score">' + score + '</div>' +
+      '<div class="final-max">de ' + TOTAL_PTS + ' pontos · 10 revisões concluídas</div>' +
+      '<div class="c-question" style="font-size:20px">Você mostrou que domina o caminho do cartaz, do texto cru ao PDF. 🏆</div>' +
+      '<div class="ach-grid">' +
+        '<div class="ach"><span class="ach-i">✋</span><div><strong>Regra de Ouro</strong><span>Sempre selecionou antes de formatar</span></div></div>' +
+        '<div class="ach"><span class="ach-i">📐</span><div><strong>Justificador</strong><span>Sabe deixar parágrafo com cara de livro</span></div></div>' +
+        '<div class="ach"><span class="ach-i">📋</span><div><strong>Organizador</strong><span>Escolhe lista certa para cada caso</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🔎</span><div><strong>Revisor</strong><span>Achou erro que o WordPad não avisou</span></div></div>' +
+        '<div class="ach"><span class="ach-i">💾</span><div><strong>Nome Certo</strong><span>Salva arquivo que qualquer um entende</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🖨️</span><div><strong>Exportador</strong><span>Sabe transformar em PDF</span></div></div>' +
+      '</div>' +
+      '<div class="mantra">' +
+        '<span class="mantra-step">Digitar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Formatar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Revisar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Entregar</span>' +
+      '</div>' +
+      '<p style="text-align:center; font-size:17px; font-weight:800; line-height:1.6; margin-top:6px;">Quem domina esse caminho <span class="hl">entrega documento bom em qualquer lugar</span>. 🎉</p>' +
+      '<button class="btn btn-ghost" onclick="restart()">Recomeçar 🔄</button>' +
+      '<div class="teacher-note">Professor: peça para 2 ou 3 alunos explicarem o mantra em voz alta antes de encerrar a aula.</div>' +
+    '</div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() { idx = -1; score = 0; attempts = 0; renderCover(); window.scrollTo({ top: 0 }); }
+
+renderCover();
+</script>
+</body>
+</html>
