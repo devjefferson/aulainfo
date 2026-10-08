@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Formatando Texto no WordPad ✍️🎨</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #06101f;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 20px 16px 40px;
+  }
+
+  .poster-mock { user-select: none; -webkit-user-select: none; }
+
+  .topbar { width: 100%; max-width: 720px; margin-bottom: 14px; }
+  .topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .badge-level { border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+  .badge-level.n1 { background: #388e3c; color: #fff; }
+  .badge-level.n2 { background: #0288d1; color: #fff; }
+  .badge-level.n3 { background: #d32f2f; color: #fff; }
+  .badge-level.fin{ background: #e64a19; color: #fff; }
+  .badge-level.end{ background: #50e6ff; color: #06101f; }
+  .score-pill { background: rgba(255,255,255,0.12); border-radius: 50px; padding: 5px 16px; font-weight: 800; color: #50e6ff; white-space: nowrap; }
+  .bar { height: 7px; background: rgba(255,255,255,0.12); border-radius: 50px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0078d4, #50e6ff); border-radius: 50px; transition: width 0.4s ease; }
+
+  .card {
+    width: 100%; max-width: 720px;
+    background: linear-gradient(150deg, #12233b, #0b1728);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 24px; padding: 36px 34px;
+    color: #fff; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)} }
+  .shake { animation: shake 0.4s ease; }
+
+  .c-emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; text-align: center; }
+  .c-kicker { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; text-align: center; }
+  .c-question { font-size: 24px; font-weight: 800; line-height: 1.35; text-align: center; margin-bottom: 8px; }
+  .c-sub { font-size: 15px; line-height: 1.6; opacity: 0.8; text-align: center; margin-bottom: 22px; }
+  .c-pts { display: block; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 1px; opacity: 0.55; text-transform: uppercase; margin-bottom: 20px; }
+
+  .field { margin-bottom: 14px; }
+  .field-label { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.65; margin-bottom: 6px; }
+  .field input[type="text"], .field textarea {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 13px 16px; font-size: 16px; color: #fff;
+    font-family: inherit; transition: border-color 0.2s, background 0.2s;
+  }
+  .field textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.32); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: #50e6ff; background: rgba(255,255,255,0.11); }
+  .field.ok input, .field.ok textarea { border-color: #38ef7d; background: rgba(56,239,125,0.12); }
+  .field.err input, .field.err textarea { border-color: #ef5350; background: rgba(239,83,80,0.12); }
+  .field-note { font-size: 12px; opacity: 0.5; margin-top: 5px; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 10px; }
+  .choice {
+    flex: 1 1 200px; background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 12px;
+    padding: 14px 16px; font-size: 15px; font-weight: 700; color: #fff;
+    cursor: pointer; text-align: center; transition: all 0.2s; user-select: none;
+  }
+  .choice:hover { background: rgba(255,255,255,0.14); }
+  .choice.picked { border-color: #50e6ff; background: rgba(80,230,255,0.18); }
+  .field.ok .choice.picked { border-color: #38ef7d; background: rgba(56,239,125,0.2); }
+  .field.err .choice.picked { border-color: #ef5350; background: rgba(239,83,80,0.2); }
+  .choices.locked .choice { cursor: default; }
+
+  .msg { display: none; margin-top: 14px; border-radius: 12px; padding: 13px 18px; font-size: 15px; font-weight: 700; line-height: 1.55; }
+  .msg.show { display: block; animation: fadeIn 0.2s ease; }
+  .msg.err { background: rgba(239,83,80,0.16); border: 1px solid rgba(239,83,80,0.45); color: #ffcdd2; }
+  .msg.hint { background: rgba(80,230,255,0.14); border: 1px solid rgba(80,230,255,0.45); color: #d6f7ff; }
+
+  .btn {
+    display: block; width: 100%; margin-top: 20px; border: none;
+    border-radius: 50px; padding: 15px 28px; font-size: 16px; font-weight: 800;
+    cursor: pointer; transition: transform 0.15s, filter 0.2s; font-family: inherit;
+  }
+  .btn:hover { transform: scale(1.02); }
+  .btn-check { background: linear-gradient(135deg, #0078d4, #01579b); color: #fff; }
+  .btn-next  { background: linear-gradient(135deg, #38ef7d, #1a6b3c); color: #fff; }
+  .btn-ghost { background: rgba(255,255,255,0.10); color: #fff; border: 2px solid rgba(255,255,255,0.22); margin-top: 10px; }
+
+  .explain { display: none; margin-top: 22px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.12); animation: fadeIn 0.35s ease; }
+  .explain.show { display: block; }
+  .explain-tag { display: inline-block; background: rgba(56,239,125,0.2); border: 1px solid #38ef7d; color: #38ef7d; border-radius: 50px; padding: 4px 14px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+  .explain p { font-size: 15.5px; line-height: 1.7; margin-bottom: 10px; opacity: 0.92; }
+  .explain strong { color: #50e6ff; }
+
+  .hl { display: inline-block; background: rgba(255,255,255,0.16); border-radius: 8px; padding: 1px 10px; font-weight: 700; }
+
+  .callout { background: rgba(80,230,255,0.12); border: 1px solid rgba(80,230,255,0.42); border-radius: 14px; padding: 14px 18px; margin: 14px 0; font-size: 15px; line-height: 1.6; color: #d6f7ff; }
+  .callout .co-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  .poster-mock {
+    background: rgba(255,255,255,0.95); color: #1a1a1a; border-radius: 14px;
+    padding: 18px 20px; margin: 14px 0; text-align: left; font-family: Georgia, 'Times New Roman', serif;
+  }
+  .poster-title { text-align: center; font-weight: 900; font-size: 17px; margin-bottom: 6px; }
+  .poster-sub { text-align: center; color: #b71c1c; text-decoration: underline; font-size: 13px; margin-bottom: 10px; font-weight: 700; }
+  .poster-body { text-align: justify; font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+  .poster-list { font-size: 13px; line-height: 1.7; padding-left: 20px; }
+
+  .rules { margin: 18px 0; }
+  .rule { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 11px 16px; margin-bottom: 8px; font-size: 14.5px; line-height: 1.55; text-align: left; }
+  .rule-n { background: rgba(255,255,255,0.18); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+
+  .ptable { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .ptable td { padding: 8px 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+  .ptable tr:last-child td { border-bottom: none; }
+  .ptable .p-lv { font-weight: 900; white-space: nowrap; }
+  .ptable .p-pt { text-align: right; font-weight: 900; color: #50e6ff; white-space: nowrap; }
+
+  .ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 16px 0; }
+  .ach { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; font-size: 13px; line-height: 1.35; text-align: left; }
+  .ach .ach-i { font-size: 24px; flex-shrink: 0; }
+  .ach strong { display: block; font-size: 13.5px; font-weight: 900; }
+  .ach span { font-size: 11.5px; opacity: 0.8; }
+
+  .mantra { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; align-items: center; margin: 18px 0; }
+  .mantra-step { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 9px 18px; font-size: 15px; font-weight: 900; }
+  .mantra-arrow { opacity: 0.6; }
+
+  .final-score { font-size: 62px; font-weight: 900; color: #50e6ff; text-align: center; line-height: 1; }
+  .final-max { text-align: center; font-size: 14px; opacity: 0.6; margin-bottom: 20px; }
+
+  .teacher-note { margin-top: 18px; font-size: 12.5px; opacity: 0.5; text-align: center; line-height: 1.6; }
+
+  @media (max-width: 640px) {
+    .card { padding: 26px 20px; }
+    .c-question { font-size: 20px; }
+    .ach-grid { grid-template-columns: 1fr; }
+  }
+  .card .rule { font-size: 18px; }
+  .card .rule-n { width: 32px; height: 32px; font-size: 16px; }
+  .card .field-label { font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="badge-level end" id="levelBadge">Formatação</span>
+    <span id="stepLabel">Início</span>
+    <span class="score-pill"><span id="scoreVal">0</span> / 23 pts</span>
+  </div>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<div id="stage"></div>
+
+<script>
+document.addEventListener('copy', e => {
+  if (e.target.closest('.poster-mock')) e.preventDefault();
+});
+
+/* ---------- utilidades ---------- */
+const norm = s => (s || '')
+  .toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[^a-z0-9 ]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const LEVELS = {
+  n1:  { badge: 'n1',  label: '🟢 Nível 1 · Letra' },
+  n2:  { badge: 'n2',  label: '🔵 Nível 2 · Parágrafo' },
+  n3:  { badge: 'n3',  label: '🔴 Nível 3 · Na prática' },
+  fin: { badge: 'fin', label: '🏆 Desafio Final' }
+};
+
+/* ---------- as missões da aula ---------- */
+const QUESTIONS = [
+  /* ============ NÍVEL 1 ============ */
+  {
+    level: 'n1', pts: 1, emoji: '✋', kicker: 'Missão 1 · Regra de ouro',
+    q: 'Você digitou "Feira de Talentos" e quer deixar só essas palavras maiores. Qual é o primeiro passo?',
+    fields: [{ key: 'r', label: 'Escolha a resposta certa', type: 'choice', options: ['Selecionar as palavras', 'Apertar Enter duas vezes', 'Salvar o arquivo'], correct: 'Selecionar as palavras' }],
+    hint: 'A regra de ouro: selecionar antes de...',
+    explain: '<p><strong>Selecionar antes de formatar.</strong> O WordPad só muda o que está selecionado (pintado de azul).</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🅱️', kicker: 'Missão 2 · N, I e S',
+    q: 'Ligue cada botão ao efeito que ele faz no texto.',
+    fields: [
+      { key: 'n', label: 'Botão N (Ctrl + B)', type: 'choice', options: ['Negrito', 'Itálico', 'Sublinhado'], correct: 'Negrito' },
+      { key: 'i', label: 'Botão I (Ctrl + I)', type: 'choice', options: ['Negrito', 'Itálico', 'Sublinhado'], correct: 'Itálico' },
+      { key: 's', label: 'Botão S (Ctrl + U)', type: 'choice', options: ['Negrito', 'Itálico', 'Sublinhado'], correct: 'Sublinhado' }
+    ],
+    hint: 'Itálico é a letra inclinada, negrito é a letra grossa, sublinhado tem uma linha embaixo.',
+    explain: '<p><strong>N</strong> = negrito, <strong>I</strong> = itálico, <strong>S</strong> = sublinhado. Dá para combinar os três no mesmo texto.</p>'
+  },
+  {
+    level: 'n1', pts: 1, emoji: '🔤', kicker: 'Missão 3 · Tamanho da fonte',
+    q: 'Onde você muda o tamanho da letra no WordPad?',
+    fields: [{ key: 'r', label: 'Escolha a resposta certa', type: 'choice', options: ['Aba Início, na caixa com o número ao lado do nome da fonte', 'Menu Arquivo → Salvar', 'Aba Exibição → Zoom'], correct: 'Aba Início, na caixa com o número ao lado do nome da fonte' }],
+    hint: 'Fica na mesma aba dos botões N, I e S.',
+    explain: '<p>Na aba <strong>Início</strong>, ao lado do nome da fonte, fica o número do tamanho. <strong>Zoom</strong> só aumenta a tela, não muda o documento.</p>'
+  },
+
+  /* ============ NÍVEL 2 ============ */
+  {
+    level: 'n2', pts: 2, emoji: '↔️', kicker: 'Missão 4 · Alinhamento',
+    q: 'Ligue cada situação ao alinhamento mais adequado.',
+    fields: [
+      { key: 'a', label: 'Título de um cartaz', type: 'choice', options: ['Centralizado (Ctrl + E)', 'Justificado (Ctrl + J)', 'À direita (Ctrl + R)'], correct: 'Centralizado (Ctrl + E)' },
+      { key: 'b', label: 'Parágrafo longo com cara de livro', type: 'choice', options: ['Centralizado (Ctrl + E)', 'Justificado (Ctrl + J)', 'À direita (Ctrl + R)'], correct: 'Justificado (Ctrl + J)' },
+      { key: 'c', label: 'Data no canto do documento', type: 'choice', options: ['Centralizado (Ctrl + E)', 'Justificado (Ctrl + J)', 'À direita (Ctrl + R)'], correct: 'À direita (Ctrl + R)' }
+    ],
+    hint: 'Justificado deixa as duas bordas do parágrafo retinhas.',
+    explain: '<p>Título pede <strong>centralizado</strong>, parágrafo longo pede <strong>justificado</strong> e data no canto vai <strong>à direita</strong>.</p>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '🎨', kicker: 'Missão 5 · Cor e destaque',
+    q: 'Duas ferramentas parecidas, funções diferentes.',
+    fields: [
+      { key: 'a', label: 'Muda a cor da própria letra (a letra "A" colorida)', type: 'choice', options: ['Cor da fonte', 'Cor de destaque (marca-texto)'], correct: 'Cor da fonte' },
+      { key: 'b', label: 'Pinta o fundo atrás do texto, como um marca-texto', type: 'choice', options: ['Cor da fonte', 'Cor de destaque (marca-texto)'], correct: 'Cor de destaque (marca-texto)' }
+    ],
+    hint: 'Uma mexe na letra, a outra mexe no fundo.',
+    explain: '<p><strong>Cor da fonte</strong> pinta a letra. <strong>Cor de destaque</strong> pinta o fundo, igual a um marca-texto.</p>'
+  },
+  {
+    level: 'n2', pts: 2, emoji: '⚖️', kicker: 'Missão 6 · Menos é mais',
+    q: 'Um colega deixou o título em 5 cores, 4 fontes diferentes, negrito, itálico e sublinhado ao mesmo tempo.',
+    fields: [
+      { key: 'r', label: 'Qual é o problema?', type: 'choice', options: ['Excesso de efeitos: fica difícil de ler e o destaque perde força', 'Nenhum, quanto mais efeito melhor', 'O WordPad não permite isso'], correct: 'Excesso de efeitos: fica difícil de ler e o destaque perde força' },
+      { key: 'why', label: 'Com suas palavras: o que você faria para melhorar?', type: 'textarea', placeholder: 'Escreva pelo menos uma frase completa.', minLen: 30 }
+    ],
+    hint: 'Se tudo está destacado, nada se destaca.',
+    explain: '<p>Formatação serve para <strong>guiar o olho</strong>. Use poucas fontes e poucas cores, e destaque só o que realmente importa.</p>'
+  },
+
+  /* ============ NÍVEL 3 ============ */
+  {
+    level: 'n3', pts: 3, emoji: '🔍', kicker: 'Missão 7 · Detetive da formatação',
+    q: 'Olhe o trecho abaixo e responda o que foi aplicado.',
+    html: '<div class="poster-mock"><div class="poster-title" style="font-size:30px">Feira de Talentos</div><div class="poster-sub" style="font-size:20px">Sexta-feira, 18 de dezembro</div><div class="poster-body" style="font-size:18px">Venha mostrar o que você sabe fazer!</div></div>',
+    fields: [
+      { key: 'a', label: 'Como está alinhado o título?', type: 'choice', options: ['Centralizado', 'À esquerda', 'À direita'], correct: 'Centralizado' },
+      { key: 'b', label: 'A linha da data tem que efeitos?', type: 'choice', options: ['Cor vermelha e sublinhado', 'Só itálico', 'Nenhum efeito'], correct: 'Cor vermelha e sublinhado' }
+    ],
+    hint: 'Olhe a posição do título e a cor da data.',
+    explain: '<p>Título <strong>centralizado</strong> e data em <strong>vermelho com sublinhado</strong>. Saber ler a formatação ajuda a copiar o que você gostou.</p>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '🔠', kicker: 'Missão 8 · Documento inteiro',
+    q: 'Você quer trocar a fonte (o tipo de letra) do documento inteiro de uma vez.',
+    fields: [
+      { key: 'a', label: 'Qual atalho seleciona todo o texto?', type: 'choice', options: ['Ctrl + A', 'Ctrl + T', 'Ctrl + P'], correct: 'Ctrl + A' },
+      { key: 'f', label: 'Onde se escolhe o tipo de letra?', type: 'choice', options: ['Aba Início, na caixa com o nome da fonte (ex.: Calibri, Arial)', 'Menu Arquivo → Imprimir', 'Aba Exibição'], correct: 'Aba Início, na caixa com o nome da fonte (ex.: Calibri, Arial)' }
+    ],
+    hint: 'A letra A de "Aaaall" (tudo). A caixa da fonte fica ao lado do tamanho.',
+    explain: '<p><strong>Ctrl + A</strong> seleciona tudo e a caixa de fonte da aba <strong>Início</strong> troca o tipo de letra de uma vez só.</p>'
+  },
+  {
+    level: 'n3', pts: 3, emoji: '↩️', kicker: 'Missão 9 · Errei, e agora?',
+    q: 'Você aplicou negrito no texto errado.',
+    fields: [
+      { key: 'u', label: 'Qual atalho desfaz a última ação?', type: 'choice', options: ['Ctrl + Z', 'Ctrl + X', 'Ctrl + S'], correct: 'Ctrl + Z' },
+      { key: 'b', label: 'Para tirar o negrito de um texto já selecionado, você...', type: 'choice', options: ['Aperta Ctrl + B de novo', 'Apaga o texto e digita de novo', 'Fecha o WordPad'], correct: 'Aperta Ctrl + B de novo' }
+    ],
+    hint: 'Os botões de formatação funcionam como interruptor: liga e desliga.',
+    explain: '<p><strong>Ctrl + Z</strong> desfaz. E N, I e S funcionam como <strong>interruptor</strong>: apertar de novo desliga o efeito.</p>'
+  },
+
+  /* ============ FINAL ============ */
+  {
+    level: 'fin', pts: 5, emoji: '🏆', kicker: 'Desafio Final · Receita da formatação',
+    q: 'Explique com suas palavras como formatar um título de cartaz do começo ao fim.',
+    sub: 'Cite pelo menos: selecionar, tamanho, negrito e alinhamento.',
+    fields: [{ key: 'r', label: 'Passo a passo da formatação', type: 'textarea', placeholder: 'Ex.: Primeiro eu seleciono o título, depois...', minLen: 80 }],
+    hint: 'Selecionar → aumentar o tamanho → negrito → centralizar.',
+    explain: '<p>Selecionar, aumentar, negrito, centralizar. Com essa receita qualquer título fica com cara de cartaz.</p>'
+  }
+];
+
+const TOTAL_PTS = QUESTIONS.reduce((a, q) => a + q.pts, 0);
+
+/* ---------- estado ---------- */
+let idx = -1;
+let score = 0;
+let attempts = 0;
+const stage = document.getElementById('stage');
+
+/* ---------- topo ---------- */
+function paintTop(badgeClass, badgeText, stepText, progress) {
+  const b = document.getElementById('levelBadge');
+  b.className = 'badge-level ' + badgeClass;
+  b.textContent = badgeText;
+  document.getElementById('stepLabel').textContent = stepText;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('barFill').style.width = progress + '%';
+}
+
+/* ---------- capa ---------- */
+function renderCover() {
+  paintTop('end', '✍️ Formatação', 'Início', 0);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">✍️</div>' +
+      '<div class="c-kicker">Aula de quinta-feira · 11–15 anos · aula 18</div>' +
+      '<div class="c-question">Formatando Texto no WordPad</div>' +
+      '<div class="c-sub">Letra, tamanho, cor e alinhamento: hoje você aprende a <strong>dar cara de profissional</strong> a qualquer texto.</div>' +
+      '<div class="field-label" style="text-align:center">📝 Texto sem formatação (digite no WordPad)</div>' +
+      '<div class="poster-mock" style="font-family:Consolas,monospace;font-size:19px;line-height:1.8">Feira de Talentos<br>Sexta-feira, 18 de dezembro<br>Venha mostrar o que você sabe fazer! Teremos música, dança, desenho e muitas outras apresentações. A entrada é gratuita.<br>O que levar: violão, fantasia, microfone</div>' +
+      '<button class="btn btn-next" onclick="renderHow()">Próximo: como formatar →</button>' +
+      '<div class="teacher-note">Professor: peça para os alunos digitarem este texto no WordPad, sem formatar nada.</div>' +
+    '</div>';
+}
+
+function renderHow() {
+  paintTop('end', '✍️ Formatação', 'Como formatar', 0);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🎨</div>' +
+      '<div class="c-kicker">Aula 18 · passo a passo</div>' +
+      '<div class="c-question">Como formatar o texto</div>' +
+      '<div class="rules">' +
+        '<div class="rule"><span class="rule-n">1</span><span>✋ <strong>Selecione</strong> o texto que quer mudar (arraste o mouse sobre ele).</span></div>' +
+        '<div class="rule"><span class="rule-n">2</span><span>🔤 Título: tamanho <strong>24</strong>, <strong>negrito</strong> (Ctrl + B) e <strong>centralizado</strong> (Ctrl + E).</span></div>' +
+        '<div class="rule"><span class="rule-n">3</span><span>🔴 Data: <strong>cor vermelha</strong> e <strong>sublinhado</strong> (Ctrl + U).</span></div>' +
+        '<div class="rule"><span class="rule-n">4</span><span>📐 Parágrafo: <strong>justificado</strong> (Ctrl + J).</span></div>' +
+        '<div class="rule"><span class="rule-n">5</span><span>📋 Itens do que levar: botão de <strong>marcadores</strong>.</span></div>' +
+      '</div>' +
+      '<div class="field-label" style="text-align:center">✅ Resultado esperado</div>' +
+      '<div class="poster-mock"><div class="poster-title" style="font-size:30px">Feira de Talentos</div><div class="poster-sub" style="font-size:20px">Sexta-feira, 18 de dezembro</div><div class="poster-body" style="font-size:18px">Venha mostrar o que você sabe fazer! Teremos música, dança, desenho e muitas outras apresentações. A entrada é gratuita.</div><ul class="poster-list" style="font-size:18px"><li>violão</li><li>fantasia</li><li>microfone</li></ul></div>' +
+      '<div class="rules">' +
+        '<div class="rule"><span class="rule-n">1</span><span>💻 Se travar, abra o WordPad e teste na prática antes de responder.</span></div>' +
+        '<div class="rule"><span class="rule-n">2</span><span>✋ Regra de ouro continua valendo: <strong>selecionar antes de formatar</strong>.</span></div>' +
+        '<div class="rule"><span class="rule-n">3</span><span>🔒 Só avança para a próxima missão acertando o card.</span></div>' +
+        '<div class="rule"><span class="rule-n">4</span><span>💡 Depois de 3 erros aparece uma dica.</span></div>' +
+      '</div>' +
+      '<table class="ptable">' +
+        '<tr><td class="p-lv">🟢 Nível 1</td><td>Selecionar, N/I/S, tamanho da fonte</td><td class="p-pt">1 pt</td></tr>' +
+        '<tr><td class="p-lv">🔵 Nível 2</td><td>Alinhamento, cores, equilíbrio</td><td class="p-pt">2 pts</td></tr>' +
+        '<tr><td class="p-lv">🔴 Nível 3</td><td>Ler formatação, fonte, desfazer</td><td class="p-pt">3 pts</td></tr>' +
+        '<tr><td class="p-lv">🏆 Final</td><td>A receita com suas palavras</td><td class="p-pt">5 pts</td></tr>' +
+      '</table>' +
+      '<button class="btn btn-next" onclick="start()">Começar 🚀</button>' +
+      '<div class="teacher-note">Professor: peça para os alunos testarem cada missão no WordPad antes de responder.</div>' +
+    '</div>';
+}
+
+function start() { idx = 0; attempts = 0; renderQuestion(); }
+
+/* ---------- card de missão ---------- */
+function renderQuestion() {
+  const q = QUESTIONS[idx];
+  const lv = LEVELS[q.level];
+  paintTop(lv.badge, lv.label, 'Missão ' + (idx + 1) + ' de ' + QUESTIONS.length, Math.round(idx / QUESTIONS.length * 100));
+
+  let html =
+    '<div class="card" id="card">' +
+      '<div class="c-emoji">' + q.emoji + '</div>' +
+      '<div class="c-kicker">' + q.kicker + '</div>' +
+      '<div class="c-question">' + q.q + '</div>' +
+      (q.sub ? '<div class="c-sub">' + q.sub + '</div>' : '') +
+      (q.html || '') +
+      '<span class="c-pts">Vale ' + q.pts + (q.pts > 1 ? ' pontos' : ' ponto') + '</span>' +
+      '<div id="fields">';
+
+  q.fields.forEach((f, i) => {
+    html += '<div class="field" id="f' + i + '">';
+    html += '<label class="field-label">' + f.label + '</label>';
+    if (f.type === 'choice') {
+      html += '<div class="choices" id="ch' + i + '">';
+      f.options.forEach(opt => {
+        html += '<div class="choice" data-val="' + opt.replace(/"/g, '&quot;') + '" onclick="pick(' + i + ', this)">' + opt + '</div>';
+      });
+      html += '</div>';
+    } else if (f.type === 'textarea') {
+      html += '<textarea id="i' + i + '" placeholder="' + (f.placeholder || '') + '"></textarea>';
+    } else {
+      html += '<input type="text" id="i' + i + '" placeholder="' + (f.placeholder || '') + '" autocomplete="off" />';
+    }
+    if (f.note) html += '<div class="field-note">' + f.note + '</div>';
+    html += '</div>';
+  });
+
+  html +=
+      '</div>' +
+      '<div class="msg" id="msg"></div>' +
+      '<button class="btn btn-check" id="btnCheck" onclick="check()">Conferir</button>' +
+      '<div class="explain" id="explain">' +
+        '<span class="explain-tag">✅ Certo · +' + q.pts + ' pts</span>' +
+        q.explain +
+        '<button class="btn btn-next" onclick="nextCard()">' + (idx === QUESTIONS.length - 1 ? 'Ver resultado final 🏆' : 'Próxima missão →') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  stage.innerHTML = html;
+
+  const first = document.getElementById('i0');
+  if (first) first.focus();
+  document.querySelectorAll('#fields input').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  });
+}
+
+/* ---------- escolha ---------- */
+const picked = {};
+function pick(i, el) {
+  const box = document.getElementById('ch' + i);
+  if (box.classList.contains('locked')) return;
+  box.querySelectorAll('.choice').forEach(c => c.classList.remove('picked'));
+  el.classList.add('picked');
+  picked[i] = el.dataset.val;
+}
+
+/* ---------- validação ---------- */
+function check() {
+  const q = QUESTIONS[idx];
+  let allOk = true;
+  const problems = [];
+
+  q.fields.forEach((f, i) => {
+    const wrap = document.getElementById('f' + i);
+    wrap.classList.remove('ok', 'err');
+    let ok = false;
+
+    if (f.type === 'choice') {
+      const val = picked[i];
+      if (!val) { problems.push('Falta marcar: ' + f.label.toLowerCase() + '.'); }
+      else if (val === f.correct) { ok = true; }
+      else { problems.push('A opção marcada não está certa. Pense de novo antes de tentar.'); }
+    } else {
+      const val = (document.getElementById('i' + i).value || '').trim();
+      if (f.accept) {
+        const n = norm(val);
+        if (!n) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else if (f.accept.some(a => n.includes(a))) { ok = true; }
+        else { problems.push('Essa resposta não confere. Releia e tente de novo.'); }
+      } else {
+        const min = f.minLen || 3;
+        if (val.length >= min) { ok = true; }
+        else if (!val) { problems.push('Falta preencher: ' + f.label.toLowerCase() + '.'); }
+        else { problems.push('Escreva um pouco mais em: ' + f.label.toLowerCase() + '.'); }
+      }
+    }
+
+    wrap.classList.add(ok ? 'ok' : 'err');
+    if (!ok) allOk = false;
+  });
+
+  const msg = document.getElementById('msg');
+
+  if (!allOk) {
+    attempts++;
+    const card = document.getElementById('card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+
+    if (attempts >= 3 && q.hint) {
+      msg.className = 'msg hint show';
+      msg.innerHTML = '💡 <strong>Dica:</strong> ' + q.hint;
+    } else {
+      msg.className = 'msg err show';
+      msg.innerHTML = '🔒 ' + problems.slice(0, 2).join(' ') + ' <span style="font-weight:400">Você não avança sem acertar.</span>';
+    }
+    return;
+  }
+
+  score += q.pts;
+  document.getElementById('scoreVal').textContent = score;
+  msg.className = 'msg';
+  document.getElementById('btnCheck').style.display = 'none';
+  document.querySelectorAll('#fields input, #fields textarea').forEach(el => el.disabled = true);
+  document.querySelectorAll('.choices').forEach(c => c.classList.add('locked'));
+  document.getElementById('explain').classList.add('show');
+  document.getElementById('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function nextCard() {
+  idx++;
+  attempts = 0;
+  for (const k in picked) delete picked[k];
+  if (idx >= QUESTIONS.length) { renderEnd(); return; }
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- fechamento ---------- */
+function renderEnd() {
+  paintTop('end', '🏆 Aula concluída', 'Concluído', 100);
+  stage.innerHTML =
+    '<div class="card">' +
+      '<div class="c-emoji">🎪</div>' +
+      '<div class="c-kicker">Aula encerrada</div>' +
+      '<div class="final-score">' + score + '</div>' +
+      '<div class="final-max">de ' + TOTAL_PTS + ' pontos · 10 missões concluídas</div>' +
+      '<div class="c-question" style="font-size:20px">Você domina a formatação de texto no WordPad. 🏆</div>' +
+      '<div class="ach-grid">' +
+        '<div class="ach"><span class="ach-i">✋</span><div><strong>Regra de Ouro</strong><span>Sempre selecionou antes de formatar</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🅱️</span><div><strong>Mestre N-I-S</strong><span>Negrito, itálico e sublinhado</span></div></div>' +
+        '<div class="ach"><span class="ach-i">↔️</span><div><strong>Alinhador</strong><span>Escolhe o alinhamento certo</span></div></div>' +
+        '<div class="ach"><span class="ach-i">🎨</span><div><strong>Colorista</strong><span>Sabe cor da fonte e destaque</span></div></div>' +
+        '<div class="ach"><span class="ach-i">⚖️</span><div><strong>Equilibrado</strong><span>Não exagera nos efeitos</span></div></div>' +
+        '<div class="ach"><span class="ach-i">↩️</span><div><strong>Desfazedor</strong><span>Errou? Ctrl + Z resolve</span></div></div>' +
+      '</div>' +
+      '<div class="mantra">' +
+        '<span class="mantra-step">Selecionar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Formatar</span><span class="mantra-arrow">→</span>' +
+        '<span class="mantra-step">Conferir</span>' +
+      '</div>' +
+      '<p style="text-align:center; font-size:17px; font-weight:800; line-height:1.6; margin-top:6px;">Quem domina esse caminho <span class="hl">faz texto bonito e fácil de ler</span>. 🎉</p>' +
+      '<button class="btn btn-ghost" onclick="restart()">Recomeçar 🔄</button>' +
+      '<div class="teacher-note">Professor: peça para 2 ou 3 alunos explicarem a receita em voz alta antes de encerrar a aula.</div>' +
+    '</div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() { idx = -1; score = 0; attempts = 0; renderCover(); window.scrollTo({ top: 0 }); }
+
+renderCover();
+</script>
+</body>
+</html>
